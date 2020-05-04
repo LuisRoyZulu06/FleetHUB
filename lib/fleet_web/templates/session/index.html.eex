@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="description" content="Page Titile">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-tap-highlight" content="no">
+            
+        <title>FleetHUB Login</title>
+        <!-- base css -->
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/vendors.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/default.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/app.bundle.css") %>" />
+        <link rel="mask-icon" color="#5bbad5" href="<%= Routes.static_path(@conn, "/css/datagrid/datatables/datatables.bundle.css") %>" />
+        <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/img/favicon/apple-touch-icon.png") %>" />
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/favicon-32x32.png") %>" />
+        <link rel="mask-icon" color="#5bbad5" href="<%= Routes.static_path(@conn, "/img/favicon/safari-pinned-tab.svg") %>" />
+        <style type="text/css">
+            .help-block{
+                color: #000000;
+            }
+            .form-control{
+                background-color: #d9d9f2;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <div class="page-inner bg-brand-gradient">
+                <div class="page-content-wrapper bg-transparent m-0">
+                    <div class="flex-1" id="login_background">
+                        <br><br><br><br><br><br>
+                        <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
+                            <div class="row">   
+                                <div class="col col-md-6 col-lg-7 hidden-sm-down">
+                                    <h1 id="app-name">FleetHUB</h1>
+
+                                    <h2 class="fs-xxl fw-500 mt-4 text-white">
+                                        <small id="login-content">
+                                            FleetHUB is a fleet management system which Zambian Railways Limited (ZRL) will use to remove or minimize the risks associated
+                                            with vehicle investment, improving efficiency, productivity and reducing their overall transportation and staff costs.
+                                        </small>
+                                    </h2>
+
+                                    <a href="#" target="_blank" class="fs-lg fw-500 text-white opacity-70">Learn more about ZRL&gt;&gt;</a>
+                                    <div id="login-content" class="d-sm-flex flex-column align-items-center justify-content-center d-md-block">
+                                        <div class="px-0 py-1 mt-5 text-white fs-nano opacity-50">
+                                            Find Probase on social media
+                                        </div>
+
+                                        <div class="d-flex flex-row opacity-70">
+                                            <a href="https://www.facebook.com/probasegroup/?__tn__=%2Cd%2CP-R&eid=ARDP8KwfLIW7cvj2CHsWs_tFBOCbFuoM3KbtKne4wRA9al1UIh9l3p8lFRu_peqIGxWeaHnWdhDLGqbD/" target="_blank" class="mr-2 fs-xxl text-white">
+                                                <img src="https://img.icons8.com/android/24/000000/facebook-new.png"/>
+                                            </a>
+                                            <a href="mailto:webmaster@example.com" class="mr-2 fs-xxl text-white">
+                                            <img src="https://img.icons8.com/material-sharp/24/000000/composing-mail.png"  />
+                                            </a>                                              
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="line" style="border-right: solid #826bb0"></div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto">
+                                    <!-- To Handle Flashes -->
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-offset-2">
+                                            <div class="form-group">
+                                                <%= if get_flash(@conn, :info) do %>
+                                                    <div class="alert alert-success alert-styled-left">
+                                                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                                                    <%= get_flash(@conn, :info) %>
+                                                    </div>
+                                                <% end %>
+                                                <%= if get_flash(@conn, :error) do %>
+                                                    <div class="alert alert-danger alert-styled-left">
+                                                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                                                    Opps! <%= get_flash(@conn, :error) %>
+                                                    </div>
+                                                <% end %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End flahses -->
+
+                                    <h1 class="text-white fw-300 mb-3 d-sm-block d-md-none">
+                                        FleetHUB
+                                    </h1>
+
+                                    <div class="card p-4 bg-faded" style="background-color: #9f9fdf;"> <!-- #9f9fdf -->
+                                        <form id="js-login" novalidate="" action="<%= Routes.session_path(@conn, :create)%>" method="POST">                                       
+                                            <div class="form-group">
+                                                <label class="form-label" for="username">Email</label>
+                                                <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" required>
+                                                <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                                <div class="invalid-feedback"></div>
+                                                <div class="help-block">Your email address.</div>                                                
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label" for="password">Password</label>
+                                                <input type="password"  name="password" id="password" class="form-control form-control-lg" placeholder="Password" required>
+                                                <div class="invalid-feedback">Sorry, you missed this one.</div>
+                                                <div class="help-block">Your password</div>
+                                                <div class="help-block"></div>
+                                            </div>                                          
+                                        
+                                            <!--<div class="form-group text-left">
+                                                <a href="<%= Routes.user_path(@conn, :forgot_password) %>">Forgot password?</a>
+                                            </div>-->
+
+                                            <div class="row no-gutters">
+                                                <div class="col-lg-6 pr-lg-1 my-2">
+                                                    <button type="submit" class="btn bg-primary-900 btn-block btn-md" id="login">Login</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>    
+                                </div>
+                                
+                                <div class="col-md-4 ml-auto"></div>
+                            </div>
+
+                            <div class="position-absolute pos-bottom pos-left pos-right p-3 text-center text-white">
+                                  2020 © FleetHUB by&nbsp;<a href='http://www.probasegroup.com/' class='text-white opacity-40 fw-500' title='gotbootstrap.com' target='_blank'>Probase</a>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+    <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script> 
+    <script src="<%= Routes.static_path(@conn, "/js/statistics/flot/flot.bundle.js") %>"></script> 
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script>
+        $("#js-login-btn").click(function(event)
+        {
+
+            // Fetch form to apply custom Bootstrap validation
+            var form = $("#js-login")
+
+            if (form[0].checkValidity() === false)
+            {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.addClass('was-validated');
+            // Perform ajax submit here...
+        });
+    </script>
+
+    </body>
+</html>

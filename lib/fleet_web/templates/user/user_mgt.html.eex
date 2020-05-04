@@ -1,0 +1,179 @@
+<main id="js-page-content" role="main" class="page-content">
+    <!-- ####################################################### FLASH ################## -->
+    <div class="row">
+        <div class="col-md-12 col-lg-offset-2">
+            <div class="form-group">
+                <%= if get_flash(@conn, :info) do %>
+                    <div class="alert alert-info alert-styled-left">
+                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                    <%= get_flash(@conn, :info) %>
+                    </div>
+                <% end %>
+                <%= if get_flash(@conn, :error) do %>
+                    <div class="alert alert-danger alert-styled-left">
+                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                    Opps! <%= get_flash(@conn, :error) %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    <!-- ################################################################################ -->
+    <div class="subheader">
+        <h1 class="subheader-title">
+            <i class='subheader-icon fal fa-user-circle'></i> Manage System Users
+        </h1>
+
+        <div class="subheader-block" id="loggedIn-user">
+            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        System users <i class='subheader-icon fal fa-user-circle'></i>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-sm btn-default waves-effect waves-themed" data-toggle="modal" data-target="#default-example-modal-lg-center">Add user</button>
+                    </div>
+                </div>
+
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        
+                        <!-- datatable start -->
+                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>User role</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <%= for system_user <- @system_users do %>    
+                                <tr>
+                                    <td><%= system_user.id %></td>
+                                    <td><%= system_user.first_name %></td>
+                                    <td><%= system_user.last_name %></td>
+                                    <td><%= system_user.email %></td>
+                                    <td><%= system_user.user_role %></td>
+                                    <td><%= system_user.status %></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class='subheader-icon fal fa-chevron-down'></i>
+                                                </span>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="<%= Routes.user_path(@conn, :edit_user, id: system_user.id)%>">Edit</a>
+                                                    <a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a> <!-- data-toggle="modal" data-target="#delete-alert" -->
+                                                    <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr> 
+                            <% end %>                          
+                        </table>
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ############################################ ADD USER MODAL ######################################### -->
+<div class="modal fade" id="default-example-modal-lg-center" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add system user <i class='subheader-icon fal fa-user-circle'></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal" action="<%= Routes.user_path(@conn, :create_user)%>" method="post">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control" placeholder="First Name" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" placeholder="Last Name" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Email Address" required="required">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="text" name="password" class="form-control" placeholder="Password" required="required">
+                        <input type="hidden" name="auto_password" value="user">
+                        <input type="hidden" name="status" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">User Type</label>
+                        <select class="custom-select form-control" name="user_type" required="required">
+                            <option selected="">Select User Type</option>
+                            <option value="1">Admin User</option>
+                            <option value="2">Driver User</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">User Role</label>
+                        <select class="custom-select form-control" name="user_role" required="required">
+                            <option selected="">Select User Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="driver">Driver</option>
+                        </select>
+                    </div>
+                
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add user</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ############################## DELETE-ALERT MODAL ################################## -->
+<div class="modal modal-alert fade" id="delete-alert" tabindex="-1" role="dialog" aria-hidden="true">
+    <%= for system_user <- @system_users do %>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure you want to delete this user?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                You can't reverse this action!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <a href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>" class="btn btn-primary">Yes</a>
+            </div>
+        </div>
+    </div>
+    <% end %>
+</div>                                        
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>

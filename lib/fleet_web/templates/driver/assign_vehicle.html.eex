@@ -1,0 +1,102 @@
+<main id="js-page-content" role="main" class="page-content">
+<!-- ####################################################### FLASH ################## -->
+<div class="row">
+    <div class="col-md-12 col-lg-offset-2">
+        <div class="form-group">
+            <%= if get_flash(@conn, :info) do %>
+                <div class="alert alert-info alert-styled-left">
+                <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                <%= get_flash(@conn, :info) %>
+                </div>
+            <% end %>
+            <%= if get_flash(@conn, :error) do %>
+                <div class="alert alert-danger alert-styled-left">
+                <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                Opps! <%= get_flash(@conn, :error) %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<!-- ################################################################################ -->
+<div class="subheader">
+    <h1 class="subheader-title">
+        <i class='subheader-icon fal fa-truck'></i> Assign Vehicle To Driver
+    </h1>
+    <div class="subheader-block" id="loggedIn-user">
+        <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+    </div>
+</div>
+
+<div class="row">
+<div class="col-md-2"></div>
+
+<div class="col-md-8">
+    <div id="panel-1" class="panel">
+        <div class="panel-hdr">
+            <h2>
+                Assign Vehicle<i class='fal fa-bus'></i>
+            </h2>
+        </div>
+
+        <div class="panel-container show">
+            <div class="panel-content">
+                <form action="#">
+                    <%= for driver <-[@drivers] do %>
+                    <div class="row">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="id" value="<%= driver.id %>">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="plate_no" required="required">
+                                        <option selected="">Select Vehicle</option>
+                                        <option value="Vehicle Plate">Vehicle Plate</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" type="button" class="btn btn-secondary">Back</a>
+                        <button type="button" data-toggle="modal" data-target="#update-driver-modal" class="btn btn-primary">Assign Vehicle</button>
+                    </div>
+
+                    <!-- ############################## ASSIGN-ALERT MODAL ################################## -->
+                    <div class="modal modal-alert fade" id="update-driver-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Are you sure you want to assign this vehicle to <%= driver.first_name%> <%= driver.last_name%>?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    You can't reverse this action!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% end %>                
+                </form>
+            </div>
+        </div>        
+
+    </div>
+</div>
+
+<div class="col-md-2"></div>
+</div>
+</main>
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>

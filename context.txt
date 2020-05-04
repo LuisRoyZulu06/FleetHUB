@@ -1,0 +1,14 @@
+mix phx.gen.context Accounts User tbl_users first_name last_name email password user_type:integer user_role status:integer user_id
+mix phx.gen.context Logs UserLogs tbl_user_logs activity user_id
+
+mix phx.gen.context Clients Contacts tbl_vendors rep_name position email comp_name comp_email comp_tel comp_address comp_info
+
+mix phx.gen.context Drivers DriverDetails tbl_drivers first_name last_name sex age:integer nrc_no phone home_add email dlt dln dl_exp_dt
+
+mix phx.gen.context Vehicles VehicleDetails tbl_vehicles v_make v_name color plate_no v_status mileage rd_tax_exp_dt fitness_exp_dt insrnc_exp_dt assigned_to assignment_status
+
+mix phx.gen.context Drivers IssueLoger tbl_vehicle_issue first_name last_name phone v_make v_name v_plate_no v_descr_problem v_slct_problem slct_fxd_problem descr_fxd_problem dt_issued dt_resolved vendor cost payment_doc v_status
+
+<!-- ################# Adding Column To Table ################ -->
+mix ecto.gen.migration alter_tbl_vehicle_issue
+mix ecto.gen.migration alter_tbl_vehicles

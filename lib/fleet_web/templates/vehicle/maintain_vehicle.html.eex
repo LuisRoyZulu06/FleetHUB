@@ -1,0 +1,102 @@
+<main id="js-page-content" role="main" class="page-content">
+    <!-- ####################################################### FLASH ################## -->
+    <div class="row">
+        <div class="col-md-12 col-lg-offset-2">
+            <div class="form-group">
+                <%= if get_flash(@conn, :info) do %>
+                    <div class="alert alert-success alert-styled-left">
+                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                    <%= get_flash(@conn, :info) %>
+                    </div>
+                <% end %>
+                <%= if get_flash(@conn, :error) do %>
+                    <div class="alert alert-danger alert-styled-left">
+                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                    Opps! <%= get_flash(@conn, :error) %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    <!-- ################################################################################ -->
+
+    <div class="subheader">
+        <h1 class="subheader-title">
+            <i class='subheader-icon fal fa-cog'></i> Vehicle Maintenance
+        </h1>
+
+        <div class="d-flex mr-4">
+            <div class="mr-2">
+                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }">4/10</span>
+            </div>
+            <div>
+                <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
+                <h4 class="font-weight-bold mb-0">2</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Vehicles Under Maintenance
+                    </h2>
+                    <div class="panel-toolbar" style="margin-right: 10px;">
+                        <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>">Back</a>
+                    </div>
+                </div>
+
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        
+                        <!-- datatable start -->
+                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                <tr>
+                                    <th>Vehicle Name</th>
+                                    <th>License Plate Number</th>
+                                    <th>Assigned To</th>
+                                    <th>Status of Vehicle</th>
+                                    <th>Vehicle Problem</th>
+                                    <th>Vendor</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class='subheader-icon fal fa-chevron-down'></i>
+                                                </span>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">View</a>
+                                                    <a class="dropdown-item" href="#">Edit</a>
+                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>                                              
+                        </table>
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/js/statistics/peity/peity.bundle.js") %>"></script>

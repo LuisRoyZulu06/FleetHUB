@@ -1,0 +1,476 @@
+<main id="js-page-content" role="main" class="page-content">
+    <!-- Page heading removed for composed layout -->
+    <div class="d-flex flex-grow-1 p-0">
+        <!-- left slider -->
+        <div id="js-inbox-menu" class="flex-wrap position-relative bg-white slide-on-mobile slide-on-mobile-left">
+            <div class="position-absolute pos-top pos-bottom w-100">
+                <div class="d-flex h-100 flex-column">
+                    <br>
+                    <div class="flex-1 pr-3">
+                        <a href="<%= Routes.admin_path(@conn, :inbox)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md font-weight-bold d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0 ">
+                            <div>
+                                <i class="fas fa-folder-open width-1"></i>Inbox
+                            </div>
+                            <div class="fw-400 fs-xs js-unread-emails-count"></div>
+                        </a>
+
+                        <a href="<%= Routes.admin_path(@conn, :resolved)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
+                            <div>
+                                <i class="fas fa-paper-plane width-1"></i>Resolved
+                            </div>
+                        </a>
+
+                        <a href="<% Routes.admin_path(@conn, :resolved)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
+                            <div>
+                                <i class="fas fa-redo width-1"></i>Refresh
+                            </div>
+                        </a>
+
+                        <a href="<%= Routes.admin_path(@conn, :rejected)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md font-weight-bold d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
+                            <div>
+                                <i class="fas fa-trash width-1"></i>Rejected
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="px-5 py-3 fs-nano fw-500">
+                        FleetHUB
+                        <div class="progress mt-1" style="height: 7px;">
+                            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="slide-backdrop" data-action="toggle" data-class="slide-on-mobile-left-show" data-target="#js-inbox-menu"></div> 
+        <!-- end left slider -->
+        
+        <!-- inbox container -->
+        <div class="d-flex flex-column flex-grow-1 bg-white"> 
+            <div class="flex-wrap align-items-center flex-grow-1 position-relative bg-gray-50">
+                <div class="position-absolute pos-top pos-bottom w-100">
+                    <div class="d-flex h-100 flex-column">
+
+                        <!-- button for mobile -->
+                        <a href="javascript:void(0);" class="pl-3 pr-3 py-2 d-flex d-lg-none align-items-left justify-content-left mr-2 btn" data-action="toggle" data-class="slide-on-mobile-left-show" data-target="#js-inbox-menu">
+                            <i class="fal fa-ellipsis-v h1 mb-0 "></i>
+                        </a>
+                        <!-- end button for mobile -->
+
+                        <div class="container show">
+                            <div class="panel-content">
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>Driver Name</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Plate Number</th>
+                                            <th>Issue Reported</th>
+                                            <th>Date Reported</th>
+                                            <th>Approval Status</th>
+                                            <th>Reject Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%= for list_issue <- @list_issues do %>
+                                        <%= if list_issue.approval_status == "rejected" do %>
+                                        <tr>
+                                            <td><%= list_issue.first_name %> <%= list_issue.last_name %></td>
+                                            <td><%= list_issue.v_make %> <%= list_issue.v_name %></td>
+                                            <td><%= list_issue.v_plate_no %></td>
+                                            <td><%= list_issue.v_slct_problem %></td>
+                                            <td><%= list_issue.dt_issued %></td>
+                                            <td><%= list_issue.approval_status %></td>
+                                            <td><%= list_issue.decline_reason %></td>
+                                        </tr>  
+                                        <% end %>
+                                    <% end %>    
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end inbox container -->
+
+        <!-- compose message -->
+        <div id="panel-compose" class="panel w-100 position-fixed pos-bottom pos-right mb-0 z-index-cloud mr-lg-4 shadow-3 border-bottom-left-radius-0 border-bottom-right-radius-0 expand-full-height-on-mobile expand-full-width-on-mobile shadow" style="max-width:40rem; height:35rem; display: none;">
+            <div class="position-relative h-100 w-100 d-flex flex-column">
+                <!-- desktop view -->
+                <div class="panel-hdr bg-fusion-600 height-4 d-none d-sm-none d-lg-flex">
+                    <h4 class="flex-1 fs-lg color-white mb-0 pl-3">
+                        New Message
+                    </h4>
+                    <div class="panel-toolbar pr-2">
+                        <a href="javascript:void(0);" class="btn btn-icon btn-icon-light fs-xl mr-1" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen" data-placement="bottom">
+                            <i class="fal fa-expand-alt"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="btn btn-icon btn-icon-light fs-xl" data-action="toggle" data-class="d-flex" data-target="#panel-compose" data-toggle="tooltip" data-original-title="Save & Close" data-placement="bottom">
+                            <i class="fal fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- end desktop view -->
+                <!-- mobile view -->
+                <div class="d-flex d-lg-none align-items-center px-3 py-3 bg-faded  border-faded border-top-0 border-left-0 border-right-0 flex-shrink-0">
+                    <!-- button for mobile -->
+                    <!-- end button for mobile -->
+                    <h3 class="subheader-title">
+                        New message
+                    </h3>
+                    <div class="ml-auto">
+                        <button type="button" class="btn btn-outline-danger" data-action="toggle" data-class="d-flex" data-target="#panel-compose">Cancel</button>
+                    </div>
+                </div>
+                <!-- end mobile view -->
+                <div class="panel-container show rounded-0 flex-1 d-flex flex-column">
+                    <div class="px-3">
+                        <input id="message-to" type="text" placeholder="Recipients" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2 pr-5" tabindex="2">
+                        <a href="javascript:void(0)" class="position-absolute pos-right pos-top mt-3 mr-4" data-action="toggle" data-class="d-block" data-target="#message-to-cc" data-focus="message-to-cc" data-toggle="tooltip" data-original-title="Add Cc recipients" data-placement="bottom">Cc</a>
+                        <input id="message-to-cc" type="text" placeholder="Cc" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2 d-none" tabindex="3">
+                        <input type="text" placeholder="Subject" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2" tabindex="4">
+                    </div>
+                    <div class="flex-1" style="overflow-y: auto;">
+                        <div id='fake_textarea' class="form-control rounded-0 w-100 h-100 border-0 py-3" contenteditable tabindex="5">
+                            <br>
+                            <br>
+                            <div class="d-flex d-column align-items-start mb-3">
+                                <img src="img/logo.png" alt="SmartAdmin WebApp" class="mr-3 mt-1">
+                                <div class="border-left pl-3">
+                                    <span class="fw-500 fs-lg d-block l-h-n">Dr. Codex Lantern</span>
+                                    <span class="fw-400 fs-nano d-block l-h-n mb-1">Orthopedic Surgeon</span>
+                                    <a href="#" class="mr-1 fs-xl" style="color:#3b5998"><i class="fab fa-facebook-square"></i></a>
+                                    <a href="#" class="mr-1 fs-xl" style="color:#38A1F3"><i class="fab fa-twitter-square"></i></a>
+                                    <a href="#" class="mr-1 fs-xl" style="color:#0077B5"><i class="fab fa-linkedin"></i></a>
+                                    <a href="#" class="mr-1 fs-xl" style="color:#ff0000"><i class="fab fa-youtube-square"></i></a>
+                                </div>
+                            </div>
+                            <div class="text-muted fs-nano">
+                                ​PRIVATE AND CONFIDENTIAL. This e-mail, its contents and attachments are private and confidential and is intended for the recipient only. Any disclosure, copying or unauthorized use of such information is prohibited. If you receive this message in error, please notify us immediately and delete the original and any copies and attachments.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-3 py-4 d-flex flex-row align-items-center flex-wrap flex-shrink-0">
+                        <a href="javascript:void(0);" class="btn btn-info mr-3">Send</a>
+                        <a href="javascript:void(0);" class="btn btn-icon fs-xl mr-1" data-toggle="tooltip" data-original-title="Formatting options" data-placement="top">
+                            <i class="fas fa-font color-fusion-300"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="btn btn-icon fs-xl mr-1" data-toggle="tooltip" data-original-title="Attach files" data-placement="top">
+                            <i class="fas fa-paperclip color-fusion-300"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="btn btn-icon fs-xl mr-1" data-toggle="tooltip" data-original-title="Insert photo" data-placement="top">
+                            <i class="fas fa-camera color-fusion-300"></i>
+                        </a>
+                        <div class="ml-auto">
+                            <a href="javascript:void(0);" class="btn btn-icon fs-xl" data-toggle="tooltip" data-original-title="Disregard draft" data-placement="top">
+                                <i class="fas fa-trash color-fusion-300"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="btn btn-icon fs-xl width-1" data-toggle="tooltip" data-original-title="More options" data-placement="top">
+                                <i class="fas fa-ellipsis-v-alt color-fusion-300"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!-- end compose message -->
+    </div>
+</main>
+
+<!-- ############################### VIEW-ISSUES ########################### -->
+<div class="modal fade" id="view-issue" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reported Issue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="px-3">
+                    <b>FROM:</b> <input id="first_name" type="text" placeholder="Driver Name" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2 pr-5" tabindex="2">
+                    <br>
+                    <b>REF:</b> <input id="v_slct_problem" type="text" placeholder="REF" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2" tabindex="4">
+                    <br>
+                    <b>MESSAGE:</b> <input id="v_descr_problem" type="text" placeholder="Description of Vehicle Issue" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2" tabindex="4">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Authorise Fix</button>
+                <button type="button" class="btn btn-info">Deny Fix</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ############################## ISSUE REPORT ########################################## -->
+<div class="modal fade" id="issue-modal"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Resolved Issues
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                    <div class="row">
+                    <input type="hidden" name="id" id="id">
+                        <div class="col-md-7">
+                            <!-- Payment Proof -->
+                            <div class="card mb-g rounded-top">
+                                <div class="row no-gutters row-grid">
+                                    <div class="col-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            <%= for list_issue <- @list_issues do %>
+                                                <img  src="<%= Fleet.FileUploader.url({list_issue.payment_doc, list_issue})%>">
+                                            <% end %>
+                                        </div>
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Cost of Fix 
+                                                <small class="text-muted mb-0"><input type="text" id="cost" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label class="form-label">Driver Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                    </div>
+                                    <input type="text" id="f_name" class="form-control" disabled>
+                                    <input type="text" id="l_name" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" id="v_make" class="form-control" disabled>
+                                    <input type="text" id="v_name" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Plate Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                    </div>
+                                    <input type="text" id="v_plate_no" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">The Problem Vehicle Had</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" id="v_slct_problem" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Resolution</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-book"></i></span>
+                                    </div>
+                                    <input type="text" id="descr_fxd_problem" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date Reported</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-book"></i></span>
+                                    </div>
+                                    <input type="text" id="dt_issued" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date Resolved</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-book"></i></span>
+                                    </div>
+                                    <input type="text" id="dt_resolved" class="form-control" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vendor Who Fixed Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-cog"></i></span>
+                                    </div>
+                                    <input type="text" id="vendor" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script type="text/javascript">
+    // push settings with "false" save to local
+    initApp.pushSettings("nav-function-minify layout-composed", false);
+
+    // the codes below are just for example use, you may need to change the scripts according to your requirement
+    // select all checkbox function
+
+    var title = document.title,
+
+        newEmailDisplayTab = function()
+        {
+            var count = $('#js-emails .unread').length
+            var newTitle = title + ' (' + count + ')';
+            document.title = newTitle;
+            $(".js-unread-emails-count").text(' (' + count + ')');
+        },
+
+        deleteEmail = function(threadID)
+        {
+
+            // delete after animation is complete
+            threadID.animate(
+            {
+                height: 'toggle',
+                opacity: 'toggle'
+            }, '200', 'easeOutExpo', function()
+            {
+                //remove email after animation is complete
+                $(this).remove();
+                //update unread email count
+                newEmailDisplayTab();
+            });
+
+            //we remove any tooltips (this is a bug with bootstrap where the tooltip stays on screen after removing parent)
+            $('.tooltip').tooltip('dispose');
+
+            //uncheck master select all
+            if ($("#js-msg-select-all").is(":checked"))
+            {
+                $("#js-msg-select-all").prop('checked', false);
+            }
+
+            return this;
+        }
+
+    // select all component demo
+    $("#js-msg-select-all").on("change", function(e)
+    {
+        if (this.checked)
+        {
+            $('#js-emails :checkbox').prop("checked", $(this).is(":checked")).closest("li").addClass("state-selected");
+        }
+        else
+        {
+            $('#js-emails :checkbox').prop("checked", $(this).is(":checked")).closest("li").removeClass("state-selected");
+        }
+    });
+
+    // add or remove state-selected class to emails when they are checked
+    $('#js-emails :checkbox').on("change", function()
+    {
+
+        if ($("#js-msg-select-all").is(":checked"))
+        {
+            $('#js-msg-select-all').prop('indeterminate', true);
+        }
+
+        if (this.checked)
+        {
+            $(this).closest("li").addClass("state-selected");
+        }
+        else
+        {
+            $(this).closest("li").removeClass("state-selected");
+        }
+
+    });
+
+    // email delete button triggers
+    $(".js-delete-email").on('click', function()
+    {
+        deleteEmail($(this).closest("li"));
+    })
+    $("#js-delete-selected").on('click', function()
+    {
+        deleteEmail($("#js-emails input:checked").closest("li"))
+    });
+
+
+    // show unread email count (once)
+    newEmailDisplayTab()
+
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+$('#issue-modal').on('show.bs.modal', function (event){
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var first_name = button.data('first_name')
+    var last_name = button.data('last_name')
+    var phone = button.data('phone')
+    var v_make = button.data('v_make')
+    var v_name = button.data('v_name')
+    var v_plate_no = button.data('v_plate_no')
+    var v_slct_problem = button.data('v_slct_problem')
+    var descr_fxd_problem = button.data('descr_fxd_problem')
+    var dt_issued = button.data('dt_issued')
+    var dt_resolved = button.data('dt_resolved')
+    var vendor = button.data('vendor')
+    var cost = button.data('cost')
+    var v_status = button.data('v_status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #f_name').val(first_name);
+    modal.find('.modal-body #l_name').val(last_name);
+    modal.find('.modal-body #phone').val(phone);
+    modal.find('.modal-body #v_make').val(v_make);
+    modal.find('.modal-body #v_name').val(v_name);
+    modal.find('.modal-body #v_plate_no').val(v_plate_no);
+    modal.find('.modal-body #v_slct_problem').val(v_slct_problem);
+    modal.find('.modal-body #descr_fxd_problem').val(descr_fxd_problem);
+    modal.find('.modal-body #dt_issued').val(dt_issued);
+    modal.find('.modal-body #dt_resolved').val(dt_resolved);
+    modal.find('.modal-body #vendor').val(vendor);
+    modal.find('.modal-body #cost').val(cost);
+    modal.find('.modal-body #v_status').val(v_status);
+});
+
+});
+</script>

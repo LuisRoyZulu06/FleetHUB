@@ -1,0 +1,1052 @@
+<main id="js-page-content" role="main" class="page-content">
+    <!-- ####################################################### FLASH ################## -->
+    <div class="row">
+        <div class="col-md-12 col-lg-offset-2">
+            <div class="form-group">
+                <%= if get_flash(@conn, :info) do %>
+                    <div class="alert alert-info alert-styled-left">
+                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                    <%= get_flash(@conn, :info) %>
+                    </div>
+                <% end %>
+                <%= if get_flash(@conn, :error) do %>
+                    <div class="alert alert-danger alert-styled-left">
+                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                    Opps! <%= get_flash(@conn, :error) %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    <!-- ################################################################################ -->
+
+    <div class="subheader">
+        <h1 class="subheader-title">
+            <i class='subheader-icon fal fa-truck'></i> FleetHUB <span class='fw-300'>Dashboard</span>
+            <small>
+            </small>
+        </h1>
+        <div class="subheader-block" id="loggedIn-user">
+            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+        </div>
+    </div>
+
+    <!-- ###################################### DRIVER-PANEL ############################ -->
+    <%= if @user.user_role == "driver" do %>
+        <div class="container-fluid" style="margin-top: 5em;">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="#" data-toggle="modal" data-target="#choice-alert">
+                        <div id="cp-2" class="card border">
+                            <div class="card-header bg-danger-600">
+                                Log Issues
+                            </div>
+                            <div class="card-body p-0 bg-danger-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                            <div class="card-footer bg-danger-800 py-2">
+                                <br>
+                            </div>
+                        </div> 
+                    </a>                                     
+                </div>
+
+                <div class="col-md-4">
+                    <a href="<%= Routes.driver_path(@conn, :logged_issues)%>">
+                        <div id="cp-2" class="card border">
+                            <div class="card-header bg-info-600">
+                                History of Logged Issues
+                            </div>
+                            <div class="card-body p-0 bg-info-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">HISTORY</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-table position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                            <div class="card-footer bg-info-800 py-2">
+                                <br>
+                            </div>
+                        </div> 
+                    </a>                                     
+                </div>
+
+                <div class="col-md-4">
+                    <div id="cp-2" class="card border">
+                        <div class="card-header bg-primary-600">
+                            Personal Profile
+                        </div>
+                        <div class="card-body p-0 bg-primary-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">PROFILE</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-user position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                            <div class="card-footer bg-primary-800 py-2">
+                            <br>
+                        </div>
+                    </div>                                      
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 5em;">
+                <div class="col-md-4">
+                    <a href="<%= Routes.driver_path(@conn, :request_response)%>">
+                        <div id="cp-2" class="card border">
+                            <div class="card-header bg-success-600">
+                                Request Feedback
+                            </div>
+                            <div class="card-body p-0 bg-success-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">INBOX</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-envelope position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                            <div class="card-footer bg-success-800 py-2">
+                                <br>
+                            </div>
+                        </div> 
+                    </a>                                     
+                </div>
+
+                
+                    <div class="col-md-4">
+                    <%= for list_vehicle <- @list_vehicles do %>
+                        <a href="#" data-id="<%= list_vehicle.id%>" data-v_make="<%= list_vehicle.v_make%>" data-v_name="<%= list_vehicle.v_name%>" data-color="<%= list_vehicle.color%>" data-plate_no="<%= list_vehicle.plate_no%>" data-v_status="<%= list_vehicle.v_status%>" data-assigned_to="<%= list_vehicle.assigned_to%>" data-assignment_status="<%= list_vehicle.assignment_status %>" data-mileage="<%= list_vehicle.mileage %>" data-rd_tax_exp_dt="<%= list_vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= list_vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= list_vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-warning-600">
+                                    Vehicle Details
+                                </div>
+                                <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="card-footer bg-warning-800 py-2">
+                                    <br>
+                                </div>
+                            </div> 
+                        </a>  
+                    <% end %>                                               
+                    </div>
+                
+
+                <div class="col-md-4">
+                    <a href="#" data-toggle="modal" data-target=".js-modal-settings">
+                        <div id="cp-2" class="card border">
+                            <div class="card-header bg-fusion-600">
+                                App Settings
+                            </div>
+                            <div class="card-body p-0 bg-fusion-300" style="height: 160px">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h1 class="opacity-15" id="driver-cards">SETTINGS</h1>  
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <i class="fal fa-cog position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem"></i>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="card-footer bg-fusion-800 py-2">
+                                <br>
+                            </div>
+                        </div> 
+                    </a>                                         
+                </div> 
+                
+            </div>
+        </div>
+    <% end %>
+    <!-- ############################################################################## -->   
+
+    <!-- ###################################### ADMIN-PANEL ############################ -->
+    <%= if @user.user_role == "admin" do %>
+        <!-- Statistics -->
+        <div class="row">
+            <div class="col-sm-6 col-xl-4">
+                <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            12
+                            <small class="m-0 l-h-n">Active Drivers</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-4">
+                <div class="p-3 bg-info-400 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            6
+                            <small class="m-0 l-h-n">Active Vehicles</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-bus position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-4">
+                <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            10
+                            <small class="m-0 l-h-n">Vehicles To Be Serviced</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-cog position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard -->
+        <div class="row">
+            <div class="col-xl-12">
+                <div id="panel-7" class="panel">
+                    <div class="panel-hdr">
+                        <h2>
+                            FleetHUB
+                        </h2>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <div id="areaChart">
+                                <canvas style="width:100%; height:350px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% end %>
+    <!-- ############################################################################## -->    
+</main>
+
+<!-- ################################ ISSUES-ALERT ################################ -->
+<div class="modal modal-alert fade" id="choice-alert" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Log Vehicle Issues & Send Reports.</h5>
+            </div>
+        
+            <div class="modal-body align-items-center" style="margin-top:2em;">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#open-issue">Open Issue</button>
+                <%= for issue <-@issues do %>
+                    <%= if issue.v_status == "in garage" && issue.approval_status == "approved" do %>
+                    <button type="button" class="btn bg-primary-900" data-id="<%= issue.id %>" data-dismiss="modal" data-toggle="modal" data-target="#file-report">Send Report</button>
+                    <% end %> 
+                <% end %> 
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+<!-- ################################ OPEN ISSUE FORM MODAL ###################### -->
+<div class="modal fade" id="open-issue" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Open Issue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="<%= Routes.driver_path(@conn, :create_issue)%>" enctype="multipart/form-data" method="POST">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="approval_status" value="pending">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="name-f">Driver Details</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-primary">
+                                            <i class="fal fa-user fs-xl"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" aria-label="First name" name="first_name" class="form-control" placeholder="First name" id="name-f" required="required">
+                                    <input type="text" aria-label="Last name" name="last_name" class="form-control" placeholder="Last name" id="name-l" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="name-f">Vehicle Details</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-primary">
+                                            <i class="fal fa-bus fs-xl"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" aria-label="First name" name="v_make" class="form-control" placeholder="Vehicle Make" id="name-f" required="required">
+                                    <input type="text" aria-label="Last name" name="v_name" class="form-control" placeholder="Vehicle Name" id="name-l" required="required">
+                                    <input type="text" aria-label="Last name" name="v_plate_no" class="form-control" placeholder="Vehicle Plate Number" id="name-l" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-primary"><i class="fal fa-clock"></i></span>
+                                    </div>
+                                    <input type="date" name="dt_issued" placeholder="Date" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text text-primary"><i class="fal fa-phone"></i></span>
+                                    </div>
+                                    <input type="text" name="phone" placeholder="Your Phone Number" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="dropdown-on-left">Select Problem With Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select form-control" name="v_slct_problem" required="required">
+                                            <option>Select Vehicle Problem</option>
+                                            <option class="dropdown-item" value="Warning Lights">Warning Lights</option>
+                                            <option class="dropdown-item" value="Dead Battery">Dead Battery</option>
+                                            <option class="dropdown-item" value="Brakes Squeaking">Brakes Squeaking</option>
+                                            <option class="dropdown-item" value="Alternator Failure">Alternator Failure</option>
+                                            <option class="dropdown-item" value="Broken Starter Motor">Broken Starter Motor</option>
+                                            <option class="dropdown-item" value="Steering Wheel Shaking">Steering Wheel Shaking</option>
+                                            <option class="dropdown-item" value="Failed Emmissions Test">Failed Emmissions Test</option>
+                                            <option class="dropdown-item" value="Overheating">Overheating</option>
+                                            <option class="dropdown-item" value="Tyre Puncture">Tyre Puncture</option>
+                                            <option class="dropdown-item" value="Suspension Broke">Suspension Broke</option>
+                                        </select>
+                                    </div>
+                                    <input type="text" class="form-control" name="v_descr_problem" placeholder="Describe problem here in deatil or if not listed on dropdown" ria-label="Text input with dropdown button" id="dropdown-on-left" required="required">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Open Issue</button>
+                    </div>        
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ################################ FILE REPORT FORM MODAL ###################### -->
+<div class="modal fade" id="file-report" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">File Report of Closed Issue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<%= Routes.driver_path(@conn, :file_issue_report)%>" enctype="multipart/form-data" method="POST">
+                    <div class="row">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="id" id="id">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Date When Problem Was Issued</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text text-primary"><i class="fal fa-clock"></i></span>
+                                    </div>
+                                    <input type="date" name="dt_issued" placeholder="When was problem reported?" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date When Problem Was Resolved</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text text-primary"><i class="fal fa-clock"></i></span>
+                                    </div>
+                                    <input type="date" name="dt_resolved" placeholder="When was problem solved?" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="dropdown-on-left">Select Problem Which was Fixed</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select form-control" name="slct_fxd_problem" required="required">
+                                            <option>Select Fixed Problem</option>
+                                            <option class="dropdown-item" value="Warning Lights">Warning Lights</option>
+                                            <option class="dropdown-item" value="Dead Battery">Dead Battery</option>
+                                            <option class="dropdown-item" value="Brakes Squeaking">Brakes Squeaking</option>
+                                            <option class="dropdown-item" value="Alternator Failure">Alternator Failure</option>
+                                            <option class="dropdown-item" value="Broken Starter Motor">Broken Starter Motor</option>
+                                            <option class="dropdown-item" value="Steering Wheel Shaking">Steering Wheel Shaking</option>
+                                            <option class="dropdown-item" value="Failed Emmissions Test">Failed Emmissions Test</option>
+                                            <option class="dropdown-item" value="Overheating">Overheating</option>
+                                            <option class="dropdown-item" value="Tyre Puncture">Tyre Puncture</option>
+                                            <option class="dropdown-item" value="Suspension Broke">Suspension Broke</option>
+                                        </select>
+                                    </div>
+                                    <input type="text" class="form-control" name="descr_fxd_problem" placeholder="Describe the problem the vehicle had" ria-label="Text input with dropdown button" id="dropdown-on-left" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="inputGroupSelect01">Select Vendor</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Select Vendor Who Fixed Problem</label>
+                                    </div>
+                                    <select class="custom-select" name="vendor" id="inputGroupSelect01">
+                                    <%= for vendor <-@vendors do %>
+                                        <option selected>Choose vendor</option>
+                                        <option value="<%= vendor.comp_name%>"><%= vendor.comp_name%></option>
+                                    <% end %>    
+                                    </select>
+                                </div>
+                            </div> 
+
+                            <div class="form-group">
+                                <label class="form-label">Cost</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text text-primary"><i class="fal fa-money-bill"></i></span>
+                                    </div>
+                                    <input type="text" name="cost" placeholder="How much did it cost?" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="example-fileinput">Upload proof of payment</label>
+                                <input type="file" name="payment_doc" id="example-fileinput" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="inputGroupSelect01">Status</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Select Vehicle Status</label>
+                                    </div>
+                                    <select class="custom-select" name="v_status" id="inputGroupSelect01">
+                                        <option selected>Select Vehicle Status</option>
+                                        <option value="out of garage">Vehicle Is Fixed</option>
+                                    </select>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Report</button>
+                    </div>          
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ############################## VIEW-VEHICLE ########################################## -->
+<div class="modal fade" id="vehicle-modal"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Vehicle Details
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form>
+                    <div class="row">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="id" id="id">
+                        <div class="col-md-6">
+                            <!-- Vehicle profile -->
+                            <div class="card mb-g rounded-top">
+                                <div class="row no-gutters row-grid">
+                                    <div class="col-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
+                                            
+
+                                            
+                                            <h5 class="mb-0 fw-700 text-center mt-3">
+                                                Mileage<br>
+                                                <input type="text" id="mileage" style="border: none; text-align: center;">
+                                            </h5>
+                                            <div class="mt-4 text-center demo">
+                                                <h5 class="mb-0 fw-700 text-center mt-3">EXPIRATION DATE OF:</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Road Tax
+                                                <small class="text-muted mb-0"><input type="text" id="rd_tax_exp_dt" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Vehicle Fittness
+                                                <small class="text-muted mb-0"><input type="text" id="fitness_exp_dt" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Insurance
+                                                <small class="text-muted mb-0"><input type="text" id="insrnc_exp_dt" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="p-3 text-center">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Make</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="v_make" id="v_make" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="v_name" id="v_name" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Plate Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                    </div>
+                                    <input type="text" name="plate_no" id="plate_no" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Color</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="color" id="color" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Driver Assigned Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                    </div>
+                                    <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Assignment Status</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                    </div>
+                                    <input type="text" name="v_status" id="v_status" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Status</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ################################ APP SETTINGS ################################ -->
+<div class="modal fade js-modal-settings modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-md">
+        <div class="modal-content">
+            <div class="dropdown-header bg-trans-gradient d-flex justify-content-center align-items-center w-100">
+                <h4 class="m-0 text-center color-white">
+                    FleetHUB Settings
+                    <small class="mb-0 opacity-80">User Interface Settings</small>
+                </h4>
+                <button type="button" class="close text-white position-absolute pos-top pos-right p-2 m-1 mr-2" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="settings-panel">
+                    <div class="mt-4 d-table w-100 px-5">
+                        <div class="d-table-cell align-middle">
+                            <h5 class="p-0">
+                                App Layout
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="list" id="fh">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="header-function-fixed"></a>
+                        <span class="onoffswitch-title">Fixed Header</span>
+                        <span class="onoffswitch-title-desc">header is in a fixed at all times</span>
+                    </div>
+                    <div class="list" id="nff">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-function-fixed"></a>
+                        <span class="onoffswitch-title">Fixed Navigation</span>
+                        <span class="onoffswitch-title-desc">left panel is fixed</span>
+                    </div>
+                    <div class="list" id="nfm">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-function-minify"></a>
+                        <span class="onoffswitch-title">Minify Navigation</span>
+                        <span class="onoffswitch-title-desc">Skew nav to maximize space</span>
+                    </div>
+                    <div class="list" id="nfh">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-function-hidden"></a>
+                        <span class="onoffswitch-title">Hide Navigation</span>
+                        <span class="onoffswitch-title-desc">roll mouse on edge to reveal</span>
+                    </div>
+                    <div class="list" id="nft">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-function-top"></a>
+                        <span class="onoffswitch-title">Top Navigation</span>
+                        <span class="onoffswitch-title-desc">Relocate left pane to top</span>
+                    </div>
+                    <div class="list" id="mmb">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-main-boxed"></a>
+                        <span class="onoffswitch-title">Boxed Layout</span>
+                        <span class="onoffswitch-title-desc">Encapsulates to a container</span>
+                    </div>
+                    <div class="expanded">
+                        <ul class="">
+                            <li>
+                                <div class="bg-fusion-50" data-action="toggle" data-class="mod-bg-1"></div>
+                            </li>
+                            <li>
+                                <div class="bg-warning-200" data-action="toggle" data-class="mod-bg-2"></div>
+                            </li>
+                            <li>
+                                <div class="bg-primary-200" data-action="toggle" data-class="mod-bg-3"></div>
+                            </li>
+                            <li>
+                                <div class="bg-success-300" data-action="toggle" data-class="mod-bg-4"></div>
+                            </li>
+                        </ul>
+                        <div class="list" id="mbgf">
+                            <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-fixed-bg"></a>
+                            <span class="onoffswitch-title">Fixed Background</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-table w-100 px-5">
+                        <div class="d-table-cell align-middle">
+                            <h5 class="p-0">
+                                Mobile Menu
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="list" id="nmp">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-mobile-push"></a>
+                        <span class="onoffswitch-title">Push Content</span>
+                        <span class="onoffswitch-title-desc">Content pushed on menu reveal</span>
+                    </div>
+                    <div class="list" id="nmno">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-mobile-no-overlay"></a>
+                        <span class="onoffswitch-title">No Overlay</span>
+                        <span class="onoffswitch-title-desc">Removes mesh on menu reveal</span>
+                    </div>
+                    <div class="list" id="sldo">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="nav-mobile-slide-out"></a>
+                        <span class="onoffswitch-title">Off-Canvas <sup>(beta)</sup></span>
+                        <span class="onoffswitch-title-desc">Content overlaps menu</span>
+                    </div>
+                    <div class="mt-4 d-table w-100 px-5">
+                        <div class="d-table-cell align-middle">
+                            <h5 class="p-0">
+                                Accessibility
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="list" id="mbf">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-bigger-font"></a>
+                        <span class="onoffswitch-title">Bigger Content Font</span>
+                        <span class="onoffswitch-title-desc">content fonts are bigger for readability</span>
+                    </div>
+                    <div class="list" id="mhc">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-high-contrast"></a>
+                        <span class="onoffswitch-title">High Contrast Text (WCAG 2 AA)</span>
+                        <span class="onoffswitch-title-desc">4.5:1 text contrast ratio</span>
+                    </div>
+                    <div class="list" id="mcb">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-color-blind"></a>
+                        <span class="onoffswitch-title">Daltonism <sup>(beta)</sup> </span>
+                        <span class="onoffswitch-title-desc">color vision deficiency</span>
+                    </div>
+                    <div class="list" id="mpc">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-pace-custom"></a>
+                        <span class="onoffswitch-title">Preloader Inside</span>
+                        <span class="onoffswitch-title-desc">preloader will be inside content</span>
+                    </div>
+                    <div class="mt-4 d-table w-100 px-5">
+                        <div class="d-table-cell align-middle">
+                            <h5 class="p-0">
+                                Global Modifications
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="list" id="mcbg">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-clean-page-bg"></a>
+                        <span class="onoffswitch-title">Clean Page Background</span>
+                        <span class="onoffswitch-title-desc">adds more whitespace</span>
+                    </div>
+                    <div class="list" id="mhni">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-hide-nav-icons"></a>
+                        <span class="onoffswitch-title">Hide Navigation Icons</span>
+                        <span class="onoffswitch-title-desc">invisible navigation icons</span>
+                    </div>
+                    <div class="list" id="dan">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-disable-animation"></a>
+                        <span class="onoffswitch-title">Disable CSS Animation</span>
+                        <span class="onoffswitch-title-desc">Disables CSS based animations</span>
+                    </div>
+                    <div class="list" id="mhic">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-hide-info-card"></a>
+                        <span class="onoffswitch-title">Hide Info Card</span>
+                        <span class="onoffswitch-title-desc">Hides info card from left panel</span>
+                    </div>
+                    <div class="list" id="mlph">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-lean-subheader"></a>
+                        <span class="onoffswitch-title">Lean Subheader</span>
+                        <span class="onoffswitch-title-desc">distinguished page header</span>
+                    </div>
+                    <div class="list" id="mnl">
+                        <a href="#" onclick="return false;" class="btn btn-switch" data-action="toggle" data-class="mod-nav-link"></a>
+                        <span class="onoffswitch-title">Hierarchical Navigation</span>
+                        <span class="onoffswitch-title-desc">Clear breakdown of nav links</span>
+                    </div>
+                    <div class="list mt-1">
+                        <span class="onoffswitch-title">Global Font Size <small>(RESETS ON REFRESH)</small> </span>
+                        <div class="btn-group btn-group-sm btn-group-toggle my-2" data-toggle="buttons">
+                            <label class="btn btn-default btn-sm" data-action="toggle-swap" data-class="root-text-sm" data-target="html">
+                                <input type="radio" name="changeFrontSize"> SM
+                            </label>
+                            <label class="btn btn-default btn-sm" data-action="toggle-swap" data-class="root-text" data-target="html">
+                                <input type="radio" name="changeFrontSize" checked=""> MD
+                            </label>
+                            <label class="btn btn-default btn-sm" data-action="toggle-swap" data-class="root-text-lg" data-target="html">
+                                <input type="radio" name="changeFrontSize"> LG
+                            </label>
+                            <label class="btn btn-default btn-sm" data-action="toggle-swap" data-class="root-text-xl" data-target="html">
+                                <input type="radio" name="changeFrontSize"> XL
+                            </label>
+                        </div>
+                        <span class="onoffswitch-title-desc d-block mb-g">Change <strong>root</strong> font size to effect rem values</span>
+                    </div>
+                    <div class="mt-2 d-table w-100 pl-5 pr-3">
+        
+                    </div>
+                    <div class="expanded theme-colors pl-5 pr-3">
+                        <ul class="m-0">
+                            <li><a href="#" id="myapp-0" data-action="theme-update" data-themesave data-theme="" data-toggle="tooltip" data-placement="top" title="Wisteria (base css)" data-original-title="Wisteria (base css)"></a></li>
+                            <li><a href="#" id="myapp-1" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-1.css" data-toggle="tooltip" data-placement="top" title="Tapestry" data-original-title="Tapestry"></a></li>
+                            <li><a href="#" id="myapp-2" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-2.css" data-toggle="tooltip" data-placement="top" title="Atlantis" data-original-title="Atlantis"></a></li>
+                            <li><a href="#" id="myapp-3" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-3.css" data-toggle="tooltip" data-placement="top" title="Indigo" data-original-title="Indigo"></a></li>
+                            <li><a href="#" id="myapp-4" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-4.css" data-toggle="tooltip" data-placement="top" title="Dodger Blue" data-original-title="Dodger Blue"></a></li>
+                            <li><a href="#" id="myapp-5" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-5.css" data-toggle="tooltip" data-placement="top" title="Tradewind" data-original-title="Tradewind"></a></li>
+                            <li><a href="#" id="myapp-6" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-6.css" data-toggle="tooltip" data-placement="top" title="Cranberry" data-original-title="Cranberry"></a></li>
+                            <li><a href="#" id="myapp-7" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-7.css" data-toggle="tooltip" data-placement="top" title="Oslo Gray" data-original-title="Oslo Gray"></a></li>
+                            <li><a href="#" id="myapp-8" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-8.css" data-toggle="tooltip" data-placement="top" title="Chetwode Blue" data-original-title="Chetwode Blue"></a></li>
+                            <li><a href="#" id="myapp-9" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-9.css" data-toggle="tooltip" data-placement="top" title="Apricot" data-original-title="Apricot"></a></li>
+                            <li><a href="#" id="myapp-10" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-10.css" data-toggle="tooltip" data-placement="top" title="Blue Smoke" data-original-title="Blue Smoke"></a></li>
+                            <li><a href="#" id="myapp-11" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-11.css" data-toggle="tooltip" data-placement="top" title="Green Smoke" data-original-title="Green Smoke"></a></li>
+                            <li><a href="#" id="myapp-12" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-12.css" data-toggle="tooltip" data-placement="top" title="Wild Blue Yonder" data-original-title="Wild Blue Yonder"></a></li>
+                            <li><a href="#" id="myapp-13" data-action="theme-update" data-themesave data-theme="css/themes/cust-theme-13.css" data-toggle="tooltip" data-placement="top" title="Emerald" data-original-title="Emerald"></a></li>
+                        </ul>
+                    </div>
+                    <hr class="mb-0 mt-4">
+                    <div class="pl-5 pr-3 py-3 bg-faded">
+                        <div class="row no-gutters">
+                            <div class="col-6 pr-1">
+                                <a href="#" class="btn btn-outline-danger fw-500 btn-block" data-action="app-reset">Reset Settings</a>
+                            </div>
+                            <div class="col-6 pl-1">
+                                <a href="#" class="btn btn-danger fw-500 btn-block" data-action="factory-reset">Factory Reset</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span id="saving"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/js/statistics/chartjs/chartjs.bundle.js") %>"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+
+$('#file-report').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+});
+
+});
+</script>
+
+<script>
+$(document).ready(function(){
+//JS FOR VIEWING VEHICLE DATA
+$('#vehicle-modal').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var v_make = button.data('v_make')
+    var v_name = button.data('v_name')
+    var color = button.data('color')
+    var plate_no = button.data('plate_no')
+    var v_status = button.data('v_status')
+    var assigned_to = button.data('assigned_to')
+    var assignment_status = button.data('assignment_status')
+    var mileage = button.data('mileage')
+    var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
+    var fitness_exp_dt = button.data('fitness_exp_dt')
+    var insrnc_exp_dt = button.data('insrnc_exp_dt')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #v_make').val(v_make);
+    modal.find('.modal-body #v_name').val(v_name);
+    modal.find('.modal-body #color').val(color);
+    modal.find('.modal-body #plate_no').val(plate_no);
+    modal.find('.modal-body #v_status').val(v_status);
+    modal.find('.modal-body #assigned_to').val(assigned_to);
+    modal.find('.modal-body #assignment_status').val(assignment_status);
+    modal.find('.modal-body #mileage').val(mileage);
+    modal.find('.modal-body #rd_tax_exp_dt').val(rd_tax_exp_dt);
+    modal.find('.modal-body #fitness_exp_dt').val(fitness_exp_dt);
+    modal.find('.modal-body #insrnc_exp_dt').val(insrnc_exp_dt);
+    
+});
+});
+</script>
+
+<script>
+$(document).ready(function(){
+//JS FOR VIEWING RESPONSE
+$('#approved-requests').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var v_slct_problem = button.data('v_slct_problem')
+    var approval_status = button.data('approval_status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #v_slct_problem').val(v_slct_problem);
+    modal.find('.modal-body #approval_status').val(approval_status);
+    
+});
+});
+</script>
+
+<!-- ############################### DASHBOARD ###################################### -->
+<script>
+    /* area chart */
+    var areaChart = function()
+    {
+        var config = {
+            type: 'line',
+            data:
+            {
+                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                datasets: [
+                {
+                    label: "Active Drivers",
+                    backgroundColor: 'rgba(136,106,181, 0.2)',
+                    borderColor: myapp_get_color.primary_500,
+                    pointBackgroundColor: myapp_get_color.primary_700,
+                    pointBorderColor: 'rgba(0, 0, 0, 0)',
+                    pointBorderWidth: 1,
+                    borderWidth: 1,
+                    pointRadius: 3,
+                    pointHoverRadius: 4,
+                    data: [
+                        2,3,4,5,2,1,4,5,2,7,8,0
+                    ],
+                    fill: true
+                },
+                {
+                    label: "Active Vehicles",
+                    backgroundColor: 'rgba(0, 0, 204, 0.2)',
+                    borderColor: myapp_get_color.info_500,
+                    pointBackgroundColor: myapp_get_color.info_700,
+                    pointBorderColor: 'rgba(0, 0, 0, 0)',
+                    pointBorderWidth: 1,
+                    borderWidth: 1,
+                    pointRadius: 3,
+                    pointHoverRadius: 4,
+                    data: [
+                        3,5,9,8,5,3,4,5,2,7,8,7
+                    ],
+                    fill: true
+                },
+                {
+                    label: "Cars To Be Serviced",
+                    backgroundColor: 'rgba(29,201,183, 0.2)',
+                    borderColor: myapp_get_color.success_500,
+                    pointBackgroundColor: myapp_get_color.success_700,
+                    pointBorderColor: 'rgba(0, 0, 0, 0)',
+                    pointBorderWidth: 1,
+                    borderWidth: 1,
+                    pointRadius: 3,
+                    pointHoverRadius: 4,
+                    data: [
+                        2,0,3,5,6,7,5,2,1,2,9,5,3
+                    ],
+                    fill: true
+                }]
+            },
+            options:
+            {
+                responsive: true,
+                title:
+                {
+                    display: false,
+                    text: 'Area Chart'
+                },
+                tooltips:
+                {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover:
+                {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales:
+                {
+                    xAxes: [
+                    {
+                        display: true,
+                        scaleLabel:
+                        {
+                            display: false,
+                            labelString: '12 months forecast'
+                        },
+                        gridLines:
+                        {
+                            display: true,
+                            color: "#f2f2f2"
+                        },
+                        ticks:
+                        {
+                            beginAtZero: true,
+                            fontSize: 11
+                        }
+                    }],
+                    yAxes: [
+                    {
+                        display: true,
+                        scaleLabel:
+                        {
+                            display: false,
+                            labelString: 'Profit margin (approx)'
+                        },
+                        gridLines:
+                        {
+                            display: true,
+                            color: "#f2f2f2"
+                        },
+                        ticks:
+                        {
+                            beginAtZero: true,
+                            fontSize: 11
+                        }
+                    }]
+                }
+            }
+        };
+        new Chart($("#areaChart > canvas").get(0).getContext("2d"), config);
+    }
+
+    /* initialize all charts */
+    $(document).ready(function()
+    {
+        areaChart();
+    });
+</script>    
+    
