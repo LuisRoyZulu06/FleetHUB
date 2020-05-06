@@ -2,25 +2,28 @@ defmodule FleetWeb.DriverController do
     use FleetWeb, :controller
     alias Fleet.Vehicles
     alias Fleet.Drivers
-    alias Fleet.Drivers.DriverDetails
+    alias Fleet.Accounts
+    alias Fleet.Accounts.User
     alias Fleet.Drivers.IssueLoger
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
 
     def list_drivers(conn, _params) do
+        pick_vehicles = Vehicles.select_vehicle
+        IO.inspect(pick_vehicles)
         list_vehicles = Vehicles.list_tbl_vehicles()
-        list_drivers  = Drivers.list_tbl_drivers()
-        render(conn, "list_drivers.html", list_drivers: list_drivers, list_vehicles: list_vehicles)
+        list_drivers  = Accounts.list_tbl_users()
+        render(conn, "list_drivers.html", list_drivers: list_drivers, list_vehicles: list_vehicles, pick_vehicles: pick_vehicles)
     end
 
     def view_driver(conn, %{"id" => id} = params) do
-      list_drivers  = Drivers.get_driver_details!(id)
+      list_drivers  = Accounts.get_user!(id)
       # list_vehicles = Vehicles.list_tbl_vehicles()
       render(conn, "view_driver.html", list_drivers: list_drivers) #, list_vehicles: list_vehicles
     end
 
     def create_driver(conn, params) do
-        case Drivers.create_driver_details(params) do
+        case Accounts.create_user(params) do
             {:ok, _} ->
               conn
               |> put_flash(:info, "New Driver Added To System")
@@ -34,12 +37,6 @@ defmodule FleetWeb.DriverController do
               |> redirect(to: Routes.driver_path(conn, :list_drivers))
         end
     end 
-    
-    def edit_driver(conn, %{"id" => id}) do
-      drivers = Drivers.get_driver_details!(id)
-      changeset = Drivers.change_driver_details(drivers)
-      render(conn, "edit_driver.html", drivers: drivers, changeset: changeset)
-    end
 
     def update_driver(conn, %{"id" => id} = params) do
       driver = Drivers.get_driver_details!(id)

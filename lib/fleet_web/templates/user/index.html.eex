@@ -33,7 +33,7 @@
 
     <!-- ###################################### DRIVER-PANEL ############################ -->
     <%= if @user.user_role == "driver" do %>
-        <div class="container-fluid" style="margin-top: 5em;">
+        <div class="container-fluid" style="margin-top: 2em;">
             <div class="row">
                 <div class="col-md-4">
                     <a href="#" data-toggle="modal" data-target="#choice-alert">

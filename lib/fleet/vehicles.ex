@@ -101,4 +101,8 @@ defmodule Fleet.Vehicles do
   def change_vehicle_details(%VehicleDetails{} = vehicle_details) do
     VehicleDetails.changeset(vehicle_details, %{})
   end
+
+  def select_vehicle do
+    Repo.all(from n in VehicleDetails, where: [assignment_status: "assigned"])
+  end
 end

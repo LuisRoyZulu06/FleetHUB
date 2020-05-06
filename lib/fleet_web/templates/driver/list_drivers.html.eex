@@ -58,34 +58,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            
-                            <%= for list_driver <- @list_drivers, list_vehicle <- @list_vehicles do %>
-                                <%= if list_vehicle.assignment_status == "assigned" do %>
-                                <tr>
-                                    <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
-                                    <td><%= list_driver.sex%></td>
-                                    <td><%= list_driver.phone%></td>
-                                    <td><%= list_driver.email%></td>
-                                    <td><%= list_vehicle.v_name%></td>  
-                                    <td><%= list_vehicle.plate_no%></td>
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>"  data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                    <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :view_driver, id: list_driver.id)%>">View</a>
-                                                    <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :delete_driver, id: list_driver.id)%>">Delete</a>
-                                                    <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :assign_vehicle, id: list_driver.id)%>">Assign Vehicle</a>
+                                <%= for list_driver <- @list_drivers, list_vehicle <- @list_vehicles do %>
+                                <%= if list_driver.user_role == "driver" do %>
+                                    <tr>
+                                        <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
+                                        <td><%= list_driver.sex%></td>
+                                        <td><%= list_driver.phone%></td>
+                                        <td><%= list_driver.email%></td>
+                                        <td><%= list_vehicle.v_name%></td>  
+                                        <td><%= list_vehicle.plate_no%></td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class='subheader-icon fal fa-chevron-down'></i>
+                                                    </span>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>"  data-toggle="modal" data-target="#editmodal">Edit</a>
+                                                        <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :view_driver, id: list_driver.id)%>">View</a>
+                                                        <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :delete_driver, id: list_driver.id)%>">Delete</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>  
-                                <% end %>  
-                            <% end %>           
+                                        </td>
+                                    </tr>  
+                                <% end %>
+                                <% end %>   
+                            </tbody>        
                         </table>
                         <!-- datatable end -->
                     </div>
@@ -94,10 +93,6 @@
         </div>
     </div>
 </main>
-
-
-<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
-<script src="<%= Routes.static_path(@conn, "/js/statistics/peity/peity.bundle.js") %>"></script>
 
 <!-- ############################### ADD-DRIVER MODAL #################################### -->
 <div class="modal fade" id="add-driver-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -112,57 +107,67 @@
             <div class="modal-body">
                 <form action="<%= Routes.driver_path(@conn, :create_driver)%>" method="POST">
                     <div class="row">
-                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                        <div class="col-md-6">
+                        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                        <input type="hidden" name="password" value="password07">
+                        <input type="hidden" name="user_type" value="2">
+                        <input type="hidden" name="user_role" value="driver">
+                        <input type="hidden" name="auto_password" value="user">
+                        <input type="hidden" name="status" value="1">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">First Name</label>
+                                <label class="form-label">Driver Name</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
                                     <input type="text" name="first_name" placeholder="First Name" class="form-control" required="required">
+                                    <input type="text" name="last_name" placeholder="Last Name" class="form-control" required="required">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Sex</label>
+                                <label class="form-label">Personal Details</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
                                     <select class="custom-select form-control" name="sex" required="required">
                                         <option selected="">Select Gender</option>
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>
                                     </select>
+                                    <input type="text" name="age" placeholder="Age of Driver" class="form-control" required="required">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">NRC Number</label>
+                                <label class="form-label">Contact Details</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-phone"></i></span>
                                     </div>
-                                    <input type="text" name="nrc_no" placeholder="NRC Number" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Home Address</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-home width-1 text-align-center"></i></span>
-                                    </div>
+                                    <input type="text" name="phone" placeholder="Phone Number" value="+260" class="form-control" required="required">
+                                    <input type="text" name="email" placeholder="Email" data-inputmask="'alias': 'email'" class="form-control">
                                     <input type="text" name="home_add" placeholder="Physical Address" class="form-control" required="required">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Drivers License Type</label>
+                                <label class="form-label">Identity Details</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                    </div>
+                                    <input type="text" name="nrc_no" placeholder="NRC Number" class="form-control" required="required">
+                                    <input type="text" name="dln" placeholder="Drivers License Number" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">License Details</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
                                     </div>
                                     <select class="custom-select form-control" name="dlt" required="required">
                                         <option selected="">Select Drievers License Type</option>
@@ -174,70 +179,6 @@
                                         <option value="CE">CE</option>
                                         <option value="PSV">PSV</option>
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Last Name</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
-                                    </div>
-                                    <input type="text" name="last_name" placeholder="Last Name" class="form-control" required="required">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Age</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user width-1 text-align-center"></i></span>
-                                    </div>
-                                    <input type="text" name="age" placeholder="Age of Driver" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Phone Number</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-phone width-1 text-align-center"></i></span>
-                                    </div>
-                                    <input type="text" name="phone" placeholder="Phone Number" value="+260" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Email Address</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-mouse-pointer width-1 text-align-center"></i></span>
-                                    </div>
-                                    <input type="text" name="email" placeholder="Email" data-inputmask="'alias': 'email'" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Drivers License Number</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
-                                    </div>
-                                    <input type="text" name="dln" placeholder="Drivers License Number" class="form-control" required="required">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="col-md-12" style="margin-top: 2em;">
-                            <div class="form-group">
-                                <label class="form-label">Drivers License Expiry Date</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
-                                    </div>
                                     <input type="date" name="dl_exp_dt" placeholder="Drivers License Expiry Date" class="form-control" required="required">
                                 </div>
                             </div>
@@ -399,12 +340,64 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 
+<!-- ############################## ASSIGN-DRIVER ########################################## -->
+<div class="modal fade" id="assignmodal"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Assign Vehicle To Driver
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="#">
+                <%= for list_vehicle <-@list_vehicles do %>
+                    <div class="row">
+                        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                        <input type="hidden" name="id" value="<%= list_vehicle.id %>">
+                        <div class="col-md-12">
+                        <%= if list_vehicle.assignment_status != "assigned" do %>
+                            <div class="form-group">
+                                <label class="form-label">Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus width-1 text-align-center"></i></span>
+                                    </div>                                    
+                                    <select class="custom-select form-control" name="plate_no" required="required">
+                                        <option>Select Vehicle</option>
+                                        <option value="<%= list_vehicle.plate_no %>" id="plate_no"><%= list_vehicle.v_make %> <%= list_vehicle.v_name %></option>
+                                    </select>
+                                </div>
+                            </div>    
+                        <% end %>
+                        </div>
+                    </div>
+                <% end %>
+                    <div class="modal-footer">
+                        <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" type="button" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Assign Vehicle</button>
+                    </div>            
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/js/statistics/peity/peity.bundle.js") %>"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <script>
 $(document).ready(function(){
-
+//Edit Driver
 $('#editmodal').on('show.bs.modal', function (event){
 
     var button = $(event.relatedTarget)
@@ -433,7 +426,27 @@ $('#editmodal').on('show.bs.modal', function (event){
     modal.find('.modal-body #dlt').val(dlt);
     modal.find('.modal-body #dln').val(dln);
 });
+});
+</script>
 
+
+<script>
+$(document).ready(function(){
+//Assign Vehicle
+$('#assignmodal').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var v_make = button.data('v_make')
+    var v_name = button.data('v_name')
+    var plate_no = button.data('plate_no')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #v_make').val(v_make);
+    modal.find('.modal-body #v_name').val(v_name);
+    modal.find('.modal-body #plate_no').val(plate_no);
+});
 });
 </script>
 

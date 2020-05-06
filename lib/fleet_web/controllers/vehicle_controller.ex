@@ -1,17 +1,20 @@
 defmodule FleetWeb.VehicleController do
     use FleetWeb, :controller
-    alias Fleet.Drivers
+    alias Fleet.Accounts
+    alias Fleet.Accounts.User
     alias Fleet.Vehicles
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
 
     def list_vehicles(conn, _params) do
-        list_drivers  = Drivers.list_tbl_drivers()
+        list_drivers  = Accounts.list_tbl_users()
         list_vehicles = Vehicles.list_tbl_vehicles()
         render(conn, "list_vehicles.html", list_vehicles: list_vehicles, list_drivers: list_drivers)
     end
 
     def create_vehicle(conn, params) do
+      # user_id = conn.assigns.user.id
+      # params = Map.merge(%{"user_id" => user_id}, params)
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->
               conn

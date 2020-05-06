@@ -19,6 +19,8 @@ defmodule Fleet.Repo.Migrations.CreateTblVehicleIssue do
       add :cost, :string
       add :payment_doc, :string
       add :v_status, :string
+      add :approval_status, :string
+      add :decline_reason, :string
 
       timestamps()
     end
