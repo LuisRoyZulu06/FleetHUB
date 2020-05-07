@@ -39,8 +39,44 @@
                 </div> %>
                 <div class="panel-container show">
                     <div class="panel-content jqvmap-bg-ocean p-0" style="height: 650px;">
-                    <img style="width: 100%; height: 100%;" alt="App user" src="<%= Routes.static_path(@conn, "/images/routes/3.gif") %>">
+                    <!-- <img style="width: 100%; height: 100%;" alt="App user" src="<%= Routes.static_path(@conn, "/images/routes/3.gif") %>"> -->
                         <%# <div id="vector-map" class="w-100 h-100 p-4"></div> %>
+                        <div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=lusaka&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.embedgooglemap.net"></a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div> %>
+                         
+                         <!----- javascript API key------->
+                         <%# <style>
+                            
+                            #map {
+                                height: 400px;  /* The height is 400 pixels */
+                                width: 100%;  /* The width is the width of the web page */
+                            }
+                        </style>
+
+                        <div id="map"></div>
+                            <script>
+                            // Initialize and add the map
+                            function initMap() {
+                            // The location of lusaka
+                            var lusaka = {lat: -15.3875, lng: 28.3228};
+                            // The map, centered at lusaka
+                            var map = new google.maps.Map(
+                                document.getElementById('map'), {zoom: 4, center: lusaka});
+                            // The marker, positioned at lusaka
+                            var marker = new google.maps.Marker({position: lusaka, map: map});
+                            }
+                            
+                            </script>
+                            <!--Load the API from the specified URL
+                            * The async attribute allows the browser to render the page while the API loads
+                            * The key parameter will contain your own API key (which is not needed for this tutorial)
+                            * The callback parameter executes the initMap() function
+                            -->
+                            <script async defer
+                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-PPH4M0DocSyyolJemHn5idFj5-QQK2E&callback=initMap">
+                            </script> %>
+
+                            <!------End------->
+                        
                     </div>
                 </div>
             </div>
