@@ -73,6 +73,7 @@
                                                     <i class='subheader-icon fal fa-chevron-down'></i>
                                                 </span>
                                                 <div class="dropdown-menu">
+                                                    <button type="button" class="dropdown-item" data-id="<%= system_user.id %>" data-first_name="<%= system_user.first_name %>" data-last_name="<%= system_user.last_name %>" data-sex="<%= system_user.sex %>" data-age="<%= system_user.age %>" data-phone="<%= system_user.phone %>" data-email="<%= system_user.email %>" data-home_add="<%= system_user.home_add %>" data-nrc_no="<%= system_user.nrc_no %>" data-dln="<%= system_user.dln %>" data-dlt="<%= system_user.dlt %>" data-dl_exp_dt="<%= system_user.dl_exp_dt %>" data-user_type="<%= system_user.user_type %>" data-user_role="<%= system_user.user_role %>" data-password="<%= system_user.password %>" data-toggle="modal" data-target="#editmodal" >Edit</button>                                         
                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :edit_user, id: system_user.id)%>">Edit</a>
                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a> <!-- data-toggle="modal" data-target="#delete-alert" -->
                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>
@@ -231,6 +232,186 @@
         </div>
     </div>
     <% end %>
-</div>                                        
+</div>   
+
+<!----------------------------------------------------------------------------------->
+<!-- ############################################ EDIT MODAL ######################################### -->
+<div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit system user <i class='subheader-icon fal fa-user-circle'></i></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal" action="<%= Routes.user_path(@conn, :update_user)%>" method="post">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <div class="form-group">
+                        <label class="form-label">User Name</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
+                            </div>
+                            <input type="hidden" name="id" id="id" value="">
+                            <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" required="required">
+                            <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" required="required">
+                            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Personal Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
+                            </div>
+                            <select class="custom-select form-control" name="sex" id="sex" required="required">
+                                <option selected="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                            <input type="text" name="age" id="age" placeholder="Age of Driver" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contact Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-phone"></i></span>
+                            </div>
+                            <input type="text" name="phone" id="phone" placeholder="Phone Number" value="+260" class="form-control" required="required">
+                            <input type="text" name="email" id="email" placeholder="Email" data-inputmask="'alias': 'email'" class="form-control">
+                            <input type="text" name="home_add" id="home_add" placeholder="Physical Address" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Identity Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
+                            </div>
+                            <input type="text" name="nrc_no" id="nrc_no" placeholder="NRC Number" class="form-control" required="required">
+                            <input type="text" name="dln" id="dln" placeholder="Drivers License Number" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">License Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                            </div>
+                            <select class="custom-select form-control" name="dlt" id="dlt" required="required">
+                                <option selected="">Select Drivers License Type</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="C1">C1</option>
+                                <option value="C1E">C1E</option>
+                                <option value="CE">CE</option>
+                                <option value="PSV">PSV</option>
+                            </select>
+                            <input type="date" name="dl_exp_dt" id="dl_exp_dt" placeholder="Drivers License Expiry Date" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">User Type</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                            </div>
+                            <select class="custom-select form-control" name="user_type" id="user_type" required="required">
+                                <option selected="">Select User Type</option>
+                                <option value="1">Admin User</option>
+                                <option value="2">Driver User</option>
+                            </select>
+                            
+                            <select class="custom-select form-control" name="user_role" id="user_role" required="required">
+                                <option selected="">Select User Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="driver">Driver</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="text" name="password" id="password" class="form-control" placeholder="Password" required="required">
+                        <input type="hidden" name="auto_password" value="user">
+                        <input type="hidden" name="status" value="1">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update user</button>
+                    </div>
+                </form>
+            </div>   
+        </div>
+    </div>
+</div>
+
+
+
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/js/jquery.js") %>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script>
+
+$(document).ready(function(){
+
+$('#editmodal').on('show.bs.modal', function (event){
+
+  console.log("edit")
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var first_name = button.data('first_name')
+    var last_name = button.data('last_name')
+    var sex = button.data('sex')
+    var age = button.data('age')
+    var phone = button.data('phone')
+    var email = button.data('email')
+    var home_add = button.data('home_add')
+    var nrc_no = button.data('nrc_no')
+    var dln = button.data('dln')
+    var dlt = button.data('dlt')
+    var dl_exp_dt = button.data('dl_exp_dt')
+    var user_type = button.data('user_type')
+    var user_role = button.data('user_role')
+    var password = button.data('password')
+    
+
+    var modal = $(this)
+    
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #first_name').val(first_name);
+    modal.find('.modal-body #last_name').val(last_name);
+    modal.find('.modal-body #sex').val(sex);
+    modal.find('.modal-body #age').val(age);
+    modal.find('.modal-body #phone').val(phone);
+    modal.find('.modal-body #email').val(email);
+    modal.find('.modal-body #home_add').val(home_add);
+    modal.find('.modal-body #nrc_no').val(nrc_no);
+    modal.find('.modal-body #dln').val(dln);
+    modal.find('.modal-body #dlt').val(dlt);
+    modal.find('.modal-body #dl_exp_dt').val(dl_exp_dt);
+    modal.find('.modal-body #user_type').val(user_type);
+    modal.find('.modal-body #user_role').val(user_role);
+    modal.find('.modal-body #password').val(password);
+    
+
+});
+
+});
+
+
+</script>
