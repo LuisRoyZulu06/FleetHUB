@@ -29,6 +29,10 @@ defmodule Fleet.Accounts.User do
     user
     |> cast(attrs, [:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :user_id, :auto_password, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
     |> validate_required([:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
+    |> unique_constraint(:nrc_no, name: :unique_nrc_no, message: "Current record already exists!")
+    |> unique_constraint(:phone, name: :unique_phone, message: "Current record already exists!")
+    |> unique_constraint(:email, name: :unique_email, message: "Current record already exists!")
+    |> unique_constraint(:dln, name: :unique_dln, message: "Current record already exists!")
     |> validate_length(:password,
       min: 4,
       max: 40,
