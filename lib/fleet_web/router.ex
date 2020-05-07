@@ -53,7 +53,6 @@ defmodule FleetWeb.Router do
     get "/View/Driver", DriverController, :view_driver
     post "/Add/New/Driver/To/System", DriverController, :create_driver
     get "/Delete/Driver/Account", DriverController, :delete_driver
-    get "/Edit/Driver/Details", DriverController, :edit_driver
     post "/Update/Driver/Details", DriverController, :update_driver
     get "/Assign/Vehicle", DriverController, :assign_vehicle
     get "/List/of/Logged/Issues", DriverController, :logged_issues

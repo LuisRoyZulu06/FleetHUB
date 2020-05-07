@@ -11,10 +11,18 @@ defmodule Fleet.Repo.Migrations.CreateTblUsers do
       add :user_role, :string
       add :status, :integer
       add :user_id, :string
+      add :auto_password, :string
+      add :sex, :string
+      add :age, :integer
+      add :nrc_no, :string
+      add :phone, :string
+      add :home_add, :string
+      add :dlt, :string
+      add :dln, :string
+      add :dl_exp_dt, :string
 
       timestamps()
     end
-    create unique_index(:tbl_users, [:email])
-
+    create unique_index(:tbl_users, [:nrc_no, :phone, :email, :dln])
   end
 end

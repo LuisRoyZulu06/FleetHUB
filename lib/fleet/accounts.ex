@@ -20,7 +20,7 @@ defmodule Fleet.Accounts do
   def list_tbl_users do
     Repo.all(User)
   end
-
+  
   @doc """
   Gets a single user.
 

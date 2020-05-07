@@ -23,5 +23,8 @@ defmodule Fleet.Drivers.DriverDetails do
     driver_details
     |> cast(attrs, [:first_name, :last_name, :sex, :age, :nrc_no, :phone, :home_add, :email, :dlt, :dln, :dl_exp_dt])
     |> validate_required([:first_name, :last_name, :sex, :age, :nrc_no, :phone, :home_add, :email, :dlt, :dln, :dl_exp_dt])
+    |> unique_constraint(:nrc_no, name: :unique_nrc_no, message: "Current record already exists!")
+    |> unique_constraint(:phone, name: :unique_phone, message: "Current record already exists!")
+    |> unique_constraint(:email, name: :unique_email, message: "Current record already exists!")
   end
 end

@@ -37,7 +37,7 @@
                         System users <i class='subheader-icon fal fa-user-circle'></i>
                     </h2>
                     <div class="panel-toolbar">
-                        <button class="btn btn-sm btn-default waves-effect waves-themed" data-toggle="modal" data-target="#default-example-modal-lg-center">Add user</button>
+                        <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#default-example-modal-lg-center">Add user</button>
                     </div>
                 </div>
 
@@ -106,18 +106,93 @@
                 <form class="form-horizontal" action="<%= Routes.user_path(@conn, :create_user)%>" method="post">
                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                     <div class="form-group">
-                        <label class="form-label">First Name</label>
-                        <input type="text" name="first_name" class="form-control" placeholder="First Name" required="required">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Last Name</label>
-                        <input type="text" name="last_name" class="form-control" placeholder="Last Name" required="required">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Email Address" required="required">
+                        <label class="form-label">User Name</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
+                            </div>
+                            <input type="text" name="first_name" class="form-control" placeholder="First Name" required="required">
+                            <input type="text" name="last_name" class="form-control" placeholder="Last Name" required="required">
+                        </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-label">Personal Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
+                            </div>
+                            <select class="custom-select form-control" name="sex" required="required">
+                                <option selected="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                            <input type="text" name="age" placeholder="Age of Driver" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contact Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-phone"></i></span>
+                            </div>
+                            <input type="text" name="phone" placeholder="Phone Number" value="+260" class="form-control" required="required">
+                            <input type="text" name="email" placeholder="Email" data-inputmask="'alias': 'email'" class="form-control">
+                            <input type="text" name="home_add" placeholder="Physical Address" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Identity Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
+                            </div>
+                            <input type="text" name="nrc_no" placeholder="NRC Number" class="form-control" required="required">
+                            <input type="text" name="dln" placeholder="Drivers License Number" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">License Details</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                            </div>
+                            <select class="custom-select form-control" name="dlt" required="required">
+                                <option selected="">Select Drivers License Type</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="C1">C1</option>
+                                <option value="C1E">C1E</option>
+                                <option value="CE">CE</option>
+                                <option value="PSV">PSV</option>
+                            </select>
+                            <input type="date" name="dl_exp_dt" placeholder="Drivers License Expiry Date" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">User Type</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                            </div>
+                            <select class="custom-select form-control" name="user_type" required="required">
+                                <option selected="">Select User Type</option>
+                                <option value="1">Admin User</option>
+                                <option value="2">Driver User</option>
+                            </select>
+                            
+                            <select class="custom-select form-control" name="user_role" required="required">
+                                <option selected="">Select User Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="driver">Driver</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="form-label">Password</label>
@@ -125,30 +200,12 @@
                         <input type="hidden" name="auto_password" value="user">
                         <input type="hidden" name="status" value="1">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">User Type</label>
-                        <select class="custom-select form-control" name="user_type" required="required">
-                            <option selected="">Select User Type</option>
-                            <option value="1">Admin User</option>
-                            <option value="2">Driver User</option>
-                        </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add user</button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">User Role</label>
-                        <select class="custom-select form-control" name="user_role" required="required">
-                            <option selected="">Select User Role</option>
-                            <option value="admin">Admin</option>
-                            <option value="driver">Driver</option>
-                        </select>
-                    </div>
-                
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Add user</button>
-            </div>
-            </form>
+                </form>
+            </div>   
         </div>
     </div>
 </div>

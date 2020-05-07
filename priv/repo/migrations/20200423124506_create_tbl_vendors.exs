@@ -14,6 +14,5 @@ defmodule Fleet.Repo.Migrations.CreateTblVendors do
 
       timestamps()
     end
-
   end
 end

@@ -17,6 +17,6 @@ defmodule Fleet.Repo.Migrations.CreateTblDrivers do
 
       timestamps()
     end
-
+    create unique_index(:tbl_drivers, [:nrc_no, :phone, :email])
   end
 end

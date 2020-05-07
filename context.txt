@@ -12,3 +12,4 @@ mix phx.gen.context Drivers IssueLoger tbl_vehicle_issue first_name last_name ph
 <!-- ################# Adding Column To Table ################ -->
 mix ecto.gen.migration alter_tbl_vehicle_issue
 mix ecto.gen.migration alter_tbl_vehicles
+mix ecto.gen.migration alter_tbl_drivers
