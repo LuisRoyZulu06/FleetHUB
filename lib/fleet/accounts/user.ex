@@ -57,4 +57,6 @@ end
 # Fleet.Accounts.create_user(%{first_name: "Luis Roy", last_name: "Zulu", email: "luis@probasegroup.com", password: "password06", user_type: 1, status: 1, user_role: "admin", inserted_at: NaiveDateTime.utc_now, updated_at: NaiveDateTime.utc_now})
 # Fleet.Accounts.create_user(%{first_name: "John", last_name: "Doe", email: "john@doe.com", password: "password07", user_type: 2, status: 1, user_role: "dev", inserted_at: NaiveDateTime.utc_now, updated_at: NaiveDateTime.utc_now})
 # Fleet.Accounts.create_user(%{first_name: "Client", last_name: "Client", email: "client@info.com", password: "password08", user_type: 3, status: 1, user_role: "client", inserted_at: NaiveDateTime.utc_now, updated_at: NaiveDateTime.utc_now})
+# Fleet.Accounts.create_user(%{first_name: "john", last_name: "mfula", email: "johnmfula360@gmail.com", password: "cool", user_type: 3, status: 1, user_role: "client", inserted_at: NaiveDateTime.utc_now, updated_at: NaiveDateTime.utc_now})
+# Fleet.Accounts.create_user(%{first_name: "john", last_name: "mfula", email: "johnmfula360@gmail.com", password: "cool", user_type: 1, status: 1, user_role: "admin", inserted_at: NaiveDateTime.utc_now, updated_at: NaiveDateTime.utc_now})
 
