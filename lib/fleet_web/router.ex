@@ -59,6 +59,7 @@ defmodule FleetWeb.Router do
     post "/Report/Problem/With/Vehicle", DriverController, :create_issue
     post "/File/Report", DriverController, :file_issue_report
     get "/Request/Response", DriverController, :request_response
+    post "/Deactivate/Account", DriverController, :deactivate_account
 
     # --------------------------------------------- Vehicle CONTROLLER
     get "/List/FleetHub/Vehicles", VehicleController, :list_vehicles

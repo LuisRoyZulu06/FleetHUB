@@ -59,7 +59,7 @@
                             </thead>
                             <tbody>
                                 <%= for list_driver <- @list_drivers, list_vehicle <- @list_vehicles do %>
-                                <%= if list_driver.user_role == "driver" do %>
+                                <%= if list_driver.user_role == "driver" && list_driver.status === 1 do %>
                                     <tr>
                                         <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
                                         <td><%= list_driver.sex%></td>
@@ -74,9 +74,9 @@
                                                         <i class='subheader-icon fal fa-chevron-down'></i>
                                                     </span>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>"  data-toggle="modal" data-target="#editmodal">Edit</a>
+                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#editmodal">Edit</a>
                                                         <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :view_driver, id: list_driver.id)%>">View</a>
-                                                        <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :delete_driver, id: list_driver.id)%>">Delete</a>
+                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-toggle="modal" data-target="#deactivate">Deactive</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -342,6 +342,52 @@
     </div>
 </div>
 
+<!-- ############################## DEACTIVATE-ACCOUNT ########################################## -->
+<div class="modal fade" id="deactivate"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Deactivate Account
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="<%= Routes.driver_path(@conn, :deactivate_account)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label class="form-label">Deactivate Account</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="status" required="required">
+                                        <option value="2">Deactive</option>
+                                    </select>
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Deactivate Account</button>
+                    </div>   
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ############################## ASSIGN-DRIVER ########################################## -->
 <div class="modal fade" id="assignmodal"  tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -446,6 +492,22 @@ $('#assignmodal').on('show.bs.modal', function (event){
     modal.find('.modal-body #v_make').val(v_make);
     modal.find('.modal-body #v_name').val(v_name);
     modal.find('.modal-body #plate_no').val(plate_no);
+});
+});
+</script>
+
+<script>
+$(document).ready(function(){
+//Deactivate Account
+$('#deactivate').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var status = button.data('status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #status').val(status);
 });
 });
 </script>

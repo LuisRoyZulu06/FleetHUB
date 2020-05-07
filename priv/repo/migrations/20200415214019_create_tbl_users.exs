@@ -23,6 +23,9 @@ defmodule Fleet.Repo.Migrations.CreateTblUsers do
 
       timestamps()
     end
-    create unique_index(:tbl_users, [:nrc_no, :phone, :email, :dln])
+    create unique_index(:tbl_users, [:nrc_no], name: :unique_nrc_no)
+    create unique_index(:tbl_users, [:phone], name: :unique_phone)
+    create unique_index(:tbl_users, [:email], name: :unique_email)
+    create unique_index(:tbl_users, [:dln], name: :unique_dln)
   end
 end

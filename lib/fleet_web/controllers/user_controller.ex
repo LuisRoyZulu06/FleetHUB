@@ -486,9 +486,8 @@ defmodule FleetWeb.UserController do
 
     # ----------------------- / user management ---------------
     def user_mgt(conn, _params) do
-      list_drivers  = Drivers.list_tbl_drivers()
       system_users = Accounts.list_tbl_users()
-      render(conn, "user_mgt.html", system_users: system_users, list_drivers: list_drivers)
+      render(conn, "user_mgt.html", system_users: system_users)
     end 
 
     def create_user(conn, params) do

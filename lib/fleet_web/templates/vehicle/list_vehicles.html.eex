@@ -172,6 +172,7 @@
                                         <%= for list_driver <-@list_drivers do %>
                                         <%= if list_driver.user_role == "driver" do %>
                                         <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
+                                        <input type="hidden" name="driver_id" value="<%= list_driver.id%>">
                                         <% end %>
                                         <% end %>
                                     </select>

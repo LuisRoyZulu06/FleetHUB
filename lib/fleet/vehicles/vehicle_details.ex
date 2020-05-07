@@ -14,14 +14,16 @@ defmodule Fleet.Vehicles.VehicleDetails do
     field :v_make, :string
     field :v_name, :string
     field :v_status, :string
+    # field :driver_id, :string
 
+    belongs_to :vehicledetails, Fleet.Accounts.User, foreign_key: :driver_id, type: :id
     timestamps()
   end
 
   @doc false
   def changeset(vehicle_details, attrs) do
     vehicle_details
-    |> cast(attrs, [:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assigned_to, :assignment_status])
+    |> cast(attrs, [:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assigned_to, :assignment_status, :driver_id])
     |> validate_required([:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assigned_to, :assignment_status])
   end
 end
