@@ -21,6 +21,11 @@ defmodule Fleet.Vehicles do
     Repo.all(VehicleDetails)
   end
 
+  # def list_tbl_vehicles(assigned_to) do
+  #   Repo.all(from u in VehicleDetails, where: u.assigned_to == ^assigned_to)
+  # end
+    
+
   @doc """
   Gets a single vehicle_details.
 
@@ -100,9 +105,5 @@ defmodule Fleet.Vehicles do
   """
   def change_vehicle_details(%VehicleDetails{} = vehicle_details) do
     VehicleDetails.changeset(vehicle_details, %{})
-  end
-
-  def select_vehicle do
-    Repo.all(from n in VehicleDetails, where: [assignment_status: "assigned"])
   end
 end

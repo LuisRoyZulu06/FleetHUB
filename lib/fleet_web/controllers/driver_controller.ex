@@ -8,12 +8,11 @@ defmodule FleetWeb.DriverController do
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
 
+
     def list_drivers(conn, _params) do
-        pick_vehicles = Vehicles.select_vehicle
-        IO.inspect(pick_vehicles)
         list_vehicles = Vehicles.list_tbl_vehicles()
         list_drivers  = Accounts.list_tbl_users()
-        render(conn, "list_drivers.html", list_drivers: list_drivers, list_vehicles: list_vehicles, pick_vehicles: pick_vehicles)
+        render(conn, "list_drivers.html", list_drivers: list_drivers, list_vehicles: list_vehicles)
     end
 
     def view_driver(conn, %{"id" => id} = params) do

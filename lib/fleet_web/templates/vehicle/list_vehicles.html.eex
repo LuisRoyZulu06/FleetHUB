@@ -138,6 +138,7 @@
             <div class="modal-body">
                 <form action="<%= Routes.vehicle_path(@conn, :create_vehicle)%>" method="POST">
                 <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -170,10 +171,9 @@
                                     <select class="custom-select form-control" name="assigned_to">
                                         <option value="not_assigned">Select Driver</option>
                                         <%= for list_driver <-@list_drivers do %>
-                                        <%= if list_driver.user_role == "driver" do %>
-                                        <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
-                                        <input type="hidden" name="driver_id" value="<%= list_driver.id%>">
-                                        <% end %>
+                                            <%= if list_driver.user_role == "driver" do %>
+                                                <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>_<%= list_driver.id%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
+                                            <% end %>
                                         <% end %>
                                     </select>
                                     <%# <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required"> %>

@@ -21,7 +21,7 @@ defmodule Fleet.Accounts.User do
     field :sex, :string
     
     belongs_to :user, Fleet.Accounts.User, foreign_key: :user_id, type: :id
-    belongs_to :vehicledetails, Fleet.Accounts.User, foreign_key: :driver_id, type: :id
+    # belongs_to :vehicledetails, Fleet.Accounts.User, foreign_key: :driver_id, type: :id
        
     timestamps(type: :utc_datetime)
   end
@@ -29,7 +29,7 @@ defmodule Fleet.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :user_id, :driver_id, :auto_password, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
+    |> cast(attrs, [:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :user_id, :auto_password, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
     |> validate_required([:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
     |> unique_constraint(:nrc_no, name: :unique_nrc_no, message: "Current record already exists!")
     |> unique_constraint(:phone, name: :unique_phone, message: "Current record already exists!")

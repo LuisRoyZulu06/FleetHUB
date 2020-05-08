@@ -13,8 +13,14 @@ defmodule FleetWeb.VehicleController do
     end
 
     def create_vehicle(conn, params) do
-      # user_id = conn.assigns.user.id
-      # params = Map.merge(%{"user_id" => user_id}, params)
+      # driver_id = conn.assigns.user.id
+      %{"assigned_to"=> ato}=params
+      [name, driver_id]=String.split(ato, "_")
+      IO.inspect "======================="
+      IO.inspect driver_id
+      IO.inspect name
+      params = Map.merge(params, %{"driver_id" => driver_id, "assigned_to" => name})
+      # IO.inspect (params)
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->
               conn
