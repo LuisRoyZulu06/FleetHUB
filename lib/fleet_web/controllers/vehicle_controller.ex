@@ -13,7 +13,9 @@ defmodule FleetWeb.VehicleController do
     end
 
     def create_vehicle(conn, params) do
-      # user_id = conn.assigns.user.id
+      user_id = conn.assigns.user
+      IO.inspect "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+      IO.inspect user_id
       # params = Map.merge(%{"user_id" => user_id}, params)
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->

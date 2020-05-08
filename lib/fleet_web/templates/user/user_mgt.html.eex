@@ -74,7 +74,6 @@
                                                 </span>
                                                 <div class="dropdown-menu">
                                                     <button type="button" class="dropdown-item" data-id="<%= system_user.id %>" data-first_name="<%= system_user.first_name %>" data-last_name="<%= system_user.last_name %>" data-sex="<%= system_user.sex %>" data-age="<%= system_user.age %>" data-phone="<%= system_user.phone %>" data-email="<%= system_user.email %>" data-home_add="<%= system_user.home_add %>" data-nrc_no="<%= system_user.nrc_no %>" data-dln="<%= system_user.dln %>" data-dlt="<%= system_user.dlt %>" data-dl_exp_dt="<%= system_user.dl_exp_dt %>" data-user_type="<%= system_user.user_type %>" data-user_role="<%= system_user.user_role %>" data-password="<%= system_user.password %>" data-toggle="modal" data-target="#editmodal" >Edit</button>                                         
-                                                    <a class="dropdown-item" href="<%= Routes.user_path(@conn, :edit_user, id: system_user.id)%>">Edit</a>
                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a> <!-- data-toggle="modal" data-target="#delete-alert" -->
                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>
                                                 </div>
