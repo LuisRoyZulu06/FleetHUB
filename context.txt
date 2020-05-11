@@ -13,3 +13,6 @@ mix phx.gen.context Drivers IssueLoger tbl_vehicle_issue first_name last_name ph
 mix ecto.gen.migration alter_tbl_vehicle_issue
 mix ecto.gen.migration alter_tbl_vehicles
 mix ecto.gen.migration alter_tbl_drivers
+
+<!-- ----------------Adding License type----------------------- -->
+mix phx.gen.context License Drivers_license tbl_license_type name vehicle_cat weight

@@ -12,6 +12,8 @@ defmodule FleetWeb.UserController do
     alias Fleet.Clients
     alias Fleet.Vehicles
     alias Fleet.Vehicles.VehicleDetails
+    alias Fleet.License
+    alias Fleet.License.Drivers_license
   
     plug(
       FleetWeb.Plugs.RequireAuth
@@ -34,7 +36,10 @@ defmodule FleetWeb.UserController do
              :update_user,
              :delete_user,
              :deactivate_user,
-             :deactivate_user_account
+             :deactivate_user_account,
+             :view_mgt_user,
+             :deactivated_acc,
+             :activate_user_account
            ]
     )
   
@@ -45,7 +50,7 @@ defmodule FleetWeb.UserController do
   
     plug(
       FleetWeb.Plugs.RequireAdminAccess
-      when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account]
+      when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account]
     )
   
   
@@ -486,8 +491,9 @@ defmodule FleetWeb.UserController do
 
     # ----------------------- / user management ---------------
     def user_mgt(conn, _params) do
+      licences = License.list_tbl_license_type()
       system_users = Accounts.list_tbl_users()
-      render(conn, "user_mgt.html", system_users: system_users)
+      render(conn, "user_mgt.html", system_users: system_users, licences: licences)
     end 
 
     def create_user(conn, params) do
@@ -577,10 +583,10 @@ defmodule FleetWeb.UserController do
     end
 
     def deactivate_user(conn, %{"id" => id}) do
-      list_drivers  = Drivers.list_tbl_drivers()
+      # list_drivers  = Drivers.list_tbl_drivers()
       system_users = Accounts.get_user!(id)
       changeset = Accounts.change_user(system_users)
-      render(conn, "deactivate.html", system_users: system_users, changeset: changeset)
+      render(conn, "deactivate.html", system_users: system_users, changeset: changeset )
     end 
 
     def deactivate_user_account(conn, %{"id" => id} = params) do
@@ -615,5 +621,48 @@ defmodule FleetWeb.UserController do
       end
     end
     
+    def view_mgt_user(conn, %{"id" => id}) do
+      view_users  = Accounts.get_user!(id)
+      render(conn, "view_mgt.html", view_users: view_users ) 
+    end
+
+    def deactivated_acc(conn, _params) do
+         system_users = Accounts.list_tbl_users()
+         render(conn, "deactivated_users.html", system_users: system_users)
+    end  
+    
+    def activate_user_account(conn, %{"id" => id} = params) do
+      system_user = Accounts.get_user!(id)
+
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
+      |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
+        activity = "FleetHUB user account activated with ID \"#{system_user.id}\""
+
+        userlogs = %{
+          user_id: conn.assigns.user.id,
+          activity: activity
+        }
+
+        UserLogs.changeset(%UserLogs{}, userlogs)
+        |> Repo.insert()
+      end)
+      |> Repo.transaction()
+      |> case do
+        {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
+          conn
+          |> put_flash(:info, "FleetHUB system user account activated :-) ")
+          |> redirect(to: Routes.user_path(conn, :deactivated_acc))
+
+        {:error, _failed_operation, failed_value, _changes_so_far} ->
+          reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+          conn
+          |> put_flash(:error, reason)
+          |> redirect(to: Routes.user_path(conn, :deactivated_acc))
+      end
+    end
+
+
   end
   
