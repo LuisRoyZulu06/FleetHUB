@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-user-circle'></i> Manage System Users
+            <i class='subheader-icon fal fa-user-circle'></i> Manage  Users
         </h1>
 
         <div class="subheader-block" id="loggedIn-user">
@@ -36,6 +36,9 @@
                     <h2>
                         System users <i class='subheader-icon fal fa-user-circle'></i>
                     </h2>
+                    <div class="panel-toolbar" style="margin-right: 10px;">
+                        <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.user_path(@conn, :deactivated_acc)%>">Deactivated Accounts</a>
+                    </div>
                     <div class="panel-toolbar">
                         <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#default-example-modal-lg-center">Add user</button>
                     </div>
@@ -58,7 +61,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <%= for system_user <- @system_users do %>    
+                            <%= for system_user <- @system_users do %>  
+                             <%= if system_user.status === 1 do %> 
                                 <tr>
                                     <td><%= system_user.id %></td>
                                     <td><%= system_user.first_name %></td>
@@ -77,14 +81,17 @@
                                                     <i class='subheader-icon fal fa-chevron-down'></i>
                                                 </span>
                                                 <div class="dropdown-menu">
+                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :view_mgt_user, id: system_user.id)%>">View</a>
                                                     <button type="button" class="dropdown-item" data-id="<%= system_user.id %>" data-first_name="<%= system_user.first_name %>" data-last_name="<%= system_user.last_name %>" data-sex="<%= system_user.sex %>" data-age="<%= system_user.age %>" data-phone="<%= system_user.phone %>" data-email="<%= system_user.email %>" data-home_add="<%= system_user.home_add %>" data-nrc_no="<%= system_user.nrc_no %>" data-dln="<%= system_user.dln %>" data-dlt="<%= system_user.dlt %>" data-dl_exp_dt="<%= system_user.dl_exp_dt %>" data-user_type="<%= system_user.user_type %>" data-user_role="<%= system_user.user_role %>" data-password="<%= system_user.password %>" data-toggle="modal" data-target="#editmodal" >Edit</button>                                         
                                                     <a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a> <!-- data-toggle="modal" data-target="#delete-alert" -->
-                                                    <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>
+                                                   <!-- <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>-->
+                                                    <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#deactivate_user">Deactive</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                 </tr> 
+                              <% end %>  
                             <% end %>                          
                         </table>
                         <!-- datatable end -->
@@ -166,13 +173,17 @@
                             </div>
                             <select class="custom-select form-control" name="dlt" required="required">
                                 <option selected="">Select Drivers License Type</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="C1">C1</option>
-                                <option value="C1E">C1E</option>
-                                <option value="CE">CE</option>
-                                <option value="PSV">PSV</option>
+                                   <%= for license <- @licences do %> 
+                                       <option value="<%= license.id%>"><%= license.name%></option>
+                                   <% end %>
+                                    <!-- <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="C1">C1</option>
+                                    <option value="C1E">C1E</option>
+                                    <option value="CE">CE</option>
+                                    <option value="PSV">PSV</option> -->
+
                             </select>
                             <input type="date" name="dl_exp_dt" placeholder="Drivers License Expiry Date" class="form-control" required="required">
                         </div>
@@ -359,7 +370,51 @@
     </div>
 </div>
 
+<!-- ############################## DEACTIVATE-ACCOUNT ########################################## -->
+<div class="modal fade" id="deactivate_user"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Deactivate Account
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="<%= Routes.user_path(@conn, :deactivate_user_account)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
 
+                            <div class="form-group">
+                                <label class="form-label">Deactivate Account</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="status" id="status" required="required">
+                                        <option value="2">Deactive</option>
+                                    </select>
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Deactivate Account</button>
+                    </div>   
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
@@ -416,5 +471,21 @@ $('#editmodal').on('show.bs.modal', function (event){
 
 });
 
+</script>
 
+
+<script>
+$(document).ready(function(){
+//Deactivate msg Account
+$('#deactivate_user').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var status = button.data('status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #status').val(status);
+});
+});
 </script>
