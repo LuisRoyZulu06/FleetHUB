@@ -86,12 +86,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%= for list_vehicle <- @list_vehicles do %>
+                                <%= for vehicle <- @list_vehicles do %>
                                 <tr>
-                                    <td><%= list_vehicle.v_name %></td>
-                                    <td><%= list_vehicle.plate_no %></td>
-                                    <td><%= list_vehicle.assigned_to %></td>
-                                    <td><%= list_vehicle.v_status %></td>
+                                    <td><%= vehicle.v_make %> <%= vehicle.v_name %></td>
+                                    <td><%= vehicle.plate_no %></td>
+                                    <%= if vehicle.assignment_status == "assigned" do %>
+                                        <td><%= Fleet.Accounts.get_user!(vehicle.driver_id).first_name %> <%= Fleet.Accounts.get_user!(vehicle.driver_id).last_name %></td>
+                                    <% else %>
+                                        <td>Not Assigned</td>
+                                    <% end %>                                    
+                                    <td><%= vehicle.v_status %></td>
                                     <td>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -99,14 +103,14 @@
                                                     <i class='subheader-icon fal fa-chevron-down'></i>
                                                 </span>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= list_vehicle.id%>" data-v_make="<%= list_vehicle.v_make%>" data-v_name="<%= list_vehicle.v_name%>" data-color="<%= list_vehicle.color%>" data-plate_no="<%= list_vehicle.plate_no%>" data-v_status="<%= list_vehicle.v_status%>" data-assigned_to="<%= list_vehicle.assigned_to%>" data-assignment_status="<%= list_vehicle.assignment_status %>" data-mileage="<%= list_vehicle.mileage %>" data-rd_tax_exp_dt="<%= list_vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= list_vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= list_vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#viewmodal">View</a>
-                                                    <a class="dropdown-item" data-id="<%= list_vehicle.id%>" data-v_make="<%= list_vehicle.v_make%>" data-v_name="<%= list_vehicle.v_name%>" data-color="<%= list_vehicle.color%>" data-plate_no="<%= list_vehicle.plate_no%>" data-v_status="<%= list_vehicle.v_status%>" data-assigned_to="<%= list_vehicle.assigned_to%>" data-assignment_status="<%= list_vehicle.assignment_status %>" data-mileage="<%= list_vehicle.mileage %>" data-rd_tax_exp_dt="<%= list_vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= list_vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= list_vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                    <%= if list_vehicle.assignment_status == "not_assigned" do %>
-                                                    <a class="dropdown-item" data-id="<%= list_vehicle.id%>" data-assigned_to="<%= list_vehicle.assigned_to%>" data-toggle="modal" data-target="#assignmodal" >Assign Vehicle to Driver</a>
+                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#viewmodal">View</a>
+                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#editmodal">Edit</a>
+                                                    <%= if vehicle.assignment_status == "not_assigned" do %>
+                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-toggle="modal" data-target="#assignmodal" >Assign Vehicle to Driver</a>
                                                     <% end %>
 
-                                                    <%= if list_vehicle.assignment_status == "assigned" do %>
-                                                    <a class="dropdown-item" data-id="<%= list_vehicle.id%>" data-assigned_to="<%= list_vehicle.assigned_to%>" data-toggle="modal" data-target="#reassignmodal" >Reassign Vehicle</a>
+                                                    <%= if vehicle.assignment_status == "assigned" do %>
+                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-toggle="modal" data-target="#reassignmodal" >Reassign Vehicle</a>
                                                     <% end %>
                                                     <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button>
                                                 </div>
@@ -137,8 +141,7 @@
             
             <div class="modal-body">
                 <form action="<%= Routes.vehicle_path(@conn, :create_vehicle)%>" method="POST">
-                <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -168,15 +171,15 @@
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
                                     
-                                    <select class="custom-select form-control" name="assigned_to">
-                                        <option value="not_assigned">Select Driver</option>
-                                        <%= for list_driver <-@list_drivers do %>
-                                            <%= if list_driver.user_role == "driver" do %>
-                                                <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>_<%= list_driver.id%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
+                                    <input type="hidden" name="driver_id" value="0">
+                                    <select class="custom-select form-control" name="driver_id">
+                                        <option value="">Select Driver</option>
+                                        <%= for driver <-@drivers do %>
+                                            <%= if driver.user_role == "driver" do %>
+                                                <option value="<%= driver.id%>"><%= driver.first_name%> <%= driver.last_name%></option>
                                             <% end %>
                                         <% end %>
                                     </select>
-                                    <%# <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required"> %>
                                 </div>
                             </div>
 
@@ -190,7 +193,6 @@
                                         <option value="assigned">Assigned</option>
                                         <option value="not_assigned">Not Assigned</option>
                                     </select>
-                                    <%# <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required"> %>
                                 </div>
                             </div>
 
@@ -429,13 +431,16 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="assigned_to">
-                                        <option>Select Driver</option>
-                                        <%= for list_driver <-@list_drivers do %>
-                                        <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
+                                    
+                                    <input type="hidden" name="driver_id" value="0">
+                                    <select class="custom-select form-control" name="driver_id">
+                                        <option value="">Select Driver</option>
+                                        <%= for driver <-@drivers do %>
+                                            <%= if driver.user_role == "driver" do %>
+                                                <option value="<%= driver.id%>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <% end %>
                                         <% end %>
                                     </select>
-                                    <%# <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required"> %>
                                 </div>
                             </div>
 
@@ -719,13 +724,12 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="assigned_to">
+                                    <select class="custom-select form-control" name="driver_id">
                                         <option>Select Driver</option>
-                                        <%= for list_driver <-@list_drivers do %>
-                                        <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
+                                        <%= for driver <-@drivers do %>
+                                        <option value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
                                         <% end %>
                                     </select>
-                                    <%# <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required"> %>
                                 </div>
                             </div>
 
@@ -783,28 +787,17 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="assigned_to">
+                                    <select class="custom-select form-control" name="driver_id">
                                         <option>Select New Driver</option>
-                                        <%= for list_driver <-@list_drivers do %>
-                                        <option value="<%= list_driver.first_name%> <%= list_driver.last_name%>"><%= list_driver.first_name%> <%= list_driver.last_name%></option>
+                                        <%= for driver <-@drivers do %>
+                                            <%= if driver.user_role == "driver" && driver.status === 1 do %>
+                                            <option value="<%= driver.id%>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <% end %>
                                         <% end %>
                                     </select>
-                                    <%# <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required"> %>
-                                </div>
-                            </div>
-
-                            
-                            <div class="form-group">
-                                <label class="form-label">Assignment Status</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
-                                    </div>
                                     <select class="custom-select form-control" name="assignment_status">
                                         <option value="assigned">Assigned</option>
-                                        <option value="not_assigned">Not Assigned</option>
                                     </select>
-                                    <%# <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required"> %>
                                 </div>
                             </div>
                         </div>
@@ -823,8 +816,6 @@
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="<%= Routes.static_path(@conn, "/js/statistics/peity/peity.bundle.js") %>"></script>
-
-
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>

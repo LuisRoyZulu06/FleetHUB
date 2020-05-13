@@ -7,6 +7,7 @@ defmodule Fleet.Accounts do
   alias Fleet.Repo
   
   alias Fleet.Accounts.User
+  alias Fleet.Vehicles.VehicleDetails
 
   @doc """
   Returns the list of tbl_users.
@@ -19,6 +20,10 @@ defmodule Fleet.Accounts do
   """
   def list_tbl_users do
     Repo.all(User)
+  end
+
+  def get_by_vehicle_id(id) do
+    Repo.get_by(VehicleDetails, driver_id: id)
   end
   
   @doc """

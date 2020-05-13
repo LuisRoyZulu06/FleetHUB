@@ -20,6 +20,7 @@ defmodule Fleet.Accounts.User do
     field :phone, :string
     field :sex, :string
     
+    
     belongs_to :user, Fleet.Accounts.User, foreign_key: :user_id, type: :id
     # belongs_to :vehicledetails, Fleet.Accounts.User, foreign_key: :driver_id, type: :id
        

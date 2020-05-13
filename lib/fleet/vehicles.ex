@@ -17,13 +17,19 @@ defmodule Fleet.Vehicles do
       [%VehicleDetails{}, ...]
 
   """
+  # def list_tbl_vehicles do
+  #   Repo.all(VehicleDetails)
+  # end
+
   def list_tbl_vehicles do
-    Repo.all(VehicleDetails)
+    veh=Repo.all(VehicleDetails)
+    comb=Repo.preload(veh, :vehicledetails)
   end
 
-  # def list_tbl_vehicles(assigned_to) do
-  #   Repo.all(from u in VehicleDetails, where: u.assigned_to == ^assigned_to)
-  # end
+
+  def get_by_user_id(id) do
+    Repo.get_by(VehicleDetails, driver_id: id)
+  end
     
 
   @doc """
