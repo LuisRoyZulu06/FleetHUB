@@ -153,9 +153,16 @@
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" title="Manage Drivers" data-filter-tags="theme settings layout options">
+                                        <a href="<%= Routes.user_path(@conn, :deactivated_acc)%>" title="Manage Drivers" data-filter-tags="theme settings layout options">
                                             <i class="fal fa-user-circle"></i>
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Drivers</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" title="Deactivated Drivers" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-user-circle"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Deactivated Drivers</span>
                                         </a>
                                     </li>
                                 </ul>
