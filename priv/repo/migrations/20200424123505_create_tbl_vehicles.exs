@@ -12,7 +12,6 @@ defmodule Fleet.Repo.Migrations.CreateTblVehicles do
       add :rd_tax_exp_dt, :string
       add :fitness_exp_dt, :string
       add :insrnc_exp_dt, :string
-      add :assigned_to, :string
       add :assignment_status, :string
       add :driver_id, references(:tbl_users, column: :id, on_delete: :delete_all)
 

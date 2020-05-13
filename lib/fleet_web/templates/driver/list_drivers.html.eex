@@ -58,15 +58,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%= for list_driver <- @list_drivers, list_vehicle <- @list_vehicles do %>
+                                <%= for list_driver <- @list_drivers do %>
                                 <%= if list_driver.user_role == "driver" && list_driver.status === 1 do %>
                                     <tr>
                                         <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
                                         <td><%= list_driver.sex%></td>
                                         <td><%= list_driver.phone%></td>
                                         <td><%= list_driver.email%></td>
-                                        <td><%= list_vehicle.v_name%></td>  
-                                        <td><%= list_vehicle.plate_no%></td>
+                                        <%= if Fleet.Accounts.get_by_vehicle_id(list_driver.id) != nil do %>
+                                            <td><%= Fleet.Accounts.get_by_vehicle_id(list_driver.id).v_name%></td>  
+                                            <td><%= Fleet.Accounts.get_by_vehicle_id(list_driver.id).plate_no%></td>
+                                        <% else %>
+                                            <td>Not Assigned</td>  
+                                            <td>Not Assigned</td>
+                                        <% end %>
                                         <td>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
@@ -81,7 +86,9 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        
                                     </tr>  
+                                
                                 <% end %>
                                 <% end %>   
                             </tbody>        
@@ -403,12 +410,12 @@
             <div class="modal-body">
                 <div class="panel-content">
                 <form action="#">
-                <%= for list_vehicle <-@list_vehicles do %>
+                <%= for vehicle <-@vehicles do %>
                     <div class="row">
                         <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                        <input type="hidden" name="id" value="<%= list_vehicle.id %>">
+                        <input type="hidden" name="id" value="<%= vehicle.id %>">
                         <div class="col-md-12">
-                        <%= if list_vehicle.assignment_status != "assigned" do %>
+                        <%= if vehicle.assignment_status != "assigned" do %>
                             <div class="form-group">
                                 <label class="form-label">Vehicle</label>
                                 <div class="input-group">
@@ -417,7 +424,7 @@
                                     </div>                                    
                                     <select class="custom-select form-control" name="plate_no" required="required">
                                         <option>Select Vehicle</option>
-                                        <option value="<%= list_vehicle.plate_no %>" id="plate_no"><%= list_vehicle.v_make %> <%= list_vehicle.v_name %></option>
+                                        <option value="<%= vehicle.plate_no %>" id="plate_no"><%= vehicle.v_make %> <%= vehicle.v_name %></option>
                                     </select>
                                 </div>
                             </div>    

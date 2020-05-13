@@ -17,9 +17,20 @@ defmodule Fleet.Vehicles do
       [%VehicleDetails{}, ...]
 
   """
+  # def list_tbl_vehicles do
+  #   Repo.all(VehicleDetails)
+  # end
+
   def list_tbl_vehicles do
-    Repo.all(VehicleDetails)
+    veh=Repo.all(VehicleDetails)
+    comb=Repo.preload(veh, :vehicledetails)
   end
+
+
+  def get_by_user_id(id) do
+    Repo.get_by(VehicleDetails, driver_id: id)
+  end
+    
 
   @doc """
   Gets a single vehicle_details.
@@ -100,9 +111,5 @@ defmodule Fleet.Vehicles do
   """
   def change_vehicle_details(%VehicleDetails{} = vehicle_details) do
     VehicleDetails.changeset(vehicle_details, %{})
-  end
-
-  def select_vehicle do
-    Repo.all(from n in VehicleDetails, where: [assignment_status: "assigned"])
   end
 end

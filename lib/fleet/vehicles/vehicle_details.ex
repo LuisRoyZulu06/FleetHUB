@@ -3,7 +3,6 @@ defmodule Fleet.Vehicles.VehicleDetails do
   import Ecto.Changeset
 
   schema "tbl_vehicles" do
-    field :assigned_to, :string
     field :assignment_status, :string, default: "not_assigned"
     field :color, :string
     field :fitness_exp_dt, :string
@@ -23,7 +22,7 @@ defmodule Fleet.Vehicles.VehicleDetails do
   @doc false
   def changeset(vehicle_details, attrs) do
     vehicle_details
-    |> cast(attrs, [:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assigned_to, :assignment_status, :driver_id])
-    |> validate_required([:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assigned_to, :assignment_status])
+    |> cast(attrs, [:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assignment_status, :driver_id])
+    # |> validate_required([:v_make, :v_name, :color, :plate_no, :v_status, :mileage, :rd_tax_exp_dt, :fitness_exp_dt, :insrnc_exp_dt, :assignment_status])
   end
 end
