@@ -13,9 +13,7 @@ defmodule FleetWeb.VehicleController do
     end
 
     def create_vehicle(conn, params) do
-      IO.inspect "==============params============================="
-      IO.inspect params
-  
+     
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->
               conn
