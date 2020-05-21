@@ -132,31 +132,51 @@
                 </div>
 
                 
-                    <div class="col-md-4">
-                    <%= for list_vehicle <- @list_vehicles do %>
-                        <a href="#" data-id="<%= list_vehicle.id%>" data-v_make="<%= list_vehicle.v_make%>" data-v_name="<%= list_vehicle.v_name%>" data-color="<%= list_vehicle.color%>" data-plate_no="<%= list_vehicle.plate_no%>" data-v_status="<%= list_vehicle.v_status%>" data-assigned_to="<%= list_vehicle.assigned_to%>" data-assignment_status="<%= list_vehicle.assignment_status %>" data-mileage="<%= list_vehicle.mileage %>" data-rd_tax_exp_dt="<%= list_vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= list_vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= list_vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
-                            <div id="cp-2" class="card border">
-                                <div class="card-header bg-warning-600">
-                                    Vehicle Details
-                                </div>
-                                <div class="card-body p-0 bg-warning-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
-                                        </div>
+                <div class="col-md-4">
+                <%= if @vehicle !=nil do %>
+                    <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
+                        <div id="cp-2" class="card border">
+                            <div class="card-header bg-warning-600">
+                                Vehicle Details
+                            </div>
+                            <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                    </div>
 
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
-                                        </div>
-                                    </div> 
-                                </div>
-                                <div class="card-footer bg-warning-800 py-2">
-                                    <br>
-                                </div>
-                            </div> 
-                        </a>  
-                    <% end %>                                               
-                    </div>
+                                    <div class="col-sm-6">
+                                        <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="card-footer bg-warning-800 py-2">
+                                <br>
+                            </div>
+                        </div> 
+                    </a> 
+                <% else %> 
+                        <div id="cp-2" class="card border">
+                            <div class="card-header bg-warning-600">
+                                Vehicle Details
+                            </div>
+                            <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="card-footer bg-warning-800 py-2">
+                                <br>
+                            </div>
+                        </div>    
+                <%end%>                                         
+                </div>
                 
 
                 <div class="col-md-4">
@@ -185,7 +205,7 @@
                 
             </div>
         </div>
-    <% end %>
+    <%end%>
     <!-- ############################################################################## -->   
 
     <!-- ###################################### ADMIN-PANEL ############################ -->
@@ -590,16 +610,6 @@
                                         <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                     </div>
                                     <input type="text" name="color" id="color" class="form-control" required="required" disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Driver Assigned Vehicle</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
-                                    </div>
-                                    <input type="text" name="assigned_to" id="assigned_to" class="form-control" required="required" disabled>
                                 </div>
                             </div>
 
