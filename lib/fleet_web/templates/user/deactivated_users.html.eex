@@ -35,14 +35,8 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        System users <i class='subheader-icon fal fa-user-circle'></i>
+                        Deactivated System users <i class='subheader-icon fal fa-user-circle'></i>
                     </h2>
-                    <div class="panel-toolbar" style="margin-right: 10px;">
-                        <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.user_path(@conn, :user_mgt)%>">Back</a>   
-                    </div>
-                    <div class="panel-toolbar">
-                        
-                    </div>
                 </div>
 
                 <div class="panel-container show">
@@ -70,7 +64,11 @@
                                     <td><%= system_user.last_name %></td>
                                     <td><%= system_user.email %></td>
                                     <td><%= system_user.user_role %></td>
-                                    <td><%= system_user.status %></td>
+                                    <%= if system_user.status == 1 do %>
+                                        <td>Active</td>
+                                        <% else %>
+                                        <td>Deactivated</td>
+                                    <% end %>
                                     <td>
                                         <div class="input-group">
                                             <div class="input-group-prepend">

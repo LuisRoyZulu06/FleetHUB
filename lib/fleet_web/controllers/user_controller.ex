@@ -67,8 +67,8 @@ defmodule FleetWeb.UserController do
       accounts = Accounts.list_tbl_users()
       issues = Drivers.list_tbl_vehicle_issue()
       vendors = Clients.list_tbl_vendors()
-      list_vehicles = Vehicles.list_tbl_vehicles()
-      render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, list_vehicles: list_vehicles)
+      vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
+      render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle)
     end
   
     def user_actitvity(conn, %{"id" => user_id}) do

@@ -48,7 +48,7 @@ defmodule FleetWeb.Router do
     get "/Deactive/System/User/Account", UserController, :deactivate_user
     post "/Deactive/System/User/Account", UserController, :deactivate_user_account
     get "/View/Mgt/Users", UserController, :view_mgt_user
-    get "/Deactivated/Acc", UserController, :deactivated_acc
+    get "/Deactivated/Driver/Accounts", UserController, :deactivated_acc
     post "/Activate/Account", UserController, :activate_user_account
 
     # --------------------------------------------- Driver CONTROLLER
