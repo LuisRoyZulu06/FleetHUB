@@ -80,7 +80,7 @@
                                                 <div class="dropdown-menu">
                                                      <a class="dropdown-item" href="<%= Routes.user_path(@conn, :view_mgt_user, id: system_user.id)%>">View</a>
                                                     <button type="button" class="dropdown-item" data-id="<%= system_user.id %>" data-first_name="<%= system_user.first_name %>" data-last_name="<%= system_user.last_name %>" data-sex="<%= system_user.sex %>" data-age="<%= system_user.age %>" data-phone="<%= system_user.phone %>" data-email="<%= system_user.email %>" data-home_add="<%= system_user.home_add %>" data-nrc_no="<%= system_user.nrc_no %>" data-dln="<%= system_user.dln %>" data-dlt="<%= system_user.dlt %>" data-dl_exp_dt="<%= system_user.dl_exp_dt %>" data-user_type="<%= system_user.user_type %>" data-user_role="<%= system_user.user_role %>" data-password="<%= system_user.password %>" data-toggle="modal" data-target="#editmodal" >Edit</button>                                         
-                                                    <a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a> <!-- data-toggle="modal" data-target="#delete-alert" -->
+                                                    <!--<a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a>--> <!-- data-toggle="modal" data-target="#delete-alert" -->
                                                    <!-- <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>-->
                                                     <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#deactivate_user">Deactive</a>
                                                 </div>
@@ -415,7 +415,6 @@
 
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
-<!-- <script src="<%= Routes.static_path(@conn, "/js/jquery.js") %>"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
