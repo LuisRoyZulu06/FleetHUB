@@ -129,7 +129,7 @@ defmodule FleetWeb.VehicleController do
             |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
   
           {:error, _failed_operation, failed_value, _changes_so_far} ->
-            reason = VehicleController.traverse_errors(failed_value.errors) |> List.first()
+            reason =VehicleController.traverse_errors(failed_value.errors) |> List.first()
   
             conn
             |> put_flash(:error, reason)

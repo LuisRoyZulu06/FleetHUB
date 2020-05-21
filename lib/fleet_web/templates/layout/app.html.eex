@@ -203,6 +203,13 @@
                                     <span class="nav-link-text" data-i18n="nav.ui_components">Manage Users</span>
                                 </a>
                             </li>
+
+                             <li>
+                                <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="Manage System users" data-filter-tags="ui components">
+                                    <i class="fal fa-cog"></i>
+                                    <span class="nav-link-text" data-i18n="nav.ui_components">Manage Licenses</span>
+                                </a>
+                            </li>
                         <% end %>
                         <!-- ############################################################################### -->
 
