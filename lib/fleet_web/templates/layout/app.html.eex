@@ -158,6 +158,13 @@
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Drivers</span>
                                         </a>
                                     </li>
+
+                                    <li>
+                                        <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="License Maintainance" data-filter-tags="ui components">
+                                            <i class="fal fa-credit-card"></i>
+                                            <span class="nav-link-text" data-i18n="nav.ui_components">License Maintainance</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
@@ -191,7 +198,7 @@
                             </li>
 
                             <li>
-                                <a href="#" title="Drivers" data-filter-tags="theme settings">
+                                <a href="#" title="System Users" data-filter-tags="theme settings">
                                     <i class="fal fa-cog"></i>
                                     <span class="nav-link-text" data-i18n="nav.theme_settings">System Users</span>
                                 </a>
@@ -209,14 +216,14 @@
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Deactivated Users</span>
                                         </a>
                                     </li>
-                                </ul>
-                            </li>
 
-                             <li>
-                                <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="Manage System users" data-filter-tags="ui components">
-                                    <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.ui_components">Manage Licenses</span>
-                                </a>
+                                    <li>
+                                        <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-file"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">User Logs</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         <% end %>
                         <!-- ############################################################################### -->
@@ -352,7 +359,7 @@
                           <div class="modal-body">
                               <ul class="app-list w-auto h-auto p-0 text-left">
                                   <li>
-                                      <a href="#" class="app-list-item text-white border-0 m-0">
+                                      <a href="<%= Routes.user_path(@conn, :dashboard)%>" class="app-list-item text-white border-0 m-0">
                                           <div class="icon-stack">
                                               <i class="base base-7 icon-stack-3x opacity-100 color-primary-500 "></i>
                                               <i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>

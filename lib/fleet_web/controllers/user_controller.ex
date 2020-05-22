@@ -42,7 +42,8 @@ defmodule FleetWeb.UserController do
              :activate_user_account,
              :mgt_licences,
              :create_license,
-             :update_license
+             :update_license,
+             :user_logs
            ]
     )
   
@@ -53,7 +54,7 @@ defmodule FleetWeb.UserController do
   
     plug(
       FleetWeb.Plugs.RequireAdminAccess
-      when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account, :mgt_licences, :create_license, :update_license]
+      when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account, :mgt_licences, :create_license, :update_license, :user_logs]
     )
   
   
@@ -667,7 +668,6 @@ defmodule FleetWeb.UserController do
     end
 
     # ------------------------  License type ---------------------------------
-
     def mgt_licences(conn, _params) do
       licences = License.list_tbl_license_type()
       render(conn, "mgt_license.html", licences: licences)
@@ -721,6 +721,8 @@ defmodule FleetWeb.UserController do
       end
     end
 
-
+    def user_logs(conn, params) do
+      render(conn, "user_logs.html")
+    end
   end
   

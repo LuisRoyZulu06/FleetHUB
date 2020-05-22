@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-credit-card'></i> License Maintenance
+            <i class='subheader-icon fal fa-user-circle'></i> User Logs
         </h1>
         
 
@@ -35,11 +35,8 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        License Types <i class='subheader-icon fal fa-credit-card'></i>
+                        System user logs <i class='subheader-icon fal fa-user-circle'></i>
                     </h2>
-                    <div class="panel-toolbar" style="margin-right: 10px;">
-                        <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#addmodal">Add License Type</button>  
-                    </div>
                     <div class="panel-toolbar">
                         
                     </div>
@@ -52,34 +49,17 @@
                         <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                             <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
                                 <tr>
-                                   
                                     <th>Name</th>
-                                    <th>Vehicle Category</th>
-                                    <th>Weight</th>
-                                    <th>Action</th>
+                                    <th>Role</th>
+                                    <th>Activity</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            <%= for licence <- @licences do %>   
                                 <tr>
-                                    <td><%= licence.name%></td>
-                                    <td><%= licence.vehicle_cat%></td>
-                                    <td><%= licence.weight%></td>
-            
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= licence.id %>" data-vehicle_cat="<%= licence.vehicle_cat %>" data-weight="<%= licence.weight %>"  data-toggle="modal" data-target="#editmodal" >Edit</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr> 
-                            <% end %>                          
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>                         
                         </table>
                         <!-- datatable end -->
                     </div>
@@ -94,7 +74,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add License Type<i class='subheader-icon fal fa-credit-card'></i></h5>
+                <h5 class="modal-title">Add License <i class='subheader-icon fal fa-user-circle'></i></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>
@@ -106,7 +86,7 @@
                         <label class="form-label">Name</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-edit"></i></span>
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
                             </div>
                             <input type="hidden" name="id" id="id" value="">
                             <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
@@ -119,7 +99,7 @@
                         <label class="form-label">Vehicle Category</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-car"></i></span>
+                                <span class="input-group-text"><i class="fal fa-phone"></i></span>
                             </div>
                             <input type="text" name="vehicle_cat" id="vehicle_cat" placeholder="Vehicle Caterogry" class="form-control" required="required">
                             
@@ -130,7 +110,7 @@
                         <label class="form-label">Weight</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-weight"></i></span>
+                                <span class="input-group-text"><i class="fal fa-user"></i></span>
                             </div>
                             <input type="text" name="weight" id="weight" placeholder="vehicle weight" class="form-control" required="required">
                         </div>

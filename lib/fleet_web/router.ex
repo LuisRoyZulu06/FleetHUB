@@ -53,6 +53,7 @@ defmodule FleetWeb.Router do
     get "/Manage/License/Type", UserController, :mgt_licences
     post "/Create/License/Type", UserController, :create_license
     post "/Update/License/Type", UserController, :update_license
+    get "/Manage/User/Logs", UserController, :user_logs
 
     # --------------------------------------------- Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers
