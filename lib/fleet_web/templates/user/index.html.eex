@@ -84,6 +84,7 @@
                 </div>
 
                 <div class="col-md-4">
+                <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#profile-modal">
                     <div id="cp-2" class="card border">
                         <div class="card-header bg-primary-600">
                             Personal Profile
@@ -102,7 +103,8 @@
                             <div class="card-footer bg-primary-800 py-2">
                             <br>
                         </div>
-                    </div>                                      
+                    </div> 
+                </a>
                 </div>
             </div>
 
@@ -212,8 +214,20 @@
     <%= if @user.user_role == "admin" do %>
         <!-- Statistics -->
         <div class="row">
-            <div class="col-sm-6 col-xl-4">
-                <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-secondary rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            10
+                            <small class="m-0 l-h-n">Total Number of Drivers</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-user-circle position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-primary-600 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             12
@@ -223,8 +237,22 @@
                     <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
                 </div>
             </div>
-            <div class="col-sm-6 col-xl-4">
-                <div class="p-3 bg-info-400 rounded overflow-hidden position-relative text-white mb-g">
+
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-info-600 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            10
+                            <small class="m-0 l-h-n">Total Number of Veehicles</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-car position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-success-600 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             6
@@ -234,17 +262,7 @@
                     <i class="fal fa-bus position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
                 </div>
             </div>
-            <div class="col-sm-6 col-xl-4">
-                <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
-                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            10
-                            <small class="m-0 l-h-n">Vehicles To Be Serviced</small>
-                        </h3>
-                    </div>
-                    <i class="fal fa-cog position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
-                </div>
-            </div>
+
         </div>
         
         <!-- Dashboard -->
@@ -498,6 +516,144 @@
                         <button type="submit" class="btn btn-primary">Send Report</button>
                     </div>          
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ############################## VIEW-PROFILE ########################################## -->
+<div class="modal fade" id="profile-modal"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Profile Details
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form>
+                    <div class="row">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="id" id="id">
+                        <div class="col-md-6">
+                            <!-- Vehicle profile -->
+                            <div class="card mb-g rounded-top">
+                                <div class="row no-gutters row-grid">
+                                    <div class="col-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
+                                            
+
+                                            
+                                            <h5 class="mb-0 fw-700 text-center mt-3">
+                                                Mileage<br>
+                                                <input type="text" id="mileage" style="border: none; text-align: center;">
+                                            </h5>
+                                            <div class="mt-4 text-center demo">
+                                                <h5 class="mb-0 fw-700 text-center mt-3">EXPIRATION DATE OF:</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Road Tax
+                                                <small class="text-muted mb-0"><input type="text" id="rd_tax_exp_dt" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Vehicle Fittness
+                                                <small class="text-muted mb-0"><input type="text" id="fitness_exp_dt" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-center py-3">
+                                            <h5 class="mb-0 fw-700">
+                                                Insurance
+                                                <small class="text-muted mb-0"><input type="text" id="insrnc_exp_dt" style="border: none; text-align: center;"></small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="p-3 text-center">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Make</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="v_make" id="v_make" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="v_name" id="v_name" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Plate Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                    </div>
+                                    <input type="text" name="plate_no" id="plate_no" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Color</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="color" id="color" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Assignment Status</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                    </div>
+                                    <input type="text" name="v_status" id="v_status" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Status</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </form>
+            </div>
             </div>
         </div>
     </div>
