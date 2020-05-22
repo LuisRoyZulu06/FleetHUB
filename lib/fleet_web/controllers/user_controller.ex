@@ -722,7 +722,8 @@ defmodule FleetWeb.UserController do
     end
 
     def user_logs(conn, params) do
-      render(conn, "user_logs.html")
+      logs = Logs.get_all_activity_logs()
+      render(conn, "user_logs.html", logs: logs)
     end
   end
   
