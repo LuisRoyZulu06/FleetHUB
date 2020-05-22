@@ -68,10 +68,12 @@ defmodule FleetWeb.UserController do
     end
   
     def dashboard(conn, _params) do
+      IO.inspect "=============================================================================================="
+      IO.inspect conn
       accounts = Accounts.list_tbl_users()
       issues = Drivers.list_tbl_vehicle_issue()
       vendors = Clients.list_tbl_vendors()
-      vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
+      vehicle = Vehicles.get_by_user_id(conn.user.id)
       render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle)
     end
   
