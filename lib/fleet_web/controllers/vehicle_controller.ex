@@ -13,9 +13,7 @@ defmodule FleetWeb.VehicleController do
     end
 
     def create_vehicle(conn, params) do
-      IO.inspect "==============params============================="
-      IO.inspect params
-  
+     
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->
               conn
@@ -131,7 +129,7 @@ defmodule FleetWeb.VehicleController do
             |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
   
           {:error, _failed_operation, failed_value, _changes_so_far} ->
-            reason = VehicleController.traverse_errors(failed_value.errors) |> List.first()
+            reason =VehicleController.traverse_errors(failed_value.errors) |> List.first()
   
             conn
             |> put_flash(:error, reason)

@@ -39,7 +39,11 @@ defmodule FleetWeb.UserController do
              :deactivate_user_account,
              :view_mgt_user,
              :deactivated_acc,
-             :activate_user_account
+             :activate_user_account,
+             :mgt_licences,
+             :create_license,
+             :update_license,
+             :user_logs
            ]
     )
   
@@ -50,7 +54,7 @@ defmodule FleetWeb.UserController do
   
     plug(
       FleetWeb.Plugs.RequireAdminAccess
-      when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account]
+      when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account, :mgt_licences, :create_license, :update_license, :user_logs]
     )
   
   
@@ -67,8 +71,8 @@ defmodule FleetWeb.UserController do
       accounts = Accounts.list_tbl_users()
       issues = Drivers.list_tbl_vehicle_issue()
       vendors = Clients.list_tbl_vendors()
-      list_vehicles = Vehicles.list_tbl_vehicles()
-      render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, list_vehicles: list_vehicles)
+      vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
+      render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle)
     end
   
     def user_actitvity(conn, %{"id" => user_id}) do
@@ -663,6 +667,63 @@ defmodule FleetWeb.UserController do
       end
     end
 
+    # ------------------------  License type ---------------------------------
+    def mgt_licences(conn, _params) do
+      licences = License.list_tbl_license_type()
+      render(conn, "mgt_license.html", licences: licences)
+    end
 
+    def create_license(conn, params) do
+      case License.create_drivers_license(params) do
+        {:ok, _} ->
+          conn
+          |> put_flash(:info, "New License Added Sccessfully :-)")
+          |> redirect(to: Routes.user_path(conn, :mgt_licences))
+
+          conn
+
+        {:error, _} ->
+          conn
+          |> put_flash(:error, "Failed To Add New License :-(")
+          |> redirect(to: Routes.user_path(conn, :mgt_licences))
+      end
+    end
+
+    def update_license(conn, %{"id" => id} = params) do
+      licences = License.get_drivers_license!(id)
+
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:licences, Drivers_license.changeset(licences, params))
+      |> Ecto.Multi.run(:userlogs, fn %{licences: licences} ->
+        activity = "FleetHUB License updated with ID \"#{licences.id}\""
+
+        userlogs = %{
+          user_id: conn.assigns.user.id,
+          activity: activity
+        }
+
+        UserLogs.changeset(%UserLogs{}, userlogs)
+        |> Repo.insert()
+      end)
+      |> Repo.transaction()
+      |> case do
+        {:ok, %{licences: licences, userlogs: _userlogs}} ->
+          conn
+          |> put_flash(:info, "FleetHUB License updated successfully :-) ")
+          |> redirect(to: Routes.user_path(conn, :mgt_licences))
+
+        {:error, _failed_operation, failed_value, _changes_so_far} ->
+          reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+          conn
+          |> put_flash(:error, reason)
+          |> redirect(to: Routes.user_path(conn, :mgt_licences))
+      end
+    end
+
+    def user_logs(conn, params) do
+      logs = Logs.get_all_activity_logs()
+      render(conn, "user_logs.html", logs: logs)
+    end
   end
   

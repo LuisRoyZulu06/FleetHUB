@@ -153,16 +153,16 @@
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="<%= Routes.user_path(@conn, :deactivated_acc)%>" title="Manage Drivers" data-filter-tags="theme settings layout options">
+                                        <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" title="Manage Drivers" data-filter-tags="theme settings layout options">
                                             <i class="fal fa-user-circle"></i>
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Drivers</span>
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" title="Deactivated Drivers" data-filter-tags="theme settings layout options">
-                                            <i class="fal fa-user-circle"></i>
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Deactivated Drivers</span>
+                                        <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="License Maintainance" data-filter-tags="ui components">
+                                            <i class="fal fa-credit-card"></i>
+                                            <span class="nav-link-text" data-i18n="nav.ui_components">License Maintainance</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -198,10 +198,32 @@
                             </li>
 
                             <li>
-                                <a href="<%= Routes.user_path(@conn, :user_mgt)%>" title="Manage System users" data-filter-tags="ui components">
+                                <a href="#" title="System Users" data-filter-tags="theme settings">
                                     <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.ui_components">Manage Users</span>
+                                    <span class="nav-link-text" data-i18n="nav.theme_settings">System Users</span>
                                 </a>
+                                <ul>
+                                    <li>
+                                        <a href="<%= Routes.user_path(@conn, :user_mgt)%>" title="Manage Active Users" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-user"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Active Users</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="<%= Routes.user_path(@conn, :deactivated_acc)%>" title="Manage Deactivated Users" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-user-circle"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Deactivated Users</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-file"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">User Logs</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         <% end %>
                         <!-- ############################################################################### -->
@@ -337,7 +359,7 @@
                           <div class="modal-body">
                               <ul class="app-list w-auto h-auto p-0 text-left">
                                   <li>
-                                      <a href="#" class="app-list-item text-white border-0 m-0">
+                                      <a href="<%= Routes.user_path(@conn, :dashboard)%>" class="app-list-item text-white border-0 m-0">
                                           <div class="icon-stack">
                                               <i class="base base-7 icon-stack-3x opacity-100 color-primary-500 "></i>
                                               <i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>
@@ -585,7 +607,8 @@
     </div>
     <!--------------------------------------------------------------------------------------------------------------------->
 
-
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <%# <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> %>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script>
     <script src="<%= Routes.static_path(@conn, "/js/statistics/c3/c3.js") %>"></script>
