@@ -74,16 +74,20 @@ defmodule FleetWeb.UserController do
     render(conn, "list_users.html", users: users, page: page)
   end
 
-  def dashboard(conn, _params) do
-    accounts = Accounts.list_tbl_users()
-    issues = Drivers.list_tbl_vehicle_issue()
-    vendors = Clients.list_tbl_vendors()
-    vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
-    
-    profiles = Accounts.user_profile()
+  # ---------------------------
   
-    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, profiles: profiles)
-  end
+    def dashboard(conn, _params) do
+      IO.inspect "=============================================================================================="
+      IO.inspect conn
+      accounts = Accounts.list_tbl_users()
+      issues = Drivers.list_tbl_vehicle_issue()
+      vendors = Clients.list_tbl_vendors()
+      vehicle = Vehicles.get_by_user_id(conn.user.id)
+      render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle)
+    end
+  
+  #  CONFICT---  render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, profiles: profiles)
+  # end
 
   def user_actitvity(conn, %{"id" => user_id}) do
     with :error <- confirm_token(conn, user_id) do
@@ -860,7 +864,7 @@ defmodule FleetWeb.UserController do
     |> case do
       {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
         conn
-        |> put_flash(:info, "FleetHUB system leave account activated :-) ")
+        |> put_flash(:info, "FleetHUB system leave account activated :-)")
         |> redirect(to: Routes.user_path(conn, :accs_on_leave))
 
       {:error, _failed_operation, failed_value, _changes_so_far} ->
@@ -872,9 +876,10 @@ defmodule FleetWeb.UserController do
     end
   end
 
-
   def user_logs(conn, params) do
-    render(conn, "user_logs.html")
+    logs = Logs.get_all_activity_logs()
+    render(conn, "user_logs.html", logs: logs)
   end
+  
 
 end

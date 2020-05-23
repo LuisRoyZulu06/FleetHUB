@@ -133,4 +133,8 @@ defmodule Fleet.Logs do
           ])
     )
   end
+
+  # def get_logs_by_user_id(user_id) do
+  #   Repo.get_by(UserLogs, user_id: id)
+  # end
 end

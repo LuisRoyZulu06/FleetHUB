@@ -52,14 +52,20 @@
                                     <th>Name</th>
                                     <th>Role</th>
                                     <th>Activity</th>
+                                    <th>Date</th>
+                                    <th>Host</th>
                                 </tr>
                             </thead>
                             <tbody>
+                            <%= for log <- @logs do %>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>                         
+                                    <td><%= Fleet.Accounts.get_user!(log.user_id).first_name %> <%= Fleet.Accounts.get_user!(log.user_id).last_name %></td>
+                                    <td><%= Fleet.Accounts.get_user!(log.user_id).user_role %></td>
+                                    <td><%= log.activity%></td>
+                                    <td><%= log.inserted_at%></td>
+                                    <td><%= @conn.host%></td>
+                                </tr>  
+                            <% end %>                          
                         </table>
                         <!-- datatable end -->
                     </div>
@@ -214,7 +220,3 @@ $(document).ready(function(){
 });
 
 </script>
-
-
-
-
