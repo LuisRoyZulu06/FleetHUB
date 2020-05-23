@@ -217,6 +217,20 @@
                                         </a>
                                     </li>
 
+                                     <li>
+                                        <a href="<%= Routes.user_path(@conn, :suspended_acc)%>" title="Manage Suspended Users" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-user-circle"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Suspended Users</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="<%= Routes.user_path(@conn, :accs_on_leave)%>" title="Manage Users on Leave" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-user-circle"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Users on Leave</span>
+                                        </a>
+                                    </li>
+
                                     <li>
                                         <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
                                             <i class="fal fa-file"></i>

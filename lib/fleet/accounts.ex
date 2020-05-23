@@ -25,6 +25,14 @@ defmodule Fleet.Accounts do
   def get_by_vehicle_id(id) do
     Repo.get_by(VehicleDetails, driver_id: id)
   end
+
+  def user_profile do
+    Repo.all(User)
+  end
+
+  # def get_by_user_id(id) do
+  #   Repo.get_by(User, user_id: id)
+  # end
   
   @doc """
   Gets a single user.

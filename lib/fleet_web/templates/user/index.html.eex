@@ -84,27 +84,30 @@
                 </div>
 
                 <div class="col-md-4">
-                <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#profile-modal">
-                    <div id="cp-2" class="card border">
-                        <div class="card-header bg-primary-600">
-                            Personal Profile
-                        </div>
-                        <div class="card-body p-0 bg-primary-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">PROFILE</h1>  
-                                        </div>
+                      <%= for profile <- @profiles do %>
+                            <a href="#" data-id="<%= profile.id %>" data-first_name="<%= profile.first_name %>" data-last_name="<%= profile.last_name %>" data-email="<%= profile.email %>" data-phone="<%= profile.phone %>" data-sex="<%= profile.sex %>" data-age="<%= profile.age %>" data-nrc_no="<%= profile.nrc_no %>" data-home_add="<%= profile.home_add %>" data-dlt="<%= profile.dlt %>" data-dln="<%= profile.dln %>" data-dl_exp_dt="<%= profile.dl_exp_dt %>"   data-toggle="modal" data-target="#profile-modal">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-primary-600">
+                                        Personal Profile
+                                    </div>
+                                    <div class="card-body p-0 bg-primary-300" style="height: 160px">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <h1 class="opacity-15" id="driver-cards">PROFILE</h1>  
+                                                    </div>
 
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-user position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
-                                        </div>
-                                    </div> 
-                                </div>
-                            <div class="card-footer bg-primary-800 py-2">
-                            <br>
-                        </div>
-                    </div> 
-                </a>
+                                                    <div class="col-sm-6">
+                                                        <i class="fal fa-user position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        <div class="card-footer bg-primary-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a>
+                        <% end %>    
+                    
                 </div>
             </div>
 
@@ -545,45 +548,39 @@
                                 <div class="row no-gutters row-grid">
                                     <div class="col-12">
                                         <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                                            <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
+                                            <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/2.jpg") %>">
                                             
 
                                             
                                             <h5 class="mb-0 fw-700 text-center mt-3">
-                                                Mileage<br>
-                                                <input type="text" id="mileage" style="border: none; text-align: center;">
+                                                Name<br>
+                                                <input type="text" name="first_name" id="first_name" name="last_name" id="last_name" style="border: none; text-align: center;">
                                             </h5>
                                             <div class="mt-4 text-center demo">
-                                                <h5 class="mb-0 fw-700 text-center mt-3">EXPIRATION DATE OF:</h5>
+                                                <h5 class="mb-0 fw-700 text-center mt-3" name="phone" id="phone"></h5>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="text-center py-3">
                                             <h5 class="mb-0 fw-700">
-                                                Road Tax
-                                                <small class="text-muted mb-0"><input type="text" id="rd_tax_exp_dt" style="border: none; text-align: center;"></small>
+                                                Sex
+                                                <small class="text-muted mb-0"><input type="text" name="sex" id="sex" style="border: none; text-align: center;"></small>
                                             </h5>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="text-center py-3">
                                             <h5 class="mb-0 fw-700">
-                                                Vehicle Fittness
-                                                <small class="text-muted mb-0"><input type="text" id="fitness_exp_dt" style="border: none; text-align: center;"></small>
+                                                Age
+                                                <small class="text-muted mb-0"><input type="text" anme="age" id="age" style="border: none; text-align: center;"></small>
                                             </h5>
                                         </div>
                                     </div>
-                                    <div class="col-4">
-                                        <div class="text-center py-3">
-                                            <h5 class="mb-0 fw-700">
-                                                Insurance
-                                                <small class="text-muted mb-0"><input type="text" id="insrnc_exp_dt" style="border: none; text-align: center;"></small>
-                                            </h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
+                                     <div class="col-12">
                                         <div class="p-3 text-center">
+                                            <a href="#"  name="email" id="email" class="btn-link font-weight-bold">Email</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+                                            <a href="#" name="phone" id="phone" class="btn-link font-weight-bold">Call</a>
                                         </div>
                                     </div>
                                 </div>
@@ -592,64 +589,55 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">Vehicle Make</label>
+                                <label class="form-label">NRC Number</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="text" name="v_make" id="v_make" class="form-control" required="required" disabled>
+                                    <input type="text" name="nrc_no" id="nrc_no" class="form-control" required="required" disabled>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Vehicle Name</label>
+                                <label class="form-label">Home Address</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-home"></i></span>
                                     </div>
-                                    <input type="text" name="v_name" id="v_name" class="form-control" required="required" disabled>
+                                    <input type="text" name="home_add" id="home_add" class="form-control" required="required" disabled>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Vehicle Plate Number</label>
+                                <label class="form-label">Drivers license Type</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="text" name="plate_no" id="plate_no" class="form-control" required="required" disabled>
+                                    <input type="text" name="dlt" id="dlt" class="form-control" required="required" disabled>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Vehicle Color</label>
+                                <label class="form-label">Drivers License Number</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="text" name="color" id="color" class="form-control" required="required" disabled>
+                                    <input type="text" name="dln" id="dln" class="form-control" required="required" disabled>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Vehicle Assignment Status</label>
+                                <label class="form-label">Drivers License Expiry date </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="text" name="v_status" id="v_status" class="form-control" required="required" disabled>
+                                    <input type="text" name="dl_exp_dt" id="dl_exp_dt" class="form-control" required="required" disabled>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Status</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
-                                    </div>
-                                    <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required" disabled>
-                                </div>
-                            </div>
                         </div>
                     </div> 
                 </form>
@@ -1085,6 +1073,44 @@ $('#approved-requests').on('show.bs.modal', function (event){
     modal.find('.modal-body #approval_status').val(approval_status);
     
 });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+//JS FOR VIEWING PERSONAL PROFILE
+    $('#profile-modal').on('show.bs.modal', function (event){
+
+        console.log("profile")
+
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var first_name = button.data('first_name')
+        var last_name = button.data('last_name')
+        var email = button.data('email')
+        var phone = button.data('phone')
+        var sex = button.data('sex')
+        var age = button.data('age')
+        var nrc_no = button.data('nrc_no')
+        var home_add = button.data('home_add')
+        var dlt = button.data('dlt')
+        var dln = button.data('dln')
+        var dl_exp_dt = button.data('dl_exp_dt')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #first_name').val(first_name);
+        modal.find('.modal-body #last_name').val(last_name);
+        modal.find('.modal-body #email').val(phone);
+        modal.find('.modal-body #sex').val(sex);
+        modal.find('.modal-body #age').val(age);
+        modal.find('.modal-body #nrc_no').val(nrc_no);
+        modal.find('.modal-body #home_add').val(home_add);
+        modal.find('.modal-body #dlt').val(dlt);
+        modal.find('.modal-body #dln').val(dln);
+        modal.find('.modal-body #dl_exp_dt').val(dl_exp_dt);
+        
+    });
 });
 </script>
 

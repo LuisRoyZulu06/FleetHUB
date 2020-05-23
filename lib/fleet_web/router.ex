@@ -54,6 +54,12 @@ defmodule FleetWeb.Router do
     post "/Create/License/Type", UserController, :create_license
     post "/Update/License/Type", UserController, :update_license
     get "/Manage/User/Logs", UserController, :user_logs
+    get "/Suspended/Accounts", UserController, :suspended_acc
+    post "/Suspend/System/User/Acccount", UserController, :suspend_user_account
+    post "/Activate/Suspended/Acccount", UserController, :activate_suspended_acc
+    get "/Accounts/on/Leave", UserController, :accs_on_leave
+    post "/Leave/User/Acccount", UserController, :user_leave_account
+    post "/Activate/Leave/Acccount", UserController, :activate_leave_acc
 
     # --------------------------------------------- Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers

@@ -83,6 +83,9 @@
                                                     <!--<a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a>--> <!-- data-toggle="modal" data-target="#delete-alert" -->
                                                    <!-- <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>-->
                                                     <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#deactivate_user">Deactive</a>
+                                                    <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#suspend_user">Suspend</a>
+                                                    <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#user_on_leave">Add on leave</a>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -414,6 +417,100 @@
 </div>
 
 
+<!-- ############################## SUSPEND-ACCOUNT ########################################## -->
+<div class="modal fade" id="suspend_user"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Suspend Account
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="<%= Routes.user_path(@conn, :suspend_user_account)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label class="form-label">Suspend Account</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="status" id="status" required="required">
+                                        <option value="3">Suspend</option>
+                                    </select>
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Suspend Account</button>
+                    </div>   
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ############################## SUSPEND-ACCOUNT ########################################## -->
+<div class="modal fade" id="user_on_leave"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Add Account on Leave 
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="<%= Routes.user_path(@conn, :user_leave_account)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label class="form-label">Leave Account</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="status" id="status" required="required">
+                                        <option value="4">Leave</option>
+                                    </select>
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Leave Account</button>
+                    </div>   
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -474,6 +571,38 @@ $('#editmodal').on('show.bs.modal', function (event){
 $(document).ready(function(){
 //Deactivate msg Account
 $('#deactivate_user').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var status = button.data('status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #status').val(status);
+});
+});
+</script>
+
+<script>
+$(document).ready(function(){
+//Suspend msg Account
+$('#suspend_user').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var status = button.data('status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #status').val(status);
+});
+});
+</script>
+
+<script>
+$(document).ready(function(){
+//Add leave msg Account
+$('#user_on_leave').on('show.bs.modal', function (event){
 
     var button = $(event.relatedTarget)
     var id = button.data('id')
