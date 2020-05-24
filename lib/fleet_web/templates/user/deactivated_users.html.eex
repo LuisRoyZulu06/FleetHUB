@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-user-circle'></i> Manage Deactivated Users
+            <i class='subheader-icon fal fa-times'></i> Deactivated Accounts
         </h1>
         
 
@@ -35,7 +35,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Deactivated System users <i class='subheader-icon fal fa-user-circle'></i>
+                        Deactivated Accounts <i class='subheader-icon fal fa-times'></i>
                     </h2>
                 </div>
 
@@ -52,35 +52,24 @@
                                     <th>Email</th>
                                     <th>User role</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Details</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            <%= for system_user <- @system_users do %>  
-                             <%= if system_user.status === 2 do %> 
+                            <%= for deactivated_user <- @deactivated_users do %>  
+                             <%= if deactivated_user.status === 4 do %> 
                                 <tr>
-                                    <td><%= system_user.id %></td>
-                                    <td><%= system_user.first_name %></td>
-                                    <td><%= system_user.last_name %></td>
-                                    <td><%= system_user.email %></td>
-                                    <td><%= system_user.user_role %></td>
-                                    <%= if system_user.status == 1 do %>
+                                    <td><%= deactivated_user.id %></td>
+                                    <td><%= deactivated_user.first_name %></td>
+                                    <td><%= deactivated_user.last_name %></td>
+                                    <td><%= deactivated_user.email %></td>
+                                    <td><%= deactivated_user.user_role %></td>
+                                    <%= if deactivated_user.status == 1 do %>
                                         <td>Active</td>
                                         <% else %>
                                         <td>Deactivated</td>
                                     <% end %>
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><%= deactivated_user.acc_inactive_reason %></td>
                                 </tr> 
                               <% end %>  
                             <% end %>                          
@@ -92,72 +81,4 @@
         </div>
     </div>
 </main>
-
-<!-- ############################## ACTIVATE-ACCOUNT ########################################## -->
-<div class="modal fade" id="activate_user"  tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title text-black">
-                    Activate Account
-                </h4>
-                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="panel-content">
-                <form action="<%= Routes.user_path(@conn, :activate_user_account)%>" method="POST">
-                    <div class="row">
-                        <div class="col-md-12">
-
-                            <div class="form-group">
-                                <label class="form-label">Activate Account</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
-                                    </div>
-                                    <select class="custom-select form-control" name="status" id="status" required="required">
-                                        <option value="1">Activate</option>
-                                    </select>
-                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                                    <input type="hidden" name="id" id="id">
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Activate Account</button>
-                    </div>   
-                </form>
-            </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-<script>
-$(document).ready(function(){
-//Deactivate msg Account
-$('#activate_user').on('show.bs.modal', function (event){
-
-    var button = $(event.relatedTarget)
-    var id = button.data('id')
-    var status = button.data('status')
-    
-    var modal = $(this)
-    modal.find('.modal-body #id').val(id);
-    modal.find('.modal-body #status').val(status);
-});
-});
-</script>
-
-

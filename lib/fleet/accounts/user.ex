@@ -19,6 +19,8 @@ defmodule Fleet.Accounts.User do
     field :nrc_no, :string
     field :phone, :string
     field :sex, :string
+    field :acc_inactive_reason, :string
+    field :slct_acc_inactive_reason, :string
     
     
     belongs_to :user, Fleet.Accounts.User, foreign_key: :user_id, type: :id
@@ -30,12 +32,13 @@ defmodule Fleet.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :user_id, :auto_password, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
+    |> cast(attrs, [:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :user_id, :auto_password, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex, :acc_inactive_reason, :slct_acc_inactive_reason])
     |> validate_required([:first_name, :last_name, :email, :password, :user_type, :user_role, :status, :age, :dl_exp_dt, :dln, :dlt, :home_add, :nrc_no, :phone, :sex])
-    |> unique_constraint(:nrc_no, name: :unique_nrc_no, message: "Current record already exists!")
-    |> unique_constraint(:phone, name: :unique_phone, message: "Current record already exists!")
-    |> unique_constraint(:email, name: :unique_email, message: "Current record already exists!")
-    |> unique_constraint(:dln, name: :unique_dln, message: "Current record already exists!")
+    |> unique_constraint(:nrc_no, name: :unique_nrc_no, message: "Record with this NRC number already exists!")
+    |> unique_constraint(:phone, name: :unique_phone, message: "Record with this phone number already exists!")
+    |> unique_constraint(:email, name: :unique_email, message: "Record with this email address already exists!")
+    |> unique_constraint(:dln, name: :unique_dln, message: "Record with this Drivers License number already exists!")
+    |> unique_constraint(:id, name: :unique_id, message: "Record with this user ID already exists!")
     |> validate_length(:password,
       min: 4,
       max: 40,

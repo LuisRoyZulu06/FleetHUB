@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-user-circle'></i> Manage Suspended Users
+            <i class='subheader-icon fal fa-edit'></i> Suspended System Users
         </h1>
         
 
@@ -35,7 +35,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Suspended System users <i class='subheader-icon fal fa-user-circle'></i>
+                        Suspended System users <i class='subheader-icon fal fa-edit'></i>
                     </h2>
                 </div>
 
@@ -52,23 +52,25 @@
                                     <th>Email</th>
                                     <th>User role</th>
                                     <th>Status</th>
+                                    <th>Details</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            <%= for system_user <- @system_users do %>  
-                             <%= if system_user.status === 3 do %> 
+                            <%= for suspended_user <- @suspended_users do %>  
+                            <%= if suspended_user.status === 3 do %> 
                                 <tr>
-                                    <td><%= system_user.id %></td>
-                                    <td><%= system_user.first_name %></td>
-                                    <td><%= system_user.last_name %></td>
-                                    <td><%= system_user.email %></td>
-                                    <td><%= system_user.user_role %></td>
-                                    <%= if system_user.status == 1 do %>
+                                    <td><%= suspended_user.id %></td>
+                                    <td><%= suspended_user.first_name %></td>
+                                    <td><%= suspended_user.last_name %></td>
+                                    <td><%= suspended_user.email %></td>
+                                    <td><%= suspended_user.user_role %></td>
+                                    <%= if suspended_user.status == 1 do %>
                                         <td>Active</td>
                                         <% else %>
                                         <td>Suspended</td>
                                     <% end %>
+                                    <td><%= suspended_user.acc_inactive_reason %></td>
                                     <td>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -76,7 +78,7 @@
                                                     <i class='subheader-icon fal fa-chevron-down'></i>
                                                 </span>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
+                                                    <a class="dropdown-item" data-id="<%= suspended_user.id%>" data-status="<%= suspended_user.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,7 +109,7 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.user_path(@conn, :activate_suspended_acc)%>" method="POST">
+                <form action="<%= Routes.user_path(@conn, :activate_account)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
 
@@ -122,6 +124,8 @@
                                     </select>
                                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                                     <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="acc_inactive_reason" value="">
+                                    <input type="hidden" name="slct_acc_inactive_reason" value="">
                                 </div>
                             </div>
 
@@ -143,10 +147,9 @@
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
 <script>
 $(document).ready(function(){
-//Deactivate msg Account
+//Activate Account
 $('#activate_user').on('show.bs.modal', function (event){
 
     var button = $(event.relatedTarget)

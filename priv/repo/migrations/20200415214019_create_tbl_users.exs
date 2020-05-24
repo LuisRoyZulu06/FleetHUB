@@ -20,6 +20,8 @@ defmodule Fleet.Repo.Migrations.CreateTblUsers do
       add :dlt, :string
       add :dln, :string
       add :dl_exp_dt, :string
+      add :acc_inactive_reason, :string
+      add :slct_acc_inactive_reason, :string
 
       timestamps()
     end

@@ -8,6 +8,22 @@ defmodule FleetWeb.DriverController do
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
 
+    plug(
+      FleetWeb.Plugs.RequireAuth
+    when action in [
+           :list_drivers,
+           :view_driver,
+           :create_driver,
+           :update_driver,
+           :delete_driver,
+           :assign_vehicle,
+           :logged_issues,
+           :create_issue,
+           :file_issue_report,
+           :request_response
+         ]
+  )
+
 
     def list_drivers(conn, _params) do
         vehicles = Vehicles.list_tbl_vehicles()
@@ -162,47 +178,4 @@ defmodule FleetWeb.DriverController do
       responses = Drivers.list_tbl_vehicle_issue()
       render(conn, "request_response.html", responses: responses)
     end
-
-    def deactivate_account(conn, %{"id" => id} = params) do
-      driver = Accounts.get_user!(id)
-
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:driver, User.changeset(driver, params))
-      |> Ecto.Multi.run(:userlogs, fn %{driver: driver} ->
-        activity = "FleetHUB driver updated with ID \"#{driver.id}\""
-
-        userlogs = %{
-          user_id: conn.assigns.user.id,
-          activity: activity
-        }
-
-        UserLogs.changeset(%UserLogs{}, userlogs)
-        |> Repo.insert()
-      end)
-      |> Repo.transaction()
-      |> case do
-        {:ok, %{driver: driver, userlogs: _userlogs}} ->
-          conn
-          |> put_flash(:info, "Account Deactivated.")
-          |> redirect(to: Routes.driver_path(conn, :list_drivers))
-
-        {:error, _failed_operation, failed_value, _changes_so_far} ->
-          reason = DriverController.traverse_errors(failed_value.errors) |> List.first()
-
-          conn
-          |> put_flash(:error, reason)
-          |> redirect(to: Routes.driver_path(conn, :list_drivers))
-      end
-    end
-
-
-    # def assign_vehicle(conn, %{"id" => id}) do
-    #   case Drivers.get_driver_details!(id) do
-    #     {:ok, _} ->
-    #   conn
-    #   |> list_vehicles = Vehicles.get_vehicle_details!(id)
-    #   |> changeset = Drivers.change_driver_details(drivers)
-    #   render(conn, "assign_vehicle.html", drivers: drivers, changeset: changeset, list_vehicles: list_vehicles)
-    #     end
-    # end
 end

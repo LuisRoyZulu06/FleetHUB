@@ -203,14 +203,11 @@
     </div>
 </div>
 
-
-
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>
-
 $(document).ready(function(){
 
     $('#editmodal').on('show.bs.modal', function (event){
@@ -228,11 +225,8 @@ $(document).ready(function(){
         modal.find('.modal-body #name').val(name);
         modal.find('.modal-body #vehicle_cat').val(vehicle_cat);
         modal.find('.modal-body #weight').val(weight);
-    
     });
-
 });
-
 </script>
 
 

@@ -45,7 +45,9 @@ defmodule Fleet.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:arc, "~> 0.11.0"},
-      {:arc_ecto, "~> 0.11.3"}
+      {:arc_ecto, "~> 0.11.3"},
+      {:timex, "~> 3.6"},
+      {:calendar, "~> 0.17.0"}
     ]
   end
 

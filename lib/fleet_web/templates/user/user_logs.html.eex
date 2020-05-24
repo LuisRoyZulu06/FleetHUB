@@ -62,7 +62,9 @@
                                     <td><%= Fleet.Accounts.get_user!(log.user_id).first_name %> <%= Fleet.Accounts.get_user!(log.user_id).last_name %></td>
                                     <td><%= Fleet.Accounts.get_user!(log.user_id).user_role %></td>
                                     <td><%= log.activity%></td>
-                                    <td><%= log.inserted_at%></td>
+                                    <td>
+                                    <%= "#{log.inserted_at |> Calendar.DateTime.shift_zone!("Africa/Cairo") |> Calendar.Strftime.strftime!("%d-%b-%Y %H:%M:%S")}" %>
+                                    </td>
                                     <td><%= @conn.host%></td>
                                 </tr>  
                             <% end %>                          
@@ -190,13 +192,11 @@
 </div>
 
 
-
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>
-
 $(document).ready(function(){
 
     $('#editmodal').on('show.bs.modal', function (event){
@@ -216,7 +216,5 @@ $(document).ready(function(){
         modal.find('.modal-body #weight').val(weight);
     
     });
-
 });
-
 </script>
