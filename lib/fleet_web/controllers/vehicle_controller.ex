@@ -6,6 +6,16 @@ defmodule FleetWeb.VehicleController do
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
 
+    plug(
+      FleetWeb.Plugs.RequireAuth
+    when action in [
+           :list_vehicles,
+           :create_vehicle,
+           :maintain_vehicle,
+           :reassign_vehicle
+         ]
+  )
+
     def list_vehicles(conn, _params) do
         list_vehicles = Vehicles.list_tbl_vehicles()
         drivers=Accounts.list_tbl_users()

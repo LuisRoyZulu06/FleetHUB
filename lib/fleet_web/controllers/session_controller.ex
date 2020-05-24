@@ -5,6 +5,11 @@ defmodule FleetWeb.SessionController do
     alias Fleet.Logs
     alias Fleet.Auth
     # alias Fleet.{Auth, Logs}
+
+    plug(
+      FleetWeb.Plugs.RequireAuth
+      when action in [:signout]
+  )
   
     def new(conn, _params) do
       conn = put_layout(conn, false)

@@ -80,9 +80,8 @@
                                                 <div class="dropdown-menu">
                                                      <a class="dropdown-item" href="<%= Routes.user_path(@conn, :view_mgt_user, id: system_user.id)%>">View</a>
                                                     <button type="button" class="dropdown-item" data-id="<%= system_user.id %>" data-first_name="<%= system_user.first_name %>" data-last_name="<%= system_user.last_name %>" data-sex="<%= system_user.sex %>" data-age="<%= system_user.age %>" data-phone="<%= system_user.phone %>" data-email="<%= system_user.email %>" data-home_add="<%= system_user.home_add %>" data-nrc_no="<%= system_user.nrc_no %>" data-dln="<%= system_user.dln %>" data-dlt="<%= system_user.dlt %>" data-dl_exp_dt="<%= system_user.dl_exp_dt %>" data-user_type="<%= system_user.user_type %>" data-user_role="<%= system_user.user_role %>" data-password="<%= system_user.password %>" data-toggle="modal" data-target="#editmodal" >Edit</button>                                         
-                                                    <!--<a class="dropdown-item" href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>">Delete</a>--> <!-- data-toggle="modal" data-target="#delete-alert" -->
-                                                   <!-- <a class="dropdown-item" href="<%= Routes.user_path(@conn, :deactivate_user, id: system_user.id)%>">Deactivate</a>-->
                                                     <a class="dropdown-item" data-id="<%= system_user.id%>" data-status="<%= system_user.status%>" data-toggle="modal" data-target="#deactivate_user">Deactive</a>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -220,32 +219,8 @@
             </div>   
         </div>
     </div>
-</div>
+</div>  
 
-<!-- ############################## DELETE-ALERT MODAL ################################## -->
-<div class="modal modal-alert fade" id="delete-alert" tabindex="-1" role="dialog" aria-hidden="true">
-    <%= for system_user <- @system_users do %>
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Are you sure you want to delete this user?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                You can't reverse this action!
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <a href="<%= Routes.user_path(@conn, :delete_user, id: system_user.id)%>" class="btn btn-primary">Yes</a>
-            </div>
-        </div>
-    </div>
-    <% end %>
-</div>   
-
-<!----------------------------------------------------------------------------------->
 <!-- ############################################ EDIT MODAL ######################################### -->
 <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -381,7 +356,7 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.user_path(@conn, :deactivate_user_account)%>" method="POST">
+                <form action="<%= Routes.user_path(@conn, :deactivate_account)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
 
@@ -391,11 +366,31 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="status" id="status" required="required">
-                                        <option value="2">Deactive</option>
+                                    <select class="custom-select form-control" name="status" required="required">
+                                        <option>Select Reason of Deactivation</option>
+                                        <option value="2">On Leave</option>
+                                        <option value="3">Suspend</option>
+                                        <option value="4">Deactive</option>
                                     </select>
                                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                                     <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label class="form-label">Reason For Deactivation</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-edit"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="slct_acc_inactive_reason" required="required">
+                                        <option>Select Why Account is Being Deactivated</option>
+                                        <option value="On Leave">On Leave.</option>
+                                        <option value="Driver Has Been Suspended">Driver Has Been Suspended.</option>
+                                        <option value="Driver no longer works for us">Driver no longer works for us.</option>
+                                    </select>
+                                    <input type="text" name="acc_inactive_reason" placeholder="Explain why account is being deactivated" class="form-control" required="required">
                                 </div>
                             </div>
 
@@ -412,7 +407,6 @@
         </div>
     </div>
 </div>
-
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>

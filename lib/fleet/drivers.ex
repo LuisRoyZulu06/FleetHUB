@@ -20,7 +20,6 @@ defmodule Fleet.Drivers do
   def list_tbl_vehicle_issue do
     Repo.all(IssueLoger)
   end
-
   @doc """
   Gets a single issue_loger.
 

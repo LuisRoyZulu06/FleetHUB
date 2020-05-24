@@ -80,7 +80,7 @@
                                                     </span>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                        <a class="dropdown-item" href="<%= Routes.driver_path(@conn, :view_driver, id: list_driver.id)%>">View</a>
+                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-user_role="<%= list_driver.user_role%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#profile-modal">View</a>
                                                         <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-toggle="modal" data-target="#deactivate">Deactive</a>
                                                     </div>
                                                 </div>
@@ -363,7 +363,7 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.driver_path(@conn, :deactivate_account)%>" method="POST">
+                <form action="<%= Routes.user_path(@conn, :deactivate_account)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
 
@@ -374,10 +374,30 @@
                                         <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
                                     </div>
                                     <select class="custom-select form-control" name="status" required="required">
-                                        <option value="2">Deactive</option>
+                                        <option>Select Reason of Deactivation</option>
+                                        <option value="2">On Leave</option>
+                                        <option value="3">Suspend</option>
+                                        <option value="4">Deactive</option>
                                     </select>
                                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                                     <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label class="form-label">Reason For Deactivation</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-edit"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="slct_acc_inactive_reason" required="required">
+                                        <option>Select Why Account is Being Deactivated</option>
+                                        <option value="On Leave">On Leave.</option>
+                                        <option value="Driver Has Been Suspended">Driver Has Been Suspended.</option>
+                                        <option value="Driver no longer works for us">Driver no longer works for us.</option>
+                                    </select>
+                                    <input type="text" name="acc_inactive_reason" placeholder="Explain why account is being deactivated" class="form-control" required="required">
                                 </div>
                             </div>
 
@@ -443,6 +463,133 @@
     </div>
 </div>
 
+<!-- ############################## VIEW-PROFILE ########################################## -->
+<div class="modal fade" id="profile-modal"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Profile Details
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="panel-content">
+                    <form>
+                        <div class="row">
+                            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                            <input type="hidden" name="id" id="id">
+                            <div class="col-md-6">
+                                <!-- Driver profile -->
+                                <div class="card mb-g rounded-top">
+                                    <div class="row no-gutters row-grid">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                                <img class="rounded-circle shadow-2 img-thumbnail" alt="<%= @user.first_name%> <%= @user.last_name%>" src="<%= Routes.static_path(@conn, "/images/avatar/7.png") %>">                                               
+                                                <h5 class="mb-0 fw-700 text-center mt-3">
+                                                    ROLE<br>
+                                                    <input type="text" id="user_role" style="border: none; text-align: center;">
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center py-3">
+                                                <h5 class="mb-0 fw-700">
+                                                    NRC Number
+                                                    <small class="text-muted mb-0"><input type="text" id="nrc_no" style="border: none; text-align: center;"></small>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center py-3">
+                                                <h5 class="mb-0 fw-700">
+                                                    Drivers License Number
+                                                    <small class="text-muted mb-0"><input type="text" id="dln" style="border: none; text-align: center;"></small>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="p-3 text-center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                        </div>
+                                        <input type="text" name="first_name" id="first_name" class="form-control" required="required" disabled>
+                                        <input type="text" name="last_name" id="last_name" class="form-control" required="required" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Gender</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                        </div>
+                                        <input type="text" id="sex" class="form-control" required="required" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Age</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-clock"></i></span>
+                                        </div>
+                                        <input type="text" id="age" class="form-control" required="required" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-envelope"></i></span>
+                                        </div>
+                                        <input type="text" id="email" class="form-control" required="required" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Phone</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" id="phone" class="form-control" required="required" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Address</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-home"></i></span>
+                                        </div>
+                                        <input type="text" id="home_add" class="form-control" required="required" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </form>
+                </div>
+
+            </div>
+        </div>    
+    </div>
+</div>
+
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="<%= Routes.static_path(@conn, "/js/statistics/peity/peity.bundle.js") %>"></script>
@@ -478,6 +625,41 @@ $('#editmodal').on('show.bs.modal', function (event){
     modal.find('.modal-body #email').val(email);
     modal.find('.modal-body #dlt').val(dlt);
     modal.find('.modal-body #dln').val(dln);
+});
+});
+</script>
+
+
+<script>
+$(document).ready(function(){
+//JS FOR VIEWING USER PROFILE
+$('#profile-modal').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var first_name = button.data('first_name')
+    var last_name = button.data('last_name')
+    var email = button.data('email')
+    var user_role = button.data('user_role')
+    var sex = button.data('sex')
+    var age = button.data('age')
+    var nrc_no = button.data('nrc_no')
+    var phone = button.data('phone')
+    var home_add = button.data('home_add')
+    var dln = button.data('dln')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #first_name').val(first_name);
+    modal.find('.modal-body #last_name').val(last_name);
+    modal.find('.modal-body #email').val(email);
+    modal.find('.modal-body #user_role').val(user_role);
+    modal.find('.modal-body #sex').val(sex);
+    modal.find('.modal-body #age').val(age);
+    modal.find('.modal-body #nrc_no').val(nrc_no);
+    modal.find('.modal-body #phone').val(phone);
+    modal.find('.modal-body #home_add').val(home_add);
+    modal.find('.modal-body #dln').val(dln);    
 });
 });
 </script>

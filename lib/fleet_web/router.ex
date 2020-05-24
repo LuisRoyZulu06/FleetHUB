@@ -37,25 +37,37 @@ defmodule FleetWeb.Router do
   end
 
   scope "/", FleetWeb do
+    pipe_through([:browser, :no_layout])
+    get("/logout/current/user", SessionController, :signout)
+  end
+
+  scope "/", FleetWeb do
     pipe_through :browser
-    # --------------------------------------------- User CONTROLLER
+    # //////////////////////////////////////////////////////////////////// User CONTROLLER
     get "/Dashboard", UserController, :dashboard
     get "/Manage/System/Users", UserController, :user_mgt
     post  "/Create/New/FleetHub/System/User", UserController, :create_user
     get "/Edit/FleetHUB/System/User/", UserController, :edit_user
     post  "/Update/FleetHUB/System/User/", UserController, :update_user
-    get "/Delete/FleetHUB/System/User/", UserController, :delete_user
-    get "/Deactive/System/User/Account", UserController, :deactivate_user
-    post "/Deactive/System/User/Account", UserController, :deactivate_user_account
     get "/View/Mgt/Users", UserController, :view_mgt_user
-    get "/Deactivated/Driver/Accounts", UserController, :deactivated_acc
-    post "/Activate/Account", UserController, :activate_user_account
     get "/Manage/License/Type", UserController, :mgt_licences
     post "/Create/License/Type", UserController, :create_license
     post "/Update/License/Type", UserController, :update_license
     get "/Manage/User/Logs", UserController, :user_logs
+    post "/Deactivate/Account", UserController, :deactivate_account
 
-    # --------------------------------------------- Driver CONTROLLER
+    # --------------------- On Leave --------------------------------
+    get "/Users/On/Leave", UserController, :users_on_leave
+
+    # ---------------------- Suspension ---------------------------
+    get "/Suspended/Users", UserController, :suspended_users
+    post "/Suspend/System/User/Acccount", UserController, :suspend_user_account
+
+    # ---------------------- Deactivated ---------------------------
+    get "/Deactivated/User/Accounts", UserController, :deactivated_accounts
+    post "/Activate/Acccount", UserController, :activate_account
+
+    # ////////////////////////////////////////////////////////////////////////// Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers
     get "/View/Driver", DriverController, :view_driver
     post "/Add/New/Driver/To/System", DriverController, :create_driver
@@ -66,9 +78,8 @@ defmodule FleetWeb.Router do
     post "/Report/Problem/With/Vehicle", DriverController, :create_issue
     post "/File/Report", DriverController, :file_issue_report
     get "/Request/Response", DriverController, :request_response
-    post "/Deactivate/Account", DriverController, :deactivate_account
 
-    # --------------------------------------------- Vehicle CONTROLLER
+    # //////////////////////////////////////////////////////////////////////// Vehicle CONTROLLER
     get "/List/FleetHub/Vehicles", VehicleController, :list_vehicles
     post "/Add/New/Vehicle/To/System", VehicleController, :create_vehicle
     get "/Vehicles/Under/Maintenance", VehicleController, :maintain_vehicle
@@ -76,7 +87,7 @@ defmodule FleetWeb.Router do
     post "/Assign/Vehicle To/Driver", VehicleController, :assign_vehicle
     post "/Reassign/Vehicle/To/New/Driver", VehicleController, :reassign_vehicle
 
-    # --------------------------------------------- Admin CONTROLLER
+    # //////////////////////////////////////////////////////////////////////// Admin CONTROLLER
     get "/List/Contacts", AdminController, :list_vendors
     post "/Create/New/FleetHub/Contact", AdminController, :create_vendor
     get "/Delete/FleetHub/Contact", AdminController, :delete_vendor
