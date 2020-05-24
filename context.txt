@@ -1,4 +1,4 @@
-mix phx.gen.context Accounts User tbl_users first_name last_name email password user_type:integer user_role status:integer user_id
+mix phx.gen.context Accounts User tbl_users first_name last_name email password user_type:integer user_role status:integer auto_password user_id
 mix phx.gen.context Logs UserLogs tbl_user_logs activity user_id
 
 mix phx.gen.context Clients Contacts tbl_vendors rep_name position email comp_name comp_email comp_tel comp_address comp_info

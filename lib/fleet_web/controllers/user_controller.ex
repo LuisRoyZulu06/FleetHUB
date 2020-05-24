@@ -34,16 +34,16 @@ defmodule FleetWeb.UserController do
            :create_user,
            :edit_user,
            :update_user,
+           :delete_user,
+           :deactivate_user,
+           :deactivate_user_account,
            :view_mgt_user,
+           :deactivated_acc,
+           :activate_user_account,
            :mgt_licences,
            :create_license,
            :update_license,
-           :user_logs,
-           :suspended_users,
-           :activate_account,
-           :users_on_leave,
-           :deactivated_accounts,
-           :deactivate_account
+           :user_logs
          ]
   )
 
@@ -54,7 +54,7 @@ defmodule FleetWeb.UserController do
 
   plug(
     FleetWeb.Plugs.RequireAdminAccess
-    when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :view_mgt_user, :mgt_licences, :create_license, :update_license, :user_logs, :suspended_users, :activate_account, :users_on_leave, :deactivated_accounts, :deactivate_account]
+    when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account, :mgt_licences, :create_license, :update_license, :user_logs]
   )
 
 
@@ -589,64 +589,20 @@ defmodule FleetWeb.UserController do
     end
   end
 
-  # def deactivate_user(conn, %{"id" => id}) do
-  #   # list_drivers  = Drivers.list_tbl_drivers()
-  #   system_users = Accounts.get_user!(id)
-  #   changeset = Accounts.change_user(system_users)
-  #   render(conn, "deactivate.html", system_users: system_users, changeset: changeset )
-  # end 
+  def deactivate_user(conn, %{"id" => id}) do
+    # list_drivers  = Drivers.list_tbl_drivers()
+    system_users = Accounts.get_user!(id)
+    changeset = Accounts.change_user(system_users)
+    render(conn, "deactivate.html", system_users: system_users, changeset: changeset )
+  end 
 
-  # def deactivate_user_account(conn, %{"id" => id} = params) do
-  #   system_user = Accounts.get_user!(id)
-
-  #   Ecto.Multi.new()
-  #   |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
-  #   |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
-  #     activity = "FleetHUB user account deactivated with ID \"#{system_user.id}\""
-
-  #     userlogs = %{
-  #       user_id: conn.assigns.user.id,
-  #       activity: activity
-  #     }
-
-  #     UserLogs.changeset(%UserLogs{}, userlogs)
-  #     |> Repo.insert()
-  #   end)
-  #   |> Repo.transaction()
-  #   |> case do
-  #     {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
-  #       conn
-  #       |> put_flash(:info, "FleetHUB system user account deactivated :-) ")
-  #       |> redirect(to: Routes.user_path(conn, :user_mgt))
-
-  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
-  #       reason = UserController.traverse_errors(failed_value.errors) |> List.first()
-
-  #       conn
-  #       |> put_flash(:error, reason)
-  #       |> redirect(to: Routes.user_path(conn, :user_mgt))
-  #   end
-  # end
-  
-  def view_mgt_user(conn, %{"id" => id}) do
-    view_users  = Accounts.get_user!(id)
-    render(conn, "view_mgt.html", view_users: view_users ) 
-  end
-
-  def deactivate_account(conn, %{"id" => id} = params) do
-    IO.inspect "================================================================================================================"
-    IO.inspect params
-    driver = Accounts.get_user!(id)
+  def deactivate_user_account(conn, %{"id" => id} = params) do
+    system_user = Accounts.get_user!(id)
 
     Ecto.Multi.new()
-    |> Ecto.Multi.update(:driver, User.changeset(driver, params))
-    |> Ecto.Multi.run(:userlogs, fn %{driver: driver} ->
-      activity = "FleetHUB user account deactivated with ID \"#{driver.id}\""
-
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
+    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
+    |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
+      activity = "FleetHUB user account deactivated with ID \"#{system_user.id}\""
 
       userlogs = %{
         user_id: conn.assigns.user.id,
@@ -658,98 +614,59 @@ defmodule FleetWeb.UserController do
     end)
     |> Repo.transaction()
     |> case do
-      {:ok, %{driver: driver, userlogs: _userlogs}} ->
+      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
         conn
-        |> put_flash(:info, "Account Deactivated.")
-        |> redirect(to: Routes.driver_path(conn, :list_drivers))
-
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = DriverController.traverse_errors(failed_value.errors) |> List.first()
-
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.driver_path(conn, :list_drivers))
-    end
-  end
-  
-  # def deactivate_account(conn, %{"id" => id} = params) do
-  #   driver = Accounts.get_user!(id)
-
-  #   Ecto.Multi.new()
-  #   |> Ecto.Multi.update(:driver, User.changeset(driver, params))
-  #   |> Ecto.Multi.run(:userlogs, fn %{driver: driver} ->
-  #     activity = "FleetHUB driver updated with ID \"#{driver.id}\""
-
-  #     userlogs = %{
-  #       user_id: conn.assigns.user.id,
-  #       activity: activity
-  #     }
-
-  #     UserLogs.changeset(%UserLogs{}, userlogs)
-  #     |> Repo.insert()
-  #   end)
-  #   |> Repo.transaction()
-  #   |> case do
-  #     {:ok, %{driver: driver, userlogs: _userlogs}} ->
-  #       conn
-  #       |> put_flash(:info, "Account Deactivated.")
-  #       |> redirect(to: Routes.driver_path(conn, :list_drivers))
-
-  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
-  #       reason = DriverController.traverse_errors(failed_value.errors) |> List.first()
-
-  #       conn
-  #       |> put_flash(:error, reason)
-  #       |> redirect(to: Routes.driver_path(conn, :list_drivers))
-  #   end
-  # end
-
-  def users_on_leave(conn, _params) do
-    users_on_leave = Accounts.list_tbl_users()
-    render(conn, "users_on_leave.html", users_on_leave: users_on_leave)
-  end
-
-  def suspended_users(conn, _params) do
-    suspended_users = Accounts.list_tbl_users()
-    render(conn, "suspended_users.html", suspended_users: suspended_users)
-  end
-
-  def deactivated_accounts(conn, _params) do
-    deactivated_users = Accounts.list_tbl_users()
-    render(conn, "deactivated_users.html", deactivated_users: deactivated_users)
-  end
-
-  def activate_account(conn, %{"id" => id} = params) do
-    IO.inspect "======================================================================="
-    IO.inspect params
-    suspended_user = Accounts.get_user!(id)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:suspended_user, User.changeset(suspended_user, params))
-    |> Ecto.Multi.run(:userlogs, fn %{suspended_user: suspended_user} ->
-      activity = "FleetHUB user updated with ID \"#{suspended_user.id}\""
-
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
-
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{suspended_user: suspended_user, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "Account Activated")
-        |> redirect(to: Routes.user_path(conn, :suspended_users))
+        |> put_flash(:info, "FleetHUB system user account deactivated :-) ")
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
 
       {:error, _failed_operation, failed_value, _changes_so_far} ->
         reason = UserController.traverse_errors(failed_value.errors) |> List.first()
 
         conn
         |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :suspended_users))
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+    end
+  end
+  
+  def view_mgt_user(conn, %{"id" => id}) do
+    view_users  = Accounts.get_user!(id)
+    render(conn, "view_mgt.html", view_users: view_users ) 
+  end
+
+  def deactivated_acc(conn, _params) do
+       system_users = Accounts.list_tbl_users()
+       render(conn, "deactivated_users.html", system_users: system_users)
+  end  
+  
+  def activate_user_account(conn, %{"id" => id} = params) do
+    system_user = Accounts.get_user!(id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
+    |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
+      activity = "FleetHUB user account activated with ID \"#{system_user.id}\""
+
+      userlogs = %{
+        user_id: conn.assigns.user.id,
+        activity: activity
+      }
+
+      UserLogs.changeset(%UserLogs{}, userlogs)
+      |> Repo.insert()
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
+        conn
+        |> put_flash(:info, "FleetHUB system user account activated :-) ")
+        |> redirect(to: Routes.user_path(conn, :deactivated_acc))
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+        conn
+        |> put_flash(:error, reason)
+        |> redirect(to: Routes.user_path(conn, :deactivated_acc))
     end
   end
 

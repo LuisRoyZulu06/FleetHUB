@@ -26,10 +26,6 @@ defmodule Fleet.Accounts do
     Repo.get_by(VehicleDetails, driver_id: id)
   end
 
-  def get_by_user_id(id) do
-    Repo.get_by(User, driver_id: id)
-  end
-
   def get_user_details(id) do
     Repo.get!(User, id)
   end
