@@ -135,29 +135,29 @@
 
                 
                 <div class="col-md-4">
-                <%= if @vehicle !=nil do %>
-                    <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-warning-600">
-                                Vehicle Details
-                            </div>
-                            <div class="card-body p-0 bg-warning-300" style="height: 160px">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
-                                    </div>
+                    <%= if @vehicle !=nil do %>
+                        <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-warning-600">
+                                    Vehicle Details
+                                </div>
+                                <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                        </div>
 
-                                    <div class="col-sm-6">
-                                        <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div class="card-footer bg-warning-800 py-2">
-                                <br>
-                            </div>
-                        </div> 
-                    </a> 
-                <% else %> 
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="card-footer bg-warning-800 py-2">
+                                    <br>
+                                </div>
+                            </div> 
+                        </a> 
+                        <% else %> 
                         <div id="cp-2" class="card border">
                             <div class="card-header bg-warning-600">
                                 Vehicle Details
@@ -177,7 +177,7 @@
                                 <br>
                             </div>
                         </div>    
-                <%end%>                                         
+                    <%end%>                                         
                 </div>
                 
 
@@ -276,7 +276,7 @@
                     <div class="panel-container show">
                         <div class="panel-content">
                             <div id="areaChart">
-                                <canvas style="width:100%; height:350px;"></canvas>
+                                <canvas style="width:100%; height:450px;"></canvas>
                             </div>
                         </div>
                     </div>
@@ -296,7 +296,10 @@
             </div>
         
             <div class="modal-body align-items-center" style="margin-top:2em;">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#open-issue">Open Issue</button>
+                <%= if @vehicle !=nil do %>
+                    <button type="button" class="btn btn-primary" data-id="<%= @vehicle.id%>" data-first_name="<%= @user.first_name%>" data-last_name="<%= @user.last_name%>" data-phone="<%= @user.phone%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-plate_no="<%= @vehicle.plate_no%>" data-dismiss="modal" data-toggle="modal" data-target="#open-issue">Open Issue</button>
+                <% end %>
+
                 <%= for issue <-@issues do %>
                     <%= if issue.v_status == "in garage" && issue.approval_status == "approved" do %>
                     <button type="button" class="btn bg-primary-900" data-id="<%= issue.id %>" data-dismiss="modal" data-toggle="modal" data-target="#file-report">Send Report</button>
@@ -334,8 +337,9 @@
                                             <i class="fal fa-user fs-xl"></i>
                                         </span>
                                     </div>
-                                    <input type="text" aria-label="First name" name="first_name" class="form-control" placeholder="First name" id="name-f" required="required">
-                                    <input type="text" aria-label="Last name" name="last_name" class="form-control" placeholder="Last name" id="name-l" required="required">
+                                    <input type="text" aria-label="First name" name="first_name" class="form-control" id="first_name" disabled>
+                                    <input type="text" aria-label="Last name" name="last_name" class="form-control" id="last_name" disabled>
+                                    <input type="text" aria-label="phone" name="phone" class="form-control" id="phone" disabled>
                                 </div>
                             </div>
 
@@ -347,29 +351,19 @@
                                             <i class="fal fa-bus fs-xl"></i>
                                         </span>
                                     </div>
-                                    <input type="text" aria-label="First name" name="v_make" class="form-control" placeholder="Vehicle Make" id="name-f" required="required">
-                                    <input type="text" aria-label="Last name" name="v_name" class="form-control" placeholder="Vehicle Name" id="name-l" required="required">
-                                    <input type="text" aria-label="Last name" name="v_plate_no" class="form-control" placeholder="Vehicle Plate Number" id="name-l" required="required">
+                                    <input type="text" aria-label="First name" name="v_make" class="form-control" id="v_make" disabled>
+                                    <input type="text" aria-label="Last name" name="v_name" class="form-control" id="v_name" disabled>
+                                    <input type="text" aria-label="Plate Number" name="plate_no" class="form-control" id="plate_no" disabled>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Date</label>
+                                <label class="form-label">Date Issued</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text text-primary"><i class="fal fa-clock"></i></span>
                                     </div>
-                                    <input type="date" name="dt_issued" placeholder="Date" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Phone</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text text-primary"><i class="fal fa-phone"></i></span>
-                                    </div>
-                                    <input type="text" name="phone" placeholder="Your Phone Number" class="form-control" required="required">
+                                    <input type="date" name="dt_issued" class="form-control" required="required">
                                 </div>
                             </div>
 
@@ -1114,19 +1108,46 @@ $('#approved-requests').on('show.bs.modal', function (event){
 });
 </script>
 
+<script>
+$(document).ready(function(){
+//JS FOR LOGGING ISSUE
+$('#open-issue').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var first_name = button.data('first_name')
+    var last_name = button.data('last_name')
+    var phone = button.data('phone')
+    var v_make = button.data('v_make')
+    var v_name = button.data('v_name')
+    var plate_no = button.data('plate_no')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #first_name').val(first_name);
+    modal.find('.modal-body #last_name').val(last_name);
+    modal.find('.modal-body #phone').val(phone);
+    modal.find('.modal-body #v_make').val(v_make);
+    modal.find('.modal-body #v_name').val(v_name);
+    modal.find('.modal-body #plate_no').val(plate_no);
+    
+});
+});
+</script>
+
 <!-- ############################### DASHBOARD ###################################### -->
 <script>
-    /* area chart */
+    / area chart /
     var areaChart = function()
     {
         var config = {
             type: 'line',
             data:
             {
-                labels: ["Day 1", "Day 2", "Day 3","Day 4","Day 5","Day 6","Day 7","Day 8","Day 9","Day 10"],
+                labels: <%= raw Poison.Encoder.encode(@keys, []) %>,
                 datasets: [
                 {
-                    label: "Active Drivers",
+                    label: "Not Assigned Vehicles",
                     backgroundColor: 'rgba(136,106,181, 0.2)',
                     borderColor: myapp_get_color.primary_500,
                     pointBackgroundColor: myapp_get_color.primary_700,
@@ -1134,29 +1155,13 @@ $('#approved-requests').on('show.bs.modal', function (event){
                     pointBorderWidth: 1,
                     borderWidth: 1,
                     pointRadius: 3,
-                    pointHoverRadius: 4,
-                    data: [
-                        2,3,4,5,2,1,4,5,2,7,8,0
-                    ],
+                    pointHoverRadius: 4,            
+                    data: <%= raw Poison.Encoder.encode(@failed, []) %>,
                     fill: true
                 },
+                
                 {
-                    label: "Active Vehicles",
-                    backgroundColor: 'rgba(0, 0, 204, 0.2)',
-                    borderColor: myapp_get_color.info_500,
-                    pointBackgroundColor: myapp_get_color.info_700,
-                    pointBorderColor: 'rgba(0, 0, 0, 0)',
-                    pointBorderWidth: 1,
-                    borderWidth: 1,
-                    pointRadius: 3,
-                    pointHoverRadius: 4,
-                    data: [
-                        3,5,9,8,5,3,4,5,2,7,8,7
-                    ],
-                    fill: true
-                },
-                {
-                    label: "Cars To Be Serviced",
+                    label: "Assigned Vehicles",
                     backgroundColor: 'rgba(29,201,183, 0.2)',
                     borderColor: myapp_get_color.success_500,
                     pointBackgroundColor: myapp_get_color.success_700,
@@ -1165,9 +1170,7 @@ $('#approved-requests').on('show.bs.modal', function (event){
                     borderWidth: 1,
                     pointRadius: 3,
                     pointHoverRadius: 4,
-                    data: [
-                        2,0,3,5,6,7,5,2,1,2,9,5,3
-                    ],
+                    data: <%= raw Poison.Encoder.encode(@success, []) %>,
                     fill: true
                 }]
             },
@@ -1197,7 +1200,7 @@ $('#approved-requests').on('show.bs.modal', function (event){
                         scaleLabel:
                         {
                             display: false,
-                            labelString: '12 months forecast'
+                            labelString: '6 months forecast'
                         },
                         gridLines:
                         {
@@ -1234,11 +1237,10 @@ $('#approved-requests').on('show.bs.modal', function (event){
         };
         new Chart($("#areaChart > canvas").get(0).getContext("2d"), config);
     }
-
-    /* initialize all charts */
-    $(document).ready(function()
+       $(document).ready(function()
     {
         areaChart();
     });
-</script>    
+</script>
+  
     

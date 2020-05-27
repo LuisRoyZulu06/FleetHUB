@@ -386,7 +386,7 @@
 </div>
 
 <!-- ############################## EDIT-VEHICLE ########################################## -->
-<div class="modal fade" id="editmodal"  tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="editmodal"  tabindex="-1" role="dialog" aria-hidden="true"> 
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -571,9 +571,6 @@
                                     <div class="col-12">
                                         <div class="d-flex flex-column align-items-center justify-content-center p-4">
                                             <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
-                                            
-
-                                            
                                             <h5 class="mb-0 fw-700 text-center mt-3">
                                                 Mileage<br>
                                                 <input type="text" id="mileage" style="border: none; text-align: center;">
@@ -589,8 +586,6 @@
                                                 Road Tax
                                                 <small class="text-muted mb-0"><input type="text" id="rd_tax_exp_dt" class="rdInput" style="border: none; text-align: center;"></small>
                                             </h5>
-                                              <a href="#" class="btn btn-primary" id="rd_expire_dt">Check</a>
-                                              <!-- <a href="#" onclick="$('#rd_tax_exp_dt').modal({'backdrop': 'static'});" class="btn btn-primary">check</a> -->
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -599,7 +594,6 @@
                                                 Vehicle Fittness
                                                 <small class="text-muted mb-0"><input type="text" id="fitness_exp_dt" class="fitInput" style="border: none; text-align: center;"></small>
                                             </h5>
-                                            <a href="#" class="btn btn-primary" id="fit_expire_dt">Check</a>
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -608,7 +602,6 @@
                                                 Insurance
                                                 <small class="text-muted mb-0"><input type="text" id="insrnc_exp_dt" class="insurInput" style="border: none; text-align: center;"></small>
                                             </h5>
-                                            <a href="#" class="btn btn-primary" id="insur_expire_dt">Check</a>
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -731,7 +724,9 @@
                                     <select class="custom-select form-control" name="driver_id" >
                                         <option>Select Driver</option>
                                         <%= for driver <-@drivers do %>
-                                        <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <%= if driver.user_role == "driver" do %>
+                                                <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <% end %>
                                         <% end %>
                                     </select>
                                 </div>
@@ -821,8 +816,7 @@
 </div>
 
 <!-- ################################################# TEST MODAL############# -->
-
-<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<%# <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -851,8 +845,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> %>
 
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>
@@ -966,112 +962,4 @@ $(document).ready(function(){
         modal.find('.modal-body #assignment_status').val(assignment_status);    
     });
 });
-
 </script>
-
-<script>
-
-$(document).ready( function(){
-
-    console.log("disable")
-
-    $("#btn_disable").click(function(){
-    $("#expired").prop("disabled", true);
-    });
-
-
-})
-
-</script>
-
-
-<script>
-
-$(document).ready( function(){
-
-    $('#submitBtn').click(function() {
-        $('#lname').text($('#lastname').val());
-        $('#fname').text($('#firstname').val());
-    });
-
-    $('#submit').click(function(){
-        alert('submitting');
-        $('#formfield').submit();
-    });
-
-
-});
- 
-
-</script>
-
-<script>
-
-  $(document).ready( function(){
-
-   $('form_validation').submit(function(event){
-
-      event.preventDefault();
-
-      console.log("validation")
-
-      $("#myForm").submit(); 
-   });
-       
-  });  
-
-    
-</script>
-
-<script>
-
-$(document).ready( function(){
-
-    reassignForm.addEventListener('submit', function (event) {
-             event.preventDefault();
-
-           console.log("submit validation");
-
-           let GivenDate = $("#insrnc_exp_dt").val();
-           let CurrentDate = new Date();
-           GivenDate = new Date(GivenDate);
-
-         if(GivenDate <= CurrentDate)
-         {
-               
-               
-
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Do not Assign the Car!. Insurance has expired',           
-                });
-                   return false;  
-         }
-
-         else
-         {
-               
-              
-              
-               Swal.fire({  
-                  icon: 'success',
-                  title: 'Successful',
-                  text: 'Assign the Car!. Insurance is Valid',
-                });
-                return true;
-                    
-          }
-   });
-
-}); 
-
-</script>
-
-
-
-
-
-
-
-

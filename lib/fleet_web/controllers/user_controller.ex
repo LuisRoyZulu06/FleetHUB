@@ -70,13 +70,56 @@ defmodule FleetWeb.UserController do
   def dashboard(conn, _params) do
     IO.inspect "=============================================================================================="
     IO.inspect conn
+
+    summary = Vehicles.dashboard_params() |> prepare_dash_result() |> IO.inspect
+    
+    keys = Enum.map(summary, &(&1.day)) |> Enum.uniq |> Enum.sort()
+    assigned_vihecles = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
+    failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "not_assigned")) |> Enum.map(&(&1.count))
+
     accounts = Accounts.list_tbl_users()
     issues = Drivers.list_tbl_vehicle_issue()
     vendors = Clients.list_tbl_vendors()
     vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
     user = Accounts.get_user_details(conn.assigns.user.id)
-    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user)
+    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys)
   end
+
+
+
+  # def dashboard(conn, _params) do
+
+  #   conn.assigns.user
+    
+  #   summary = Vehicles.dashboard_params() |> prepare_dash_result() 
+    
+  #   keys = Enum.map(summary, &(&1.day)) |> Enum.uniq |> Enum.sort()
+  #   assigned_vihecles = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
+  #   failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "not_assigned")) |> Enum.map(&(&1.count))
+  #   render(conn, "index.html", assigned_vihecles: success, failed: failed, keys: keys)
+  # end
+
+  defp prepare_dash_result(results) do
+    Enum.reduce(default_dashboard(), results, fn item, acc ->
+      filtered = Enum.filter(acc, &(&1.day == item.day && &1.status == "assigned"))
+      if item not in acc && Enum.empty?(filtered), do: [item | acc], else: acc
+    end)
+    |> Enum.sort_by(& &1.day)
+  end
+
+  defp default_dashboard do
+    today = Date.utc_today()
+    days = Date.days_in_month(today)
+
+    Date.range(%{today | day: 1}, %{today | day: days})
+    |> Enum.map(&%{count: 0, day: Timex.format!(&1, "%b #{String.pad_leading(to_string(&1.day), 2, "0")}, %Y", :strftime), status: "assigned"})
+  end
+
+
+
+
+
+
 
   def user_actitvity(conn, %{"id" => user_id}) do
     with :error <- confirm_token(conn, user_id) do
@@ -482,7 +525,7 @@ defmodule FleetWeb.UserController do
     for {key, {msg, _opts}} <- errors, do: "#{key} #{msg}"
   end
 
-  def default_dashboard do
+  def defaul_dashboard do
     today = Date.utc_today()
     days = Date.days_in_month(today)
 

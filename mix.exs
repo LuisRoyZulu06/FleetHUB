@@ -47,7 +47,8 @@ defmodule Fleet.MixProject do
       {:arc, "~> 0.11.0"},
       {:arc_ecto, "~> 0.11.3"},
       {:timex, "~> 3.6"},
-      {:calendar, "~> 0.17.0"}
+      {:calendar, "~> 0.17.0"},
+      {:poison, "~> 3.1"}
     ]
   end
 

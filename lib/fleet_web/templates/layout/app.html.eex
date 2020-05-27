@@ -357,7 +357,7 @@
               <!-------------------------------------------------------------------- Page Footer -->
                <footer class="page-footer" role="contentinfo">
                  <div class="d-flex align-items-center flex-1 text-muted">
-                     <span class="hidden-md-down fw-700">2020 © FleetHub Powered By&nbsp;
+                     <span class="hidden-md-down fw-700"><%= Timex.today.year %> © FleetHub Powered By&nbsp;
                          <a href='http://www.probasegroup.com/' class='text-primary fw-500' title='proBASE' target='_blank'>
                              <img class="img-responsive" width="100" alt="proBASE Logo" src="<%= Routes.static_path(@conn, "/images/logos/1.png") %>">
                          </a>
@@ -625,7 +625,6 @@
     <%# <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> %>
     
     <script src="/js/statistics/peity/peity.bundle.js"></script>
-
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script>
     <script src="<%= Routes.static_path(@conn, "/js/statistics/c3/c3.js") %>"></script>
