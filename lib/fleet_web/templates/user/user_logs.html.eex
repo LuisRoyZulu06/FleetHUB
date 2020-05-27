@@ -62,9 +62,7 @@
                                     <td><%= Fleet.Accounts.get_user!(log.user_id).first_name %> <%= Fleet.Accounts.get_user!(log.user_id).last_name %></td>
                                     <td><%= Fleet.Accounts.get_user!(log.user_id).user_role %></td>
                                     <td><%= log.activity%></td>
-                                    <td>
-                                    <%= "#{log.inserted_at |> Calendar.DateTime.shift_zone!("Africa/Cairo") |> Calendar.Strftime.strftime!("%d-%b-%Y %H:%M:%S")}" %>
-                                    </td>
+                                    <td><%= log.inserted_at%></td>
                                     <td><%= @conn.host%></td>
                                 </tr>  
                             <% end %>                          
@@ -77,126 +75,12 @@
     </div>
 </main>
 
-<!-- ############################################ ADD MODAL ######################################### -->
-<div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add License <i class='subheader-icon fal fa-user-circle'></i></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <form class="form-horizontal" action="<%= Routes.user_path(@conn, :create_license)%>" method="post">
-                    <div class="form-group">
-                        <label class="form-label">Name</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-user"></i></span>
-                            </div>
-                            <input type="hidden" name="id" id="id" value="">
-                            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                            <input type="text" name="name" id="name" class="form-control" placeholder="License Name" required="required">
-                          
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Vehicle Category</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-phone"></i></span>
-                            </div>
-                            <input type="text" name="vehicle_cat" id="vehicle_cat" placeholder="Vehicle Caterogry" class="form-control" required="required">
-                            
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Weight</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-user"></i></span>
-                            </div>
-                            <input type="text" name="weight" id="weight" placeholder="vehicle weight" class="form-control" required="required">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add License</button>
-                    </div>
-                </form>
-            </div>   
-        </div>
-    </div>
-</div>
-
-<!-- ############################################ EDIT MODAL ######################################### -->
-<div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit License <i class='subheader-icon fal fa-user-circle'></i></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <form class="form-horizontal" action="<%= Routes.user_path(@conn, :update_license)%>" method="post">
-                   <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                   <input type="hidden" name="id" id="id" value="">
-                    <div class="form-group">
-                        <label class="form-label">Name</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-user"></i></span>
-                            </div>
-                             <input type="text" name="name" id="name" placeholder="License Name" class="form-control" required="required">
-                          
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Vehicle Category</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-phone"></i></span>
-                            </div>
-                            <input type="text" name="vehicle_cat" id="vehicle_cat" placeholder="Vehicle Caterogry" class="form-control" required="required">
-                            
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Weight</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fal fa-user"></i></span>
-                            </div>
-                            <input type="text" name="weight" id="weight" placeholder="vehicle weight" class="form-control" required="required">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update License</button>
-                    </div>
-                </form>
-            </div>   
-        </div>
-    </div>
-</div>
-
-
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>
+
 $(document).ready(function(){
 
     $('#editmodal').on('show.bs.modal', function (event){
@@ -216,5 +100,7 @@ $(document).ready(function(){
         modal.find('.modal-body #weight').val(weight);
     
     });
+
 });
+
 </script>
