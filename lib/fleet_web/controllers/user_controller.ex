@@ -92,7 +92,7 @@ defmodule FleetWeb.UserController do
     summary = Vehicles.dashboard_params() |> prepare_dash_result() |> IO.inspect
     keys = Enum.map(summary, &(&1.day)) |> Enum.uniq |> Enum.sort()
     assigned_vihecles = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
-    failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "not_assigned")) |> Enum.map(&(&1.count))
+    failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
 
     accounts = Accounts.list_tbl_users()
     issues = Drivers.list_tbl_vehicle_issue()
