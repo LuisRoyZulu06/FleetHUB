@@ -136,4 +136,45 @@ defmodule Fleet.Vehicles do
     })
     |> Repo.all()
   end
+
+  def vehicles_assigned do
+    query =
+    """
+    SELECT COUNT(tbl_users.id)
+    FROM tbl_users
+    INNER JOIN tbl_vehicles ON tbl_users.id = tbl_vehicles.driver_id;
+    """ 
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
+
+  def total_vehicles do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_vehicles;
+    """ 
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
+
+  def total_drivers do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_users WHERE user_role = 'driver'
+    """ 
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
+
+  def vehicles_unassigned do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_vehicles WHERE assignment_status = 'not_assigned';
+    """
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
 end

@@ -213,55 +213,41 @@
     <%= if @user.user_role == "admin" do %>
         <!-- Statistics -->
         <div class="row">
-            <div class="col-sm-6 col-xl-3">
+            <div class="col-sm-6 col-xl-4">
                 <div class="p-3 bg-secondary rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            10
+                                <%= @total_drivers %>
                             <small class="m-0 l-h-n">Total Number of Drivers</small>
                         </h3>
                     </div>
-                    <i class="fal fa-user-circle position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
                 </div>
             </div>
 
-            <div class="col-sm-6 col-xl-3">
+            <div class="col-sm-6 col-xl-4">
                 <div class="p-3 bg-primary-600 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            12
-                            <small class="m-0 l-h-n">Active Drivers</small>
+                            <%= @count_vehicles %>    
+                            <small class="m-0 l-h-n">Drivers Assigned Vehicles</small>
                         </h3>
                     </div>
-                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+                    <i class="fal fa-user-circle position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
                 </div>
             </div>
 
-
-            <div class="col-sm-6 col-xl-3">
-                <div class="p-3 bg-info-600 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
-                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            10
-                            <small class="m-0 l-h-n">Total Number of Veehicles</small>
-                        </h3>
-                    </div>
-                    <i class="fal fa-car position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-xl-3">
+            <div class="col-sm-6 col-xl-4">
                 <div class="p-3 bg-success-600 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            6
-                            <small class="m-0 l-h-n">Active Vehicles</small>
+                            <%= @total_vehicles %>
+                            <small class="m-0 l-h-n">Total Number of Vehicles</small>
                         </h3>
                     </div>
                     <i class="fal fa-bus position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
                 </div>
             </div>
-
         </div>
         
         <!-- Dashboard -->
@@ -1005,135 +991,135 @@
 <script src="<%= Routes.static_path(@conn, "/js/statistics/chartjs/chartjs.bundle.js") %>"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script>
-$(document).ready(function(){
+    $(document).ready(function(){
 
-$('#file-report').on('show.bs.modal', function (event){
+    $('#file-report').on('show.bs.modal', function (event){
 
-    var button = $(event.relatedTarget)
-    var id = button.data('id')
-    
-    var modal = $(this)
-    modal.find('.modal-body #id').val(id);
-});
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+    });
 
-});
+    });
 </script>
 
 <script>
-$(document).ready(function(){
-//JS FOR VIEWING USER PROFILE
-$('#profile-modal').on('show.bs.modal', function (event){
+    $(document).ready(function(){
+    //JS FOR VIEWING USER PROFILE
+    $('#profile-modal').on('show.bs.modal', function (event){
 
-    var button = $(event.relatedTarget)
-    var id = button.data('id')
-    var first_name = button.data('first_name')
-    var last_name = button.data('last_name')
-    var email = button.data('email')
-    var user_role = button.data('user_role')
-    var sex = button.data('sex')
-    var age = button.data('age')
-    var nrc_no = button.data('nrc_no')
-    var phone = button.data('phone')
-    var home_add = button.data('home_add')
-    var dln = button.data('dln')
-    
-    var modal = $(this)
-    modal.find('.modal-body #id').val(id);
-    modal.find('.modal-body #first_name').val(first_name);
-    modal.find('.modal-body #last_name').val(last_name);
-    modal.find('.modal-body #email').val(email);
-    modal.find('.modal-body #user_role').val(user_role);
-    modal.find('.modal-body #sex').val(sex);
-    modal.find('.modal-body #age').val(age);
-    modal.find('.modal-body #nrc_no').val(nrc_no);
-    modal.find('.modal-body #phone').val(phone);
-    modal.find('.modal-body #home_add').val(home_add);
-    modal.find('.modal-body #dln').val(dln);    
-});
-});
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var first_name = button.data('first_name')
+        var last_name = button.data('last_name')
+        var email = button.data('email')
+        var user_role = button.data('user_role')
+        var sex = button.data('sex')
+        var age = button.data('age')
+        var nrc_no = button.data('nrc_no')
+        var phone = button.data('phone')
+        var home_add = button.data('home_add')
+        var dln = button.data('dln')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #first_name').val(first_name);
+        modal.find('.modal-body #last_name').val(last_name);
+        modal.find('.modal-body #email').val(email);
+        modal.find('.modal-body #user_role').val(user_role);
+        modal.find('.modal-body #sex').val(sex);
+        modal.find('.modal-body #age').val(age);
+        modal.find('.modal-body #nrc_no').val(nrc_no);
+        modal.find('.modal-body #phone').val(phone);
+        modal.find('.modal-body #home_add').val(home_add);
+        modal.find('.modal-body #dln').val(dln);    
+    });
+    });
 </script>
 
 <script>
-$(document).ready(function(){
-//JS FOR VIEWING VEHICLE DATA
-$('#vehicle-modal').on('show.bs.modal', function (event){
+    $(document).ready(function(){
+    //JS FOR VIEWING VEHICLE DATA
+    $('#vehicle-modal').on('show.bs.modal', function (event){
 
-    var button = $(event.relatedTarget)
-    var id = button.data('id')
-    var v_make = button.data('v_make')
-    var v_name = button.data('v_name')
-    var color = button.data('color')
-    var plate_no = button.data('plate_no')
-    var v_status = button.data('v_status')
-    var assigned_to = button.data('assigned_to')
-    var assignment_status = button.data('assignment_status')
-    var mileage = button.data('mileage')
-    var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
-    var fitness_exp_dt = button.data('fitness_exp_dt')
-    var insrnc_exp_dt = button.data('insrnc_exp_dt')
-    
-    var modal = $(this)
-    modal.find('.modal-body #id').val(id);
-    modal.find('.modal-body #v_make').val(v_make);
-    modal.find('.modal-body #v_name').val(v_name);
-    modal.find('.modal-body #color').val(color);
-    modal.find('.modal-body #plate_no').val(plate_no);
-    modal.find('.modal-body #v_status').val(v_status);
-    modal.find('.modal-body #assigned_to').val(assigned_to);
-    modal.find('.modal-body #assignment_status').val(assignment_status);
-    modal.find('.modal-body #mileage').val(mileage);
-    modal.find('.modal-body #rd_tax_exp_dt').val(rd_tax_exp_dt);
-    modal.find('.modal-body #fitness_exp_dt').val(fitness_exp_dt);
-    modal.find('.modal-body #insrnc_exp_dt').val(insrnc_exp_dt);
-    
-});
-});
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var v_make = button.data('v_make')
+        var v_name = button.data('v_name')
+        var color = button.data('color')
+        var plate_no = button.data('plate_no')
+        var v_status = button.data('v_status')
+        var assigned_to = button.data('assigned_to')
+        var assignment_status = button.data('assignment_status')
+        var mileage = button.data('mileage')
+        var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
+        var fitness_exp_dt = button.data('fitness_exp_dt')
+        var insrnc_exp_dt = button.data('insrnc_exp_dt')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #v_make').val(v_make);
+        modal.find('.modal-body #v_name').val(v_name);
+        modal.find('.modal-body #color').val(color);
+        modal.find('.modal-body #plate_no').val(plate_no);
+        modal.find('.modal-body #v_status').val(v_status);
+        modal.find('.modal-body #assigned_to').val(assigned_to);
+        modal.find('.modal-body #assignment_status').val(assignment_status);
+        modal.find('.modal-body #mileage').val(mileage);
+        modal.find('.modal-body #rd_tax_exp_dt').val(rd_tax_exp_dt);
+        modal.find('.modal-body #fitness_exp_dt').val(fitness_exp_dt);
+        modal.find('.modal-body #insrnc_exp_dt').val(insrnc_exp_dt);
+        
+    });
+    });
 </script>
 
 <script>
-$(document).ready(function(){
-//JS FOR VIEWING RESPONSE
-$('#approved-requests').on('show.bs.modal', function (event){
+    $(document).ready(function(){
+    //JS FOR VIEWING RESPONSE
+    $('#approved-requests').on('show.bs.modal', function (event){
 
-    var button = $(event.relatedTarget)
-    var id = button.data('id')
-    var v_slct_problem = button.data('v_slct_problem')
-    var approval_status = button.data('approval_status')
-    
-    var modal = $(this)
-    modal.find('.modal-body #id').val(id);
-    modal.find('.modal-body #v_slct_problem').val(v_slct_problem);
-    modal.find('.modal-body #approval_status').val(approval_status);
-    
-});
-});
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var v_slct_problem = button.data('v_slct_problem')
+        var approval_status = button.data('approval_status')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #v_slct_problem').val(v_slct_problem);
+        modal.find('.modal-body #approval_status').val(approval_status);
+        
+    });
+    });
 </script>
 
 <script>
-$(document).ready(function(){
-//JS FOR LOGGING ISSUE
-$('#open-issue').on('show.bs.modal', function (event){
+    $(document).ready(function(){
+    //JS FOR LOGGING ISSUE
+    $('#open-issue').on('show.bs.modal', function (event){
 
-    var button = $(event.relatedTarget)
-    var id = button.data('id')
-    var first_name = button.data('first_name')
-    var last_name = button.data('last_name')
-    var phone = button.data('phone')
-    var v_make = button.data('v_make')
-    var v_name = button.data('v_name')
-    var plate_no = button.data('plate_no')
-    
-    var modal = $(this)
-    modal.find('.modal-body #id').val(id);
-    modal.find('.modal-body #first_name').val(first_name);
-    modal.find('.modal-body #last_name').val(last_name);
-    modal.find('.modal-body #phone').val(phone);
-    modal.find('.modal-body #v_make').val(v_make);
-    modal.find('.modal-body #v_name').val(v_name);
-    modal.find('.modal-body #plate_no').val(plate_no);
-    
-});
-});
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var first_name = button.data('first_name')
+        var last_name = button.data('last_name')
+        var phone = button.data('phone')
+        var v_make = button.data('v_make')
+        var v_name = button.data('v_name')
+        var plate_no = button.data('plate_no')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #first_name').val(first_name);
+        modal.find('.modal-body #last_name').val(last_name);
+        modal.find('.modal-body #phone').val(phone);
+        modal.find('.modal-body #v_make').val(v_make);
+        modal.find('.modal-body #v_name').val(v_name);
+        modal.find('.modal-body #plate_no').val(plate_no);
+        
+    });
+    });
 </script>
 
 <!-- ############################### DASHBOARD ###################################### -->

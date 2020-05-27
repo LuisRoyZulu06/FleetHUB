@@ -19,7 +19,10 @@ defmodule FleetWeb.VehicleController do
     def list_vehicles(conn, _params) do
         list_vehicles = Vehicles.list_tbl_vehicles()
         drivers=Accounts.list_tbl_users()
-        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers)
+        [%{""=>count_vehicles}] = Vehicles.vehicles_assigned()
+        [%{""=>total_vehicles}] = Vehicles.total_vehicles()
+        [%{""=>vehicles_unassigned}] = Vehicles.vehicles_unassigned()
+        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned)
     end
 
     def create_vehicle(conn, params) do

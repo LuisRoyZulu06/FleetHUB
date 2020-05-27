@@ -25,7 +25,6 @@ defmodule FleetWeb.UserController do
            :list_users,
            :edit,
            :delete,
-           :user_logs,
            :update,
            :create,
            :update_status,
@@ -54,7 +53,26 @@ defmodule FleetWeb.UserController do
 
   plug(
     FleetWeb.Plugs.RequireAdminAccess
-    when action not in [:new_password, :change_password, :dashboard, :user_actitvity, :user_mgt, :create_user, :edit_user, :update_user, :delete_user, :deactivate_user, :deactivate_user_account, :view_mgt_user, :deactivated_acc, :activate_user_account, :mgt_licences, :create_license, :update_license, :user_logs]
+    when action not in [
+      :new_password, 
+      :change_password, 
+      :dashboard, 
+      :user_actitvity, 
+      :user_mgt, 
+      :create_user, 
+      :edit_user, 
+      :update_user, 
+      :delete_user, 
+      :deactivate_user, 
+      :deactivate_user_account, 
+      :view_mgt_user, 
+      :deactivated_acc, 
+      :activate_user_account, 
+      :mgt_licences, 
+      :create_license, 
+      :update_license, 
+      :user_logs,
+      :users_on_leave]
   )
 
 
@@ -72,7 +90,6 @@ defmodule FleetWeb.UserController do
     IO.inspect conn
 
     summary = Vehicles.dashboard_params() |> prepare_dash_result() |> IO.inspect
-    
     keys = Enum.map(summary, &(&1.day)) |> Enum.uniq |> Enum.sort()
     assigned_vihecles = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
     failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "not_assigned")) |> Enum.map(&(&1.count))
@@ -82,22 +99,11 @@ defmodule FleetWeb.UserController do
     vendors = Clients.list_tbl_vendors()
     vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
     user = Accounts.get_user_details(conn.assigns.user.id)
-    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys)
+    [%{""=>count_vehicles}] = Vehicles.vehicles_assigned() 
+    [%{""=>total_vehicles}] = Vehicles.total_vehicles()
+    [%{""=>total_drivers}] = Vehicles.total_drivers()
+    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, count_vehicles: count_vehicles, total_vehicles: total_vehicles, total_drivers: total_drivers)
   end
-
-
-
-  # def dashboard(conn, _params) do
-
-  #   conn.assigns.user
-    
-  #   summary = Vehicles.dashboard_params() |> prepare_dash_result() 
-    
-  #   keys = Enum.map(summary, &(&1.day)) |> Enum.uniq |> Enum.sort()
-  #   assigned_vihecles = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
-  #   failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "not_assigned")) |> Enum.map(&(&1.count))
-  #   render(conn, "index.html", assigned_vihecles: success, failed: failed, keys: keys)
-  # end
 
   defp prepare_dash_result(results) do
     Enum.reduce(default_dashboard(), results, fn item, acc ->
@@ -114,11 +120,6 @@ defmodule FleetWeb.UserController do
     Date.range(%{today | day: 1}, %{today | day: days})
     |> Enum.map(&%{count: 0, day: Timex.format!(&1, "%b #{String.pad_leading(to_string(&1.day), 2, "0")}, %Y", :strftime), status: "assigned"})
   end
-
-
-
-
-
 
 
   def user_actitvity(conn, %{"id" => user_id}) do
@@ -249,9 +250,6 @@ defmodule FleetWeb.UserController do
       |> redirect(to: Routes.user_path(conn, :list_users))
   end
 
-  # def new(conn, _params) do
-  #   render(conn, "new.html", page: %{first: "Users", last: "New user"})
-  # end
 
   def create(conn, %{"user" => user_params}) do
     pwd = random_string(6)
@@ -770,5 +768,9 @@ defmodule FleetWeb.UserController do
   def user_logs(conn, params) do
     logs = Logs.get_all_activity_logs()
     render(conn, "user_logs.html", logs: logs)
+  end
+
+  def users_on_leave(conn, params) do
+    render(conn, "users_on_leave.html")
   end
 end
