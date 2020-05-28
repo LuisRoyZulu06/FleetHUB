@@ -31,7 +31,6 @@ defmodule Fleet.Vehicles do
     Repo.get_by(VehicleDetails, driver_id: id)
   end
     
-
   @doc """
   Gets a single vehicle_details.
 
@@ -111,5 +110,71 @@ defmodule Fleet.Vehicles do
   """
   def change_vehicle_details(%VehicleDetails{} = vehicle_details) do
     VehicleDetails.changeset(vehicle_details, %{})
+  end
+
+  def dashboard_params do
+    VehicleDetails   
+    |> join(
+      :right,
+      [c],      
+      day in fragment("""
+      SELECT CAST(DATEADD(DAY, nbr - 1, DATEADD(month, DATEDIFF(month, 0, CAST(CURRENT_TIMESTAMP AS DATETIME)), 0)) AS DATE) d
+      FROM (
+        SELECT ROW_NUMBER() OVER (ORDER BY c.object_id) AS Nbr
+        FROM sys.columns c
+      ) nbrs
+      WHERE nbr - 1 <= DATEDIFF(DAY, DATEADD(month, DATEDIFF(month, 0, CAST(CURRENT_TIMESTAMP AS DATETIME)), 0), EOMONTH(CAST(CURRENT_TIMESTAMP AS DATETIME)))
+      """),
+      day.d == fragment("CAST(? AS DATE)", c.inserted_at)
+    )
+    |> group_by([c, day], [day.d, c.assignment_status])
+    |> order_by([_c, day], day.d)
+    |> select([c, day], %{
+      day: fragment("convert(varchar, ?, 107)", day.d),
+      count: count(c.id),
+      status: c.assignment_status
+    })
+    |> Repo.all()
+  end
+
+  def vehicles_assigned do
+    query =
+    """
+    SELECT COUNT(tbl_users.id)
+    FROM tbl_users
+    INNER JOIN tbl_vehicles ON tbl_users.id = tbl_vehicles.driver_id;
+    """ 
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
+
+  def total_vehicles do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_vehicles;
+    """ 
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
+
+  def total_drivers do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_users WHERE user_role = 'driver'
+    """ 
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
+
+  def vehicles_unassigned do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_vehicles WHERE assignment_status = 'not_assigned';
+    """
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
   end
 end
