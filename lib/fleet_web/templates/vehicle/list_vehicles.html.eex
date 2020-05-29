@@ -443,46 +443,22 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Driver Assigned Vehicle</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
-                                    </div>
-                                    
-                                    <input type="hidden" name="driver_id" value="0">
-                                    <select class="custom-select form-control" name="driver_id">
-                                        <option value="">Select Driver</option>
-                                        <%= for driver <-@drivers do %>
-                                            <%= if driver.user_role == "driver" do %>
-                                                <option value="<%= driver.id%>"><%= driver.first_name%> <%= driver.last_name%></option>
-                                            <% end %>
-                                        <% end %>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Assignment Status</label>
+                                <label class="form-label">Vehicle Mileage</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="assignment_status">
-                                        <option>is the vehicle assigned?</option>
-                                        <option value="1">Assigned</option>
-                                        <option value="0">Not Assigned</option>
-                                    </select>
-                                    <%# <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required"> %>
+                                    <input type="text" name="mileage" id="mileage" class="form-control" required="required">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Road Tax Expiration Date</label>
+                                <label class="form-label">Expiration Date of Fitness</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-clock width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="date" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="form-control" required="required">
+                                    <input type="date" name="fitness_exp_dt" id="fitness_exp_dt" class="form-control" required="required">
                                 </div>
                             </div>
                         </div>
@@ -519,24 +495,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Vehicle Mileage</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
-                                    </div>
-                                    <input type="text" name="mileage" id="mileage" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Expiration Date of Fitness</label>
+                                <label class="form-label">Road Tax Expiration Date</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-clock width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="date" name="fitness_exp_dt" id="fitness_exp_dt" class="form-control" required="required">
+                                    <input type="date" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="form-control" required="required">
                                 </div>
-                            </div>
+                            </div>                       
                         </div>
 
                         <div class="col-md-12" style="margin-top: 2em;">

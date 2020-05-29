@@ -211,7 +211,7 @@ defmodule Fleet.Vehicles do
     query =
     """
     SELECT COUNT(id)
-    FROM tbl_vehicles WHERE assignment_status = 'not_assigned';
+    FROM tbl_vehicles WHERE assignment_status = '0';
     """
     {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
     rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
