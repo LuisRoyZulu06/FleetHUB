@@ -17,7 +17,8 @@ defmodule Fleet.Repo.Migrations.CreateTblVehicles do
 
       timestamps()
     end
-    create unique_index(:tbl_vehicles, [:plate_no])
+    # create unique_index(:tbl_vehicles, [:driver_id], name: :unique_driver_id)
+    create unique_index(:tbl_vehicles, [:plate_no], name: :unique_plate_no)
 
   end
 end

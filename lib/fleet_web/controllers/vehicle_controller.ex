@@ -19,14 +19,17 @@ defmodule FleetWeb.VehicleController do
     def list_vehicles(conn, _params) do
         list_vehicles = Vehicles.list_tbl_vehicles()
         drivers=Accounts.list_tbl_users()
+        driver_ids= for driver <- list_vehicles, into: [] do driver.driver_id end
+        IO.inspect "=========================================================================================="
+        IO.inspect driver_ids
         [%{""=>count_vehicles}] = Vehicles.vehicles_assigned()
         [%{""=>total_vehicles}] = Vehicles.total_vehicles()
         [%{""=>vehicles_unassigned}] = Vehicles.vehicles_unassigned()
-        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned)
+        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned, driver_ids: driver_ids)
     end
 
     def create_vehicle(conn, params) do
-     
+     IO.inspect params
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->
               conn
@@ -117,13 +120,15 @@ defmodule FleetWeb.VehicleController do
     end
 
     def reassign_vehicle(conn, %{"id" => id, "driver_id"=> driver_id} = params) do
-      IO.inspect "==============================================================================================================="
+      
       IO.inspect params
         vehicle = Vehicles.get_vehicle_details!(id)
+        current_vehicle = Vehicles.get_by_user_id(driver_id)
   
         Ecto.Multi.new()
-        |> Ecto.Multi.update(:vehicle, VehicleDetails.changeset(vehicle, params))
-        |> Ecto.Multi.run(:userlogs, fn %{vehicle: vehicle} ->
+        |> Ecto.Multi.update(:unassign, VehicleDetails.changeset(current_vehicle, Map.merge(Map.from_struct(current_vehicle), %{driver_id: nil, assignment_status: "0"})))
+        |> Ecto.Multi.update(:assign, VehicleDetails.changeset(vehicle, params))
+        |> Ecto.Multi.run(:userlogs, fn %{assign: vehicle} ->
           activity = "FleetHUB vehicle updated with ID \"#{vehicle.id}\""
   
           userlogs = %{
@@ -136,12 +141,14 @@ defmodule FleetWeb.VehicleController do
         end)
         |> Repo.transaction()
         |> case do
-          {:ok, %{vehicle: vehicle, userlogs: _userlogs}} ->
+          {:ok, %{assign: vehicle, userlogs: _userlogs}} ->
             conn
             |> put_flash(:info, "Vehicle Reassigned To New Driver:-) ")
             |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
   
           {:error, _failed_operation, failed_value, _changes_so_far} ->
+            IO.inspect "==============================================================================================================="
+            IO.inspect failed_value
             reason =VehicleController.traverse_errors(failed_value.errors) |> List.first()
   
             conn

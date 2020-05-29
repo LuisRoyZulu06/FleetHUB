@@ -100,7 +100,7 @@
                                 <tr>
                                     <td><%= vehicle.v_make %> <%= vehicle.v_name %></td>
                                     <td><%= vehicle.plate_no %></td>
-                                    <%= if vehicle.assignment_status == "assigned" do %>
+                                    <%= if vehicle.assignment_status == "1" do %>
                                         <td><%= Fleet.Accounts.get_user!(vehicle.driver_id).first_name %> <%= Fleet.Accounts.get_user!(vehicle.driver_id).last_name %></td>
                                     <% else %>
                                         <td>Not Assigned</td>
@@ -121,12 +121,12 @@
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#viewmodal">View</a>
                                                     <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                    <%= if vehicle.assignment_status == "not_assigned" do %>
+                                                    <%= if vehicle.assignment_status === "0" do %>
                                                     <a class="dropdown-item" data-id="<%= vehicle.id%>" data-toggle="modal" data-target="#assignmodal" >Assign Vehicle to Driver</a>
                                                     <% end %>
 
-                                                    <%= if vehicle.assignment_status == "assigned" do %>
-                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-toggle="modal" data-target="#reassignmodal" >Reassign Vehicle</a>
+                                                    <%= if vehicle.assignment_status === "1" do %>
+                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#reassignmodal">Reassign Vehicle</a>
                                                     <% end %>
                                                     <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button>
                                                 </div>
@@ -158,6 +158,7 @@
             <div class="modal-body">
                 <form action="<%= Routes.vehicle_path(@conn, :create_vehicle)%>" method="POST">
                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="driver_id" value="0">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -191,8 +192,8 @@
                                     <select class="custom-select form-control" name="driver_id">
                                         <option value="">Select Driver</option>
                                         <%= for driver <-@drivers do %>
-                                            <%= if driver.user_role == "driver" do %>
-                                                <option value="<%= driver.id%>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <%= if driver.user_role == "driver" && driver.id not in @driver_ids do %>
+                                                <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
                                             <% end %>
                                         <% end %>
                                     </select>
@@ -206,8 +207,8 @@
                                         <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                     </div>
                                     <select class="custom-select form-control" name="assignment_status">
-                                        <option value="assigned">Assigned</option>
-                                        <option value="not_assigned">Not Assigned</option>
+                                        <option value="1">Assigned</option>
+                                        <option value="0">Not Assigned</option>
                                     </select>
                                 </div>
                             </div>
@@ -442,46 +443,22 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Driver Assigned Vehicle</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
-                                    </div>
-                                    
-                                    <input type="hidden" name="driver_id" value="0">
-                                    <select class="custom-select form-control" name="driver_id">
-                                        <option value="">Select Driver</option>
-                                        <%= for driver <-@drivers do %>
-                                            <%= if driver.user_role == "driver" do %>
-                                                <option value="<%= driver.id%>"><%= driver.first_name%> <%= driver.last_name%></option>
-                                            <% end %>
-                                        <% end %>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Assignment Status</label>
+                                <label class="form-label">Vehicle Mileage</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="assignment_status">
-                                        <option>is the vehicle assigned?</option>
-                                        <option value="assigned">Assigned</option>
-                                        <option value="not_assigned">Not Assigned</option>
-                                    </select>
-                                    <%# <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required"> %>
+                                    <input type="text" name="mileage" id="mileage" class="form-control" required="required">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Road Tax Expiration Date</label>
+                                <label class="form-label">Expiration Date of Fitness</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-clock width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="date" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="form-control" required="required">
+                                    <input type="date" name="fitness_exp_dt" id="fitness_exp_dt" class="form-control" required="required">
                                 </div>
                             </div>
                         </div>
@@ -518,24 +495,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Vehicle Mileage</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
-                                    </div>
-                                    <input type="text" name="mileage" id="mileage" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Expiration Date of Fitness</label>
+                                <label class="form-label">Road Tax Expiration Date</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-clock width-1 text-align-center"></i></span>
                                     </div>
-                                    <input type="date" name="fitness_exp_dt" id="fitness_exp_dt" class="form-control" required="required">
+                                    <input type="date" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="form-control" required="required">
                                 </div>
-                            </div>
+                            </div>                       
                         </div>
 
                         <div class="col-md-12" style="margin-top: 2em;">
@@ -736,7 +703,7 @@
                                     <select class="custom-select form-control" name="driver_id" >
                                         <option>Select Driver</option>
                                         <%= for driver <-@drivers do %>
-                                            <%= if driver.user_role == "driver" do %>
+                                            <%= if driver.user_role == "driver" && driver.id not in @driver_ids do %>
                                                 <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
                                             <% end %>
                                         <% end %>
@@ -752,8 +719,8 @@
                                         <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                     </div>
                                     <select class="custom-select form-control" name="assignment_status">
-                                        <option value="assigned">Assigned</option>
-                                        <option value="not_assigned">Not Assigned</option>
+                                        <option value="1">Assigned</option>
+                                        <option value="0">Not Assigned</option>
                                     </select>
                                     <%# <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required"> %>
                                 </div>
@@ -788,6 +755,11 @@
             <div class="modal-body">
                 <div class="panel-content">
                 <form role="form" id="reassignForm" action="<%= Routes.vehicle_path(@conn, :reassign_vehicle)%>" method="POST">  <!---<%= Routes.vehicle_path(@conn, :reassign_vehicle)%>---->
+                <!--//////////////////////////// To Validate Ex-Dates //////////////////////////////////-->
+                <input type="hidden" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="rd_tax_exp_dt" disabled="disabled">
+                <input type="hidden" name="fitness_exp_dt" id="fitness_exp_dt" class="fitness_exp_dt" disabled="disabled">
+                <input type="hidden" name="insrnc_exp_dt" id="insrnc_exp_dt" class="insrnc_exp_dt" disabled="disabled">
+
                     <div class="row">
                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                     <input type="hidden" name="id" id="id">
@@ -807,7 +779,7 @@
                                         <% end %>
                                     </select>
                                     <select class="custom-select form-control" name="assignment_status">
-                                        <option value="assigned" >Assigned</option>
+                                        <option value="1" >Assigned</option>
                                     </select>
                                 </div>
                             </div>
@@ -937,30 +909,10 @@ $('#viewmodal').on('show.bs.modal', function (event){
 });
 </script> 
 
+
 <script>
 $(document).ready(function(){
 //JS FOR ASSIGNING VEHICLE
-    $('#reassignmodal').on('show.bs.modal', function (event){
-
-        console.log("Assing test")
-
-        var button = $(event.relatedTarget)
-        var id = button.data('id')
-        var assigned_to = button.data('assigned_to')
-        var assignment_status = button.data('assignment_status')
-
-        var modal = $(this)
-        modal.find('.modal-body #id').val(id);
-        modal.find('.modal-body #assigned_to').val(assigned_to);
-        modal.find('.modal-body #assignment_status').val(assignment_status);   
-    });
-});
-</script>
-
-
-<script>
-$(document).ready(function(){
-//JS FOR REASSIGNING VEHICLE
     $('#assignmodal').on('show.bs.modal', function (event){
 
         var button = $(event.relatedTarget)
@@ -974,4 +926,82 @@ $(document).ready(function(){
         modal.find('.modal-body #assignment_status').val(assignment_status);    
     });
 });
+</script>
+
+<script>
+$(document).ready(function(){
+    //JS FOR REASSIGNING VEHICLE
+    $('#reassignmodal').on('show.bs.modal', function (event){
+
+        console.log("Assing test")
+
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var assigned_to = button.data('assigned_to')
+        var assignment_status = button.data('assignment_status')
+        var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
+        var fitness_exp_dt = button.data('fitness_exp_dt')
+        var insrnc_exp_dt = button.data('insrnc_exp_dt')
+
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #assigned_to').val(assigned_to);
+        modal.find('.modal-body #assignment_status').val(assignment_status); 
+        modal.find('.modal-body #rd_tax_exp_dt').val(rd_tax_exp_dt);
+        modal.find('.modal-body #fitness_exp_dt').val(fitness_exp_dt);
+        modal.find('.modal-body #insrnc_exp_dt').val(insrnc_exp_dt);
+  
+    });
+});
+</script>
+
+
+<script>
+  $(document).ready( function(){
+    document.getElementByID("reassignForm").addEventListener('submit', function (event) {
+            event.preventDefault();
+                 
+           let road_tax = $(".rd_tax_exp_dt").val();
+           let fitness = $(".fitness_exp_dt").val();
+           let insrnc_exp_dt = $(".insrnc_exp_dt").val();
+
+           console.log(road_tax);
+           console.log(fitness);
+           console.log(insrnc_exp_dt);
+
+           let CurrentDate = new Date();
+
+           road_tax = new Date(road_tax);
+           fitness = new Date(fitness);
+           insrnc_exp_dt = new Date(insrnc_exp_dt);   
+
+           console.log(road_tax);        
+
+
+         if((road_tax <= CurrentDate) || (fitness <= CurrentDate) || (insrnc_exp_dt <= CurrentDate))
+         {   
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cannot assign vehicle!. Expired, Road Tax, or Insurance or Fitness.',           
+            });   
+         }
+
+         else
+         {
+              event.preventDefault();
+
+               Swal.fire({  
+                  icon: 'success',
+                  title: 'Successful',
+                  text: 'Vehicle has been reassigned!',
+                }).then(function () {
+                
+                $("#reassignForm").submit();
+    
+               }).catch(swal.noop);
+          }
+   });
+
+  }); 
 </script>
