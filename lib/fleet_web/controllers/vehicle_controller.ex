@@ -19,14 +19,17 @@ defmodule FleetWeb.VehicleController do
     def list_vehicles(conn, _params) do
         list_vehicles = Vehicles.list_tbl_vehicles()
         drivers=Accounts.list_tbl_users()
+        driver_ids= for driver <- list_vehicles, into: [] do driver.driver_id end
+        IO.inspect "=========================================================================================="
+        IO.inspect driver_ids
         [%{""=>count_vehicles}] = Vehicles.vehicles_assigned()
         [%{""=>total_vehicles}] = Vehicles.total_vehicles()
         [%{""=>vehicles_unassigned}] = Vehicles.vehicles_unassigned()
-        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned)
+        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned, driver_ids: driver_ids)
     end
 
     def create_vehicle(conn, params) do
-     
+     IO.inspect params
         case Vehicles.create_vehicle_details(params) do
             {:ok, _} ->
               conn

@@ -127,15 +127,54 @@ defmodule Fleet.Vehicles do
       """),
       day.d == fragment("CAST(? AS DATE)", c.inserted_at)
     )
-    |> group_by([c, day], [day.d, c.assignment_status])
-    |> order_by([_c, day], day.d)
-    |> select([c, day], %{
+    |> group_by([c, day], [day.d, fragment("CASE 
+        WHEN ? = '1' 
+            THEN 'assigned'
+        ELSE 'not_assigned'
+      END", c.assignment_status)
+      ])
+      |> order_by([_c, day], day.d)
+      |> select([c, day], %{
       day: fragment("convert(varchar, ?, 107)", day.d),
       count: count(c.id),
-      status: c.assignment_status
-    })
+      status: fragment("""
+      CASE 
+          WHEN ? = '1' 
+              THEN 'assigned'
+          ELSE 'not_assigned'
+      END
+      """, c.assignment_status
+      )
+      })
     |> Repo.all()
   end
+
+
+
+#   |> group_by([c, day], [day.d, fragment("CASE 
+#   WHEN ? = '200' 
+#       THEN 'SUCCESS'
+#   ELSE 'FAILED'
+# END", c.status_code)
+# ])
+# |> order_by([_c, day], day.d)
+# |> select([c, day], %{
+# day: fragment("convert(varchar, ?, 107)", day.d),
+# count: count(c.id),
+# status: fragment("""
+# CASE 
+#     WHEN ? = '200' 
+#         THEN 'SUCCESS'
+#     ELSE 'FAILED'
+# END
+# """, c.status_code
+# )
+# })
+# |> Repo.all()
+# end
+
+
+
 
   def vehicles_assigned do
     query =
