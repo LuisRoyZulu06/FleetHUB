@@ -216,4 +216,14 @@ defmodule Fleet.Vehicles do
     {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
     rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
   end
+
+  def vehicles_in_maintenance do
+    query =
+    """
+    SELECT COUNT(id)
+    FROM tbl_vehicle_issue WHERE v_status = 'in garage';
+    """
+    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+  end
 end

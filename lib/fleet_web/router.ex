@@ -54,7 +54,6 @@ defmodule FleetWeb.Router do
     post "/Create/License/Type", UserController, :create_license
     post "/Update/License/Type", UserController, :update_license
     get "/Manage/User/Logs", UserController, :user_logs
-    post "/Deactivate/Account", UserController, :deactivate_account
 
     # --------------------- On Leave --------------------------------
     get "/Users/On/Leave", UserController, :users_on_leave
@@ -64,8 +63,10 @@ defmodule FleetWeb.Router do
     post "/Suspend/System/User/Acccount", UserController, :suspend_user_account
 
     # ---------------------- Deactivated ---------------------------
+    post "/Deactivate/Account", UserController, :deactivate_account
     get "/Deactivated/User/Accounts", UserController, :deactivated_accounts
-    post "/Activate/Acccount", UserController, :activate_account
+    post "/Activate/Account", UserController, :activate_user_on_leave
+    post "/Activate/Account", UserController, :activate_suspended_user
 
     # ////////////////////////////////////////////////////////////////////////// Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers
@@ -78,6 +79,7 @@ defmodule FleetWeb.Router do
     post "/Report/Problem/With/Vehicle", DriverController, :create_issue
     post "/File/Report", DriverController, :file_issue_report
     get "/Request/Response", DriverController, :request_response
+    get "/Rejected/Request", DriverController, :rejected_request
 
     # //////////////////////////////////////////////////////////////////////// Vehicle CONTROLLER
     get "/List/FleetHub/Vehicles", VehicleController, :list_vehicles

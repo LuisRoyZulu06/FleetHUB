@@ -109,7 +109,7 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.user_path(@conn, :activate_account)%>" method="POST">
+                <form action="<%= Routes.user_path(@conn, :activate_suspended_user)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
 

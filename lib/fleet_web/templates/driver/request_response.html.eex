@@ -55,13 +55,17 @@
                             </thead>
                             <tbody>
                             <%= for response <-@responses do %>
-                            <%= if response.approval_status == "rejected" do %>
+                                <%= if response.approval_status != "rejected" do %>
                                 <tr>
                                     <td><%= response.v_make %> <%= response.v_name %></td>
                                     <td><%= response.v_plate_no %></td>
                                     <td><%= response.v_slct_problem %></td>
                                     <td><%= response.dt_issued %></td>
-                                    <td><%= response.approval_status %></td>
+                                    <%= if response.approval_status == "pending" do %>
+                                        <td>Request is Pending</td>
+                                        <% else %>
+                                        <td>Request Denied</td>
+                                    <% end %>                                    
                                     <td>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -70,13 +74,16 @@
                                                 </span>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" data-id="<%= response.id %>" data-decline_reason="<%= response.decline_reason %>" data-v_make="<%= response.v_make %>" data-v_name="<%= response.v_name %>" data-v_plate_no="<%= response.v_plate_no %>" data-v_slct_problem="<%= response.v_slct_problem %>" data-dt_issued="<%= response.dt_issued %>" data-approval_status="<%= response.approval_status %>" data-toggle="modal" data-target="#response-modal"><i class="fas fa-envelope fs-md"> View</i></a>
+                                                    <%= if response.v_status == "in garage" && response.approval_status == "approved" do %>
+                                                    <a class="dropdown-item" data-dismiss="modal" data-toggle="modal" data-target="#file-report"><i class="fas fa-edit fs-md"> Send Report</i></a>
+                                                    <% end %>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                 </tr> 
-                             <% end %>  
-                             <% end %>     
+                            <% end %>
+                            <% end %>     
                         </table>
                         <!-- datatable end -->
                     </div>
@@ -86,7 +93,7 @@
     </div>
 </main>
 
-<!-- ############################## ISSUE REPORT ########################################## -->
+<!-- ############################## RESPONSE MODAL ########################################## -->
 <div class="modal fade" id="response-modal"  tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -153,19 +160,137 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Response</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fal fa-envelope width-1 text-align-center"></i></span>
+
+                    <%= for response <-@responses do %>
+                        <%= if response.decline_reason != nil do %>
+                            <div class="form-group">
+                                <label class="form-label">Response</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-envelope width-1 text-align-center"></i></span>
+                                    </div>
+                                    <textarea type="text" id="decline_reason" class="form-control" disabled></textarea>
                                 </div>
-                                <textarea type="text" id="decline_reason" class="form-control" disabled></textarea>
                             </div>
-                        </div>
+                        <% end %>
+                    <% end %>    
                     </form><br>
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- ################################ FILE REPORT FORM MODAL ###################### -->
+<div class="modal fade" id="file-report" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">File Report of Closed Issue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<%= Routes.driver_path(@conn, :file_issue_report)%>" enctype="multipart/form-data" method="POST">
+                    <div class="row">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <input type="hidden" name="id" id="id">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Date When Problem Was Issued</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text text-primary"><i class="fal fa-clock"></i></span>
+                                    </div>
+                                    <input type="date" name="dt_issued" placeholder="When was problem reported?" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date When Problem Was Resolved</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text text-primary"><i class="fal fa-clock"></i></span>
+                                    </div>
+                                    <input type="date" name="dt_resolved" placeholder="When was problem solved?" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="dropdown-on-left">Select Problem Which was Fixed</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select form-control" name="slct_fxd_problem" required="required">
+                                            <option>Select Fixed Problem</option>
+                                            <option class="dropdown-item" value="Warning Lights">Warning Lights</option>
+                                            <option class="dropdown-item" value="Dead Battery">Dead Battery</option>
+                                            <option class="dropdown-item" value="Brakes Squeaking">Brakes Squeaking</option>
+                                            <option class="dropdown-item" value="Alternator Failure">Alternator Failure</option>
+                                            <option class="dropdown-item" value="Broken Starter Motor">Broken Starter Motor</option>
+                                            <option class="dropdown-item" value="Steering Wheel Shaking">Steering Wheel Shaking</option>
+                                            <option class="dropdown-item" value="Failed Emmissions Test">Failed Emmissions Test</option>
+                                            <option class="dropdown-item" value="Overheating">Overheating</option>
+                                            <option class="dropdown-item" value="Tyre Puncture">Tyre Puncture</option>
+                                            <option class="dropdown-item" value="Suspension Broke">Suspension Broke</option>
+                                        </select>
+                                    </div>
+                                    <input type="text" class="form-control" name="descr_fxd_problem" placeholder="Describe the problem the vehicle had" ria-label="Text input with dropdown button" id="dropdown-on-left" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="inputGroupSelect01">Select Vendor</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Select Vendor Who Fixed Problem</label>
+                                    </div>
+                                    <select class="custom-select" name="vendor" id="inputGroupSelect01">
+                                    <%= for vendor <-@vendors do %>
+                                        <option selected>Choose vendor</option>
+                                        <option value="<%= vendor.comp_name%>"><%= vendor.comp_name%></option>
+                                    <% end %>    
+                                    </select>
+                                </div>
+                            </div> 
+
+                            <div class="form-group">
+                                <label class="form-label">Cost</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text text-primary"><i class="fal fa-money-bill"></i></span>
+                                    </div>
+                                    <input type="text" name="cost" placeholder="How much did it cost?" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="example-fileinput">Upload proof of payment</label>
+                                <input type="file" name="payment_doc" id="example-fileinput" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="inputGroupSelect01">Status</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Select Vehicle Status</label>
+                                    </div>
+                                    <select class="custom-select" name="v_status" id="inputGroupSelect01">
+                                        <option selected>Select Vehicle Status</option>
+                                        <option value="out of garage">Vehicle Is Fixed</option>
+                                    </select>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Report</button>
+                    </div>          
+                </form>
+            </div>
         </div>
     </div>
 </div>

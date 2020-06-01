@@ -17,6 +17,7 @@
                         List of Previous Logged in issues
                     </h2>
                     <div class="panel-toolbar">
+                        <a href="<%= Routes.driver_path(@conn, :rejected_request)%>" style="margin-right: 2em;" class="btn btn-sm btn-danger waves-effect waves-themed">Rejected</a>
                         <a href="<%= Routes.user_path(@conn, :dashboard)%>" class="btn btn-sm btn-primary waves-effect waves-themed">Back</a>
                     </div>
                 </div>
