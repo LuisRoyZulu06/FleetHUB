@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-times'></i> Deactivated Accounts
+            <i class='subheader-icon fal fa-times'></i> Dismissed Users
         </h1>
         
 
@@ -35,7 +35,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Deactivated Accounts <i class='subheader-icon fal fa-times'></i>
+                        Dismissed Users<i class='subheader-icon fal fa-times'></i>
                     </h2>
                 </div>
 
@@ -56,20 +56,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <%= for deactivated_user <- @deactivated_users do %>  
-                             <%= if deactivated_user.status === 4 do %> 
+                            <%= for dismissed_user <- @dismissed_users do %>  
+                             <%= if dismissed_user.status === 4 do %> 
                                 <tr>
-                                    <td><%= deactivated_user.id %></td>
-                                    <td><%= deactivated_user.first_name %></td>
-                                    <td><%= deactivated_user.last_name %></td>
-                                    <td><%= deactivated_user.email %></td>
-                                    <td><%= deactivated_user.user_role %></td>
-                                    <%= if deactivated_user.status == 1 do %>
+                                    <td><%= dismissed_user.id %></td>
+                                    <td><%= dismissed_user.first_name %></td>
+                                    <td><%= dismissed_user.last_name %></td>
+                                    <td><%= dismissed_user.email %></td>
+                                    <td><%= dismissed_user.user_role %></td>
+                                    <%= if dismissed_user.status == 1 do %>
                                         <td>Active</td>
                                         <% else %>
-                                        <td>Deactivated</td>
+                                        <td>Dismissed</td>
                                     <% end %>
-                                    <td><%= deactivated_user.acc_inactive_reason %></td>
+                                    <td><%= dismissed_user.acc_inactive_reason %></td>
                                 </tr> 
                               <% end %>  
                             <% end %>                          

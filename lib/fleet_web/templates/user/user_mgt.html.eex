@@ -370,7 +370,8 @@
                                         <option>Select Reason of Deactivation</option>
                                         <option value="2">On Leave</option>
                                         <option value="3">Suspend</option>
-                                        <option value="4">Deactive</option>
+                                        <option value="4">Dismissed</option>
+                                        <option value="5">Retired</option>
                                     </select>
                                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                                     <input type="hidden" name="id" id="id">
@@ -387,8 +388,9 @@
                                     <select class="custom-select form-control" name="slct_acc_inactive_reason" required="required">
                                         <option>Select Why Account is Being Deactivated</option>
                                         <option value="On Leave">On Leave.</option>
-                                        <option value="Driver Has Been Suspended">Driver Has Been Suspended.</option>
-                                        <option value="Driver no longer works for us">Driver no longer works for us.</option>
+                                        <option value="Suspended">Driver Has Been Suspended.</option>
+                                        <option value="Dismissed">Driver was dismissed.</option>
+                                        <option value="Retired">Driver retired.</option>
                                     </select>
                                     <input type="text" name="acc_inactive_reason" placeholder="Explain why account is being deactivated" class="form-control" required="required">
                                 </div>

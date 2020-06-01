@@ -64,9 +64,10 @@ defmodule FleetWeb.Router do
 
     # ---------------------- Deactivated ---------------------------
     post "/Deactivate/Account", UserController, :deactivate_account
-    get "/Deactivated/User/Accounts", UserController, :deactivated_accounts
+    get "/Dismissed/User/Accounts", UserController, :dismissed_users
     post "/Activate/Account", UserController, :activate_user_on_leave
     post "/Activate/Account", UserController, :activate_suspended_user
+    get "/Retired/User/Accounts", UserController, :retired_users
 
     # ////////////////////////////////////////////////////////////////////////// Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers

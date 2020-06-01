@@ -73,7 +73,7 @@ defmodule FleetWeb.UserController do
       :user_logs,
       :users_on_leave,
       :deactivate_account,
-      :deactivated_accounts,
+      :dismissed_users,
       :activate_user_on_leave,
       :suspended_users
     ]
@@ -678,9 +678,9 @@ defmodule FleetWeb.UserController do
     render(conn, "view_mgt.html", view_users: view_users ) 
   end
 
-  def deactivated_accounts(conn, _params) do
-    deactivated_users = Accounts.list_tbl_users()
-    render(conn, "deactivated_users.html", deactivated_users: deactivated_users)
+  def dismissed_users(conn, _params) do
+    dismissed_users = Accounts.list_tbl_users()
+    render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
   end  
   
   def activate_user_account(conn, %{"id" => id} = params) do
