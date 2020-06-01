@@ -54,18 +54,27 @@ defmodule FleetWeb.Router do
     post "/Create/License/Type", UserController, :create_license
     post "/Update/License/Type", UserController, :update_license
     get "/Manage/User/Logs", UserController, :user_logs
-    post "/Deactivate/Account", UserController, :deactivate_account
 
     # --------------------- On Leave --------------------------------
     get "/Users/On/Leave", UserController, :users_on_leave
+    post "/Activate/Leave/Account", UserController, :activate_user_on_leave
 
     # ---------------------- Suspension ---------------------------
     get "/Suspended/Users", UserController, :suspended_users
-    post "/Suspend/System/User/Acccount", UserController, :suspend_user_account
+    post "/Activate/Suspended/Account", UserController, :activate_suspended_user
+    
 
     # ---------------------- Deactivated ---------------------------
-    get "/Deactivated/User/Accounts", UserController, :deactivated_accounts
-    post "/Activate/Acccount", UserController, :activate_account
+    post "/Deactivate/Account", UserController, :deactivate_account
+    
+    # -----------------------Dismissed---------------------------------
+    get "/Dismissed/User/Accounts", UserController, :dismissed_users
+    post "/Activate/dismissed/Account", UserController, :activate_dismissed_user
+
+
+    # ------------------------Retired -------------------------------
+    get "/Retired/User/Accounts", UserController, :retired_users
+    post "/Activate/retired/Account", UserController, :activate_retired_user
 
     # ////////////////////////////////////////////////////////////////////////// Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers
@@ -78,6 +87,7 @@ defmodule FleetWeb.Router do
     post "/Report/Problem/With/Vehicle", DriverController, :create_issue
     post "/File/Report", DriverController, :file_issue_report
     get "/Request/Response", DriverController, :request_response
+    get "/Rejected/Request", DriverController, :rejected_request
 
     # //////////////////////////////////////////////////////////////////////// Vehicle CONTROLLER
     get "/List/FleetHub/Vehicles", VehicleController, :list_vehicles

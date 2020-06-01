@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-info'></i> Users on Leave
+            <i class='subheader-icon fal fa-times'></i> Retired Users
         </h1>
         
 
@@ -35,7 +35,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Users on leave <i class='subheader-icon fal fa-info'></i>
+                        Retired Users<i class='subheader-icon fal fa-times'></i>
                     </h2>
                 </div>
 
@@ -57,28 +57,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <%= for users_on_leave <- @users_on_leave do %>  
-                             <%= if users_on_leave.status === 2 do %> 
+                            <%= for retired_user <- @retired_users do %>  
+                             <%= if retired_user.status === 5 do %> 
                                 <tr>
-                                    <td><%= users_on_leave.id %></td>
-                                    <td><%= users_on_leave.first_name %></td>
-                                    <td><%= users_on_leave.last_name %></td>
-                                    <td><%= users_on_leave.email %></td>
-                                    <td><%= users_on_leave.user_role %></td>
-                                    <%= if users_on_leave.status == 1 do %>
+                                    <td><%= retired_user.id %></td>
+                                    <td><%= retired_user.first_name %></td>
+                                    <td><%= retired_user.last_name %></td>
+                                    <td><%= retired_user.email %></td>
+                                    <td><%= retired_user.user_role %></td>
+                                    <%= if retired_user.status == 1 do %>
                                         <td>Active</td>
                                         <% else %>
-                                        <td>On Leave</td>
+                                        <td>Retired</td>
                                     <% end %>
-                                    <td><%= users_on_leave.acc_inactive_reason %></td>
-                                    <td>
+                                    <td><%= retired_user.acc_inactive_reason %></td>
+                                     <td>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class='subheader-icon fal fa-chevron-down'></i>
                                                 </span>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= users_on_leave.id%>" data-status="<%= users_on_leave.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
+                                                    <a class="dropdown-item" data-id="<%= retired_user.id%>" data-status="<%= retired_user.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.user_path(@conn, :activate_user_on_leave)%>" method="POST">
+                <form action="<%= Routes.user_path(@conn, :activate_retired_user)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
 
@@ -146,10 +146,9 @@
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
 <script>
 $(document).ready(function(){
-//Deactivate msg Account
+//Activate Account
 $('#activate_user').on('show.bs.modal', function (event){
 
     var button = $(event.relatedTarget)
@@ -162,5 +161,3 @@ $('#activate_user').on('show.bs.modal', function (event){
 });
 });
 </script>
-
-

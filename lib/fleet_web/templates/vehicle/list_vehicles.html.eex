@@ -61,7 +61,7 @@
             </div>
             <div>
                 <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
-                <h4 class="font-weight-bold mb-0">2</h4>
+                <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
             </div>
         </div>
     </div>
@@ -122,7 +122,7 @@
                                                     <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#viewmodal">View</a>
                                                     <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#editmodal">Edit</a>
                                                     <%= if vehicle.assignment_status === "0" do %>
-                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-toggle="modal" data-target="#assignmodal" >Assign Vehicle to Driver</a>
+                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#assignmodal">Assign Vehicle to Driver</a>
                                                     <% end %>
 
                                                     <%= if vehicle.assignment_status === "1" do %>
@@ -689,7 +689,11 @@
 
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.vehicle_path(@conn, :assign_vehicle)%>" method="POST">  <!---<%= Routes.vehicle_path(@conn, :assign_vehicle)%>----->
+                <form  role="form" id="assignForm" action="<%= Routes.vehicle_path(@conn, :assign_vehicle)%>" method="POST">  
+                      <!--//////////////////////////// To Validate Ex-Dates //////////////////////////////////-->
+                        <input type="hidden" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="rd_tax_exp" disabled="disabled">
+                        <input type="hidden" name="fitness_exp_dt" id="fitness_exp_dt" class="fitness_exp" disabled="disabled">
+                        <input type="hidden" name="insrnc_exp_dt" id="insrnc_exp_dt" class="insrnc_exp" disabled="disabled">
                     <div class="row">
                     <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                     <input type="hidden" name="id" id="id">
@@ -730,7 +734,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary"  >Assign Vehicle</button>
+                        <input type="submit" class="btn btn-primary" id="vehicle_validation_submit" value="Assign Vehicle" >
                     </div>   
                 </form>
             </div>
@@ -919,14 +923,68 @@ $(document).ready(function(){
         var id = button.data('id')
         var assigned_to = button.data('assigned_to')
         var assignment_status = button.data('assignment_status')
+        var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
+        var fitness_exp_dt = button.data('fitness_exp_dt')
+        var insrnc_exp_dt = button.data('insrnc_exp_dt')
         
         var modal = $(this)
         modal.find('.modal-body #id').val(id);
         modal.find('.modal-body #assigned_to').val(assigned_to);
-        modal.find('.modal-body #assignment_status').val(assignment_status);    
+        modal.find('.modal-body #assignment_status').val(assignment_status); 
+        modal.find('.modal-body #rd_tax_exp_dt').val(rd_tax_exp_dt);
+        modal.find('.modal-body #fitness_exp_dt').val(fitness_exp_dt);
+        modal.find('.modal-body #insrnc_exp_dt').val(insrnc_exp_dt)
+
     });
 });
 </script>
+
+<script>
+  $(document).ready( function(){
+      ////////////////////////// vehicle Assigning Validation ////////////////////////////// 
+    document.getElementById("assignForm").addEventListener('submit', function (event) {
+            event.preventDefault();
+                 
+           let road_tax = $(".rd_tax_exp").val();
+           let fitness = $(".fitness_exp").val();
+           let insrnc_exp_dt = $(".insrnc_exp").val();
+
+           let CurrentDate = new Date();
+
+           road_tax = new Date(road_tax);
+           fitness = new Date(fitness);
+           insrnc_exp_dt = new Date(insrnc_exp_dt);   
+
+
+         if((road_tax <= CurrentDate) || (fitness <= CurrentDate) || (insrnc_exp_dt <= CurrentDate))
+         {   
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cannot assign vehicle!. Expired, Road Tax, or Insurance or Fitness.',           
+            });   
+         }
+
+         else
+         {
+              event.preventDefault();
+
+               Swal.fire({  
+                  icon: 'success',
+                  title: 'Successful',
+                  text: 'Vehicle has been reassigned!',
+                }).then(function () {
+                
+                $("#assignForm").submit();
+    
+               }).catch(swal.noop);
+          }
+   });
+
+  }); 
+</script>
+
+
 
 <script>
 $(document).ready(function(){
@@ -956,26 +1014,22 @@ $(document).ready(function(){
 </script>
 
 
+
 <script>
   $(document).ready( function(){
-    document.getElementByID("reassignForm").addEventListener('submit', function (event) {
+      ////////////////////////// vehicle Reassigning Validation ////////////////////////////// 
+    document.getElementById("reassignForm").addEventListener('submit', function (event) {
             event.preventDefault();
                  
            let road_tax = $(".rd_tax_exp_dt").val();
            let fitness = $(".fitness_exp_dt").val();
            let insrnc_exp_dt = $(".insrnc_exp_dt").val();
 
-           console.log(road_tax);
-           console.log(fitness);
-           console.log(insrnc_exp_dt);
-
            let CurrentDate = new Date();
 
            road_tax = new Date(road_tax);
            fitness = new Date(fitness);
            insrnc_exp_dt = new Date(insrnc_exp_dt);   
-
-           console.log(road_tax);        
 
 
          if((road_tax <= CurrentDate) || (fitness <= CurrentDate) || (insrnc_exp_dt <= CurrentDate))

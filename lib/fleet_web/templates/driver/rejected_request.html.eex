@@ -1,0 +1,121 @@
+<main id="js-page-content" role="main" class="page-content">
+
+    <div class="subheader">
+        <h1 class="subheader-title">
+            <i class='subheader-icon fal fa-times'></i> Rejected Requests
+        </h1>
+        <div class="subheader-block" id="loggedIn-user">
+            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="panel-1" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        List of Previous Logged in issues
+                    </h2>
+                    <div class="panel-toolbar">
+                        <a href="<%= Routes.driver_path(@conn, :logged_issues)%>" class="btn btn-sm btn-primary waves-effect waves-themed">Back</a>
+                    </div>
+                </div>
+
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        
+                        <!-- datatable start -->
+                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                <tr>
+                                    <th>Vehicle Name</th>
+                                    <th>Vehicle Make</th>
+                                    <th>Plate Number</th>
+                                    <th>Date Reported</th>
+                                    <th>Date Rejected</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <%= for rejected <- @rejected do %>
+                                <%= if rejected.approval_status == "rejected" do %>
+                                <tr>
+                                    <td><%= rejected.v_name %></td>
+                                    <td><%= rejected.v_make %></td>
+                                    <td><%= rejected.v_plate_no %></td>
+                                    <td><%= rejected.dt_issued %></td>
+                                    <td><%= rejected.updated_at %></td>
+                                    <%= if rejected.approval_status == "pending" do %>
+                                        <td>Request is Pending</td>
+                                        <% else %>
+                                        <td>Request Denied</td>
+                                    <% end %>  
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class='subheader-icon fal fa-chevron-down'></i>
+                                                </span>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" data-id="<%= rejected.id %>" data-first_name="<%= rejected.first_name %>" data-last_name="<%= rejected.last_name %>" data-phone="<%= rejected.phone %>" data-v_make="<%= rejected.v_make %>" data-v_name="<%= rejected.v_name %>" data-v_plate_no="<%= rejected.v_plate_no %>" data-v_slct_problem="<%= rejected.v_slct_problem %>" data-descr_fxd_problem="<%= rejected.descr_fxd_problem %>" data-dt_issued="<%= rejected.dt_issued %>" data-dt_resolved="<%= rejected.dt_resolved %>" data-vendor="<%= rejected.vendor %>" data-cost="<%= rejected.cost %>" data-v_status="<%= rejected.v_status %>" data-toggle="modal" data-target="#issue-modal"><i class="fas fa-envelope fs-md"> View</i></a>
+                                                    <%# <a class="dropdown-item"><i class="fas fa-edit fs-md"> Edit</i></a>
+                                                    <a class="dropdown-item"><i class="fas fa-trash fs-md"> Delete</i></a> %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>  
+                                <% end %>
+                            <% end %>    
+                        </table>
+                        <!-- datatable end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="<%= Routes.static_path(@conn, "/js/statistics/peity/peity.bundle.js") %>"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+$('#issue-modal').on('show.bs.modal', function (event){
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var first_name = button.data('first_name')
+    var last_name = button.data('last_name')
+    var phone = button.data('phone')
+    var v_make = button.data('v_make')
+    var v_name = button.data('v_name')
+    var v_plate_no = button.data('v_plate_no')
+    var v_slct_problem = button.data('v_slct_problem')
+    var descr_fxd_problem = button.data('descr_fxd_problem')
+    var dt_issued = button.data('dt_issued')
+    var dt_resolved = button.data('dt_resolved')
+    var vendor = button.data('vendor')
+    var cost = button.data('cost')
+    var v_status = button.data('v_status')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #f_name').val(first_name);
+    modal.find('.modal-body #l_name').val(last_name);
+    modal.find('.modal-body #phone').val(phone);
+    modal.find('.modal-body #v_make').val(v_make);
+    modal.find('.modal-body #v_name').val(v_name);
+    modal.find('.modal-body #v_plate_no').val(v_plate_no);
+    modal.find('.modal-body #v_slct_problem').val(v_slct_problem);
+    modal.find('.modal-body #descr_fxd_problem').val(descr_fxd_problem);
+    modal.find('.modal-body #dt_issued').val(dt_issued);
+    modal.find('.modal-body #dt_resolved').val(dt_resolved);
+    modal.find('.modal-body #vendor').val(vendor);
+    modal.find('.modal-body #cost').val(cost);
+    modal.find('.modal-body #v_status').val(v_status);
+});
+
+});
+</script>

@@ -22,10 +22,11 @@ defmodule FleetWeb.VehicleController do
         driver_ids= for driver <- list_vehicles, into: [] do driver.driver_id end
         IO.inspect "=========================================================================================="
         IO.inspect driver_ids
+        [%{""=>garage}] = Vehicles.vehicles_in_maintenance()
         [%{""=>count_vehicles}] = Vehicles.vehicles_assigned()
         [%{""=>total_vehicles}] = Vehicles.total_vehicles()
         [%{""=>vehicles_unassigned}] = Vehicles.vehicles_unassigned()
-        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned, driver_ids: driver_ids)
+        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned, driver_ids: driver_ids, garage: garage)
     end
 
     def create_vehicle(conn, params) do
@@ -120,14 +121,23 @@ defmodule FleetWeb.VehicleController do
     end
 
     def reassign_vehicle(conn, %{"id" => id, "driver_id"=> driver_id} = params) do
-      
-      IO.inspect params
         vehicle = Vehicles.get_vehicle_details!(id)
         current_vehicle = Vehicles.get_by_user_id(driver_id)
+
+        multi = case current_vehicle do
+          nil-> 
+            Ecto.Multi.new()
+            |> Ecto.Multi.update(:assign, VehicleDetails.changeset(vehicle, params))
+          current_vehicle->
+            Ecto.Multi.new()
+            |> Ecto.Multi.update(:unassign, VehicleDetails.changeset(current_vehicle, Map.merge(Map.from_struct(current_vehicle), %{driver_id: nil, assignment_status: "0"})))
+            |> Ecto.Multi.update(:assign, VehicleDetails.changeset(vehicle, params))
+        end
   
-        Ecto.Multi.new()
-        |> Ecto.Multi.update(:unassign, VehicleDetails.changeset(current_vehicle, Map.merge(Map.from_struct(current_vehicle), %{driver_id: nil, assignment_status: "0"})))
-        |> Ecto.Multi.update(:assign, VehicleDetails.changeset(vehicle, params))
+        # Ecto.Multi.new()
+        # |> Ecto.Multi.update(:unassign, VehicleDetails.changeset(current_vehicle, Map.merge(Map.from_struct(current_vehicle), %{driver_id: nil, assignment_status: "0"})))
+        # |> Ecto.Multi.update(:assign, VehicleDetails.changeset(vehicle, params))
+        multi
         |> Ecto.Multi.run(:userlogs, fn %{assign: vehicle} ->
           activity = "FleetHUB vehicle updated with ID \"#{vehicle.id}\""
   

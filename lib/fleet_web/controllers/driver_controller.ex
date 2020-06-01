@@ -1,5 +1,6 @@
 defmodule FleetWeb.DriverController do
     use FleetWeb, :controller
+    alias Fleet.Clients
     alias Fleet.Vehicles
     alias Fleet.Drivers
     alias Fleet.Accounts
@@ -176,6 +177,12 @@ defmodule FleetWeb.DriverController do
 
     def request_response(conn, _params) do
       responses = Drivers.list_tbl_vehicle_issue()
-      render(conn, "request_response.html", responses: responses)
+      vendors = Clients.list_tbl_vendors()
+      render(conn, "request_response.html", responses: responses, vendors: vendors)
+    end
+
+    def rejected_request(conn, _params) do
+      rejected = Drivers.list_tbl_vehicle_issue()
+      render(conn, "rejected_request.html", rejected: rejected)
     end
 end
