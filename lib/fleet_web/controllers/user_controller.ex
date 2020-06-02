@@ -77,6 +77,7 @@ defmodule FleetWeb.UserController do
       :deactivate_account,
       :dismissed_users,
       :activate_user_on_leave,
+      :suspended_users
       :suspended_users,
       :activate_dismissed_user,
       :retired_users,
@@ -684,6 +685,11 @@ defmodule FleetWeb.UserController do
     render(conn, "view_mgt.html", view_users: view_users ) 
   end
 
+  def dismissed_users(conn, _params) do
+    dismissed_users = Accounts.list_tbl_users()
+    render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
+  end  
+  
   def activate_user_account(conn, %{"id" => id} = params) do
     system_user = Accounts.get_user!(id)
 
@@ -800,6 +806,7 @@ defmodule FleetWeb.UserController do
     |> case do
       {:ok, %{suspended_user: suspended_user, userlogs: _userlogs}} ->
         conn
+        |> put_flash(:info, "FleetHUB system leave account activated :-) ")
         |> put_flash(:info, "FleetHUB system suspended account activated :-) ")
         |> redirect(to: Routes.user_path(conn, :suspended_users))
 
@@ -958,9 +965,4 @@ defmodule FleetWeb.UserController do
         |> redirect(to: Routes.user_path(conn, :retired_users))
     end
   end
-
-
-
-
-
 end

@@ -178,6 +178,7 @@
                         <b>MESSAGE:</b> <input name="decline_reason" type="text" placeholder="State Reason of Rejection" class="form-control border-top-0 border-left-0 border-right-0 px-0 rounded-0 fs-md mt-2" tabindex="4" required>
                         <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                         <input type="hidden" name="approval_status" value="rejected">
+                        <input type="hidden" name="v_status" value="NULL">
                         <input type="hidden" name="id" id="id">
                     </div>
                 </div>
