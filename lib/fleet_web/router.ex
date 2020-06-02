@@ -97,6 +97,12 @@ defmodule FleetWeb.Router do
     post "/Assign/Vehicle To/Driver", VehicleController, :assign_vehicle
     post "/Reassign/Vehicle/To/New/Driver", VehicleController, :reassign_vehicle
 
+    # --------------------------------- Problem maintenance-------------------------------------
+    get "/Manage/vehicle/problem", VehicleController, :mgt_problem
+    post "/Create/vehicle/problem", VehicleController, :create_problem
+    post "/Update/vehicle/problem", VehicleController, :update_problem
+
+
     # //////////////////////////////////////////////////////////////////////// Admin CONTROLLER
     get "/List/Contacts", AdminController, :list_vendors
     post "/Create/New/FleetHub/Contact", AdminController, :create_vendor

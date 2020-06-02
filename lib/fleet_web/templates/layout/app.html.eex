@@ -180,6 +180,13 @@
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Vehicles</span>
                                         </a>
                                     </li>
+                                     <li>
+                                        <a href="<%= Routes.vehicle_path(@conn, :mgt_problem)%>" title="Manage vehicle Problems" data-filter-tags="theme settings layout options">
+                                            <i class="fal fa-truck"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage vehicle Problems</span>
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </li>
 
