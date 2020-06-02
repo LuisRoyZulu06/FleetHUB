@@ -57,10 +57,12 @@ defmodule FleetWeb.Router do
 
     # --------------------- On Leave --------------------------------
     get "/Users/On/Leave", UserController, :users_on_leave
+    post "/Activate/Leave/Account", UserController, :activate_user_on_leave
 
     # ---------------------- Suspension ---------------------------
     get "/Suspended/Users", UserController, :suspended_users
-    post "/Suspend/System/User/Acccount", UserController, :suspend_user_account
+    post "/Activate/Suspended/Account", UserController, :activate_suspended_user
+    
 
     # ---------------------- Deactivated ---------------------------
     post "/Deactivate/Account", UserController, :deactivate_account
@@ -68,6 +70,15 @@ defmodule FleetWeb.Router do
     post "/Activate/Account", UserController, :activate_user_on_leave
     post "/Activate/Account", UserController, :activate_suspended_user
     get "/Retired/User/Accounts", UserController, :retired_users
+    
+    # -----------------------Dismissed---------------------------------
+    get "/Dismissed/User/Accounts", UserController, :dismissed_users
+    post "/Activate/dismissed/Account", UserController, :activate_dismissed_user
+
+
+    # ------------------------Retired -------------------------------
+    get "/Retired/User/Accounts", UserController, :retired_users
+    post "/Activate/retired/Account", UserController, :activate_retired_user
 
     # ////////////////////////////////////////////////////////////////////////// Driver CONTROLLER
     get "/List/FleetHub/Drivers", DriverController, :list_drivers
@@ -89,6 +100,12 @@ defmodule FleetWeb.Router do
     post "/Update/Vehicle/Details", VehicleController, :update_vehicle
     post "/Assign/Vehicle To/Driver", VehicleController, :assign_vehicle
     post "/Reassign/Vehicle/To/New/Driver", VehicleController, :reassign_vehicle
+
+    # --------------------------------- Problem maintenance-------------------------------------
+    get "/Manage/vehicle/problem", VehicleController, :mgt_problem
+    post "/Create/vehicle/problem", VehicleController, :create_problem
+    post "/Update/vehicle/problem", VehicleController, :update_problem
+
 
     # //////////////////////////////////////////////////////////////////////// Admin CONTROLLER
     get "/List/Contacts", AdminController, :list_vendors

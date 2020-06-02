@@ -5,6 +5,8 @@ defmodule FleetWeb.VehicleController do
     alias Fleet.Vehicles
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
+    alias Fleet.Problems
+    alias Fleet.Problems.Vehicle_problem
 
     plug(
       FleetWeb.Plugs.RequireAuth
@@ -12,7 +14,10 @@ defmodule FleetWeb.VehicleController do
            :list_vehicles,
            :create_vehicle,
            :maintain_vehicle,
-           :reassign_vehicle
+           :reassign_vehicle,
+           :mgt_problem,
+           :create_problem,
+           :update_problem
          ]
   )
 
@@ -166,4 +171,64 @@ defmodule FleetWeb.VehicleController do
             |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
         end
     end
+
+  #  -------------------------------Problem Maintenance-------------------------------------------------
+
+  def mgt_problem(conn, _params) do
+    problems = Problems.list_tbl_vehicle_problems()
+    render(conn, "vehicle_problem.html", problems: problems)
+  end
+
+  def create_problem(conn, params) do
+    case Problems.create_vehicle_problem(params) do
+      {:ok, _} ->
+        conn
+        |> put_flash(:info, "New Problem Added Sccessfully :-)")
+        |> redirect(to: Routes.vehicle_path(conn, :mgt_problem))
+
+        conn
+
+      {:error, _} ->
+        conn
+        |> put_flash(:error, "Failed To Add New Problem :-(")
+        |> redirect(to: Routes.vehicle_path(conn, :mgt_problem))
+    end
+  end
+
+  def update_problem(conn, %{"id" => id} = params) do
+    problems = Problems.get_vehicle_problem!(id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:problems, Vehicle_problem.changeset(problems, params))
+    |> Ecto.Multi.run(:userlogs, fn %{problems: problems} ->
+      activity = "FleetHUB Problem updated with ID \"#{problems.id}\""
+
+      userlogs = %{
+        user_id: conn.assigns.user.id,
+        activity: activity
+      }
+
+      UserLogs.changeset(%UserLogs{}, userlogs)
+      |> Repo.insert()
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{problems: problems, userlogs: _userlogs}} ->
+        conn
+        |> put_flash(:info, "FleetHUB Problem updated successfully :-) ")
+        |> redirect(to: Routes.vehicle_path(conn, :mgt_problem))
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        reason =VehicleController.traverse_errors(failed_value.errors) |> List.first()
+
+        conn
+        |> put_flash(:error, reason)
+        |> redirect(to: Routes.vehicle_path(conn, :mgt_problem))
+    end
+  end
+
+
+
+
+
 end

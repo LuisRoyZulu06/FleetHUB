@@ -356,16 +356,9 @@
                                     <div class="input-group-prepend">
                                         <select class="custom-select form-control" name="v_slct_problem" required="required">
                                             <option>Select Vehicle Problem</option>
-                                            <option class="dropdown-item" value="Warning Lights">Warning Lights</option>
-                                            <option class="dropdown-item" value="Dead Battery">Dead Battery</option>
-                                            <option class="dropdown-item" value="Brakes Squeaking">Brakes Squeaking</option>
-                                            <option class="dropdown-item" value="Alternator Failure">Alternator Failure</option>
-                                            <option class="dropdown-item" value="Broken Starter Motor">Broken Starter Motor</option>
-                                            <option class="dropdown-item" value="Steering Wheel Shaking">Steering Wheel Shaking</option>
-                                            <option class="dropdown-item" value="Failed Emmissions Test">Failed Emmissions Test</option>
-                                            <option class="dropdown-item" value="Overheating">Overheating</option>
-                                            <option class="dropdown-item" value="Tyre Puncture">Tyre Puncture</option>
-                                            <option class="dropdown-item" value="Suspension Broke">Suspension Broke</option>
+                                            <%= for problem <- @problems do %>
+                                               <option class="dropdown-item" value="<%= problem.problem_descr%>"><%= problem.problem_descr%></option>
+                                            <% end %>   
                                         </select>
                                     </div>
                                     <input type="text" class="form-control" name="v_descr_problem" placeholder="Describe problem here in deatil or if not listed on dropdown" ria-label="Text input with dropdown button" id="dropdown-on-left" required="required">
