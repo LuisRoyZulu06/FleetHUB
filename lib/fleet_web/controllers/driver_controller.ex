@@ -8,6 +8,8 @@ defmodule FleetWeb.DriverController do
     alias Fleet.Drivers.IssueLoger
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
+    alias Fleet.License
+    alias Fleet.License.Drivers_license
 
     plug(
       FleetWeb.Plugs.RequireAuth
@@ -29,7 +31,8 @@ defmodule FleetWeb.DriverController do
     def list_drivers(conn, _params) do
         vehicles = Vehicles.list_tbl_vehicles()
         list_drivers = Accounts.list_tbl_users()
-        render(conn, "list_drivers.html", list_drivers: list_drivers, vehicles: vehicles)
+        licences = License.list_tbl_license_type()
+        render(conn, "list_drivers.html", list_drivers: list_drivers, vehicles: vehicles, licences: licences)
     end
 
     def view_driver(conn, %{"id" => id} = params) do

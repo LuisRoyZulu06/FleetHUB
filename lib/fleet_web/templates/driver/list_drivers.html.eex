@@ -178,13 +178,9 @@
                                     </div>
                                     <select class="custom-select form-control" name="dlt" required="required">
                                         <option selected="">Select Drievers License Type</option>
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
-                                        <option value="C1">C1</option>
-                                        <option value="C1E">C1E</option>
-                                        <option value="CE">CE</option>
-                                        <option value="PSV">PSV</option>
+                                        <%= for licence <- @licences do %>
+                                            <option value="<%= licence.name%>"><%= licence.name%></option>
+                                        <% end %>               
                                     </select>
                                     <input type="date" name="dl_exp_dt" placeholder="Drivers License Expiry Date" class="form-control" required="required">
                                 </div>
@@ -272,14 +268,10 @@
                                         <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
                                     </div>
                                     <select class="custom-select form-control" name="dlt" required="required">
-                                        <option selected="">Select Drievers License Type</option>
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
-                                        <option value="C1">C1</option>
-                                        <option value="C1E">C1E</option>
-                                        <option value="CE">CE</option>
-                                        <option value="PSV">PSV</option>
+                                    <option selected="">Select Drievers License Type</option>
+                                    <%= for licence  <- @licences  do %>
+                                        <option value="<%= licence.name %>"><%= licence.name %></option>
+                                     <% end %>   
                                     </select>
                                 </div>
                             </div>

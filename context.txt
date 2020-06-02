@@ -16,3 +16,8 @@ mix ecto.gen.migration alter_tbl_drivers
 
 <!-- ----------------Adding License type----------------------- -->
 mix phx.gen.context License Drivers_license tbl_license_type name vehicle_cat weight
+
+
+<!-------------------------Vehicle Problems--------------------------->
+mix phx.gen.context Problems Vehicle_problem tbl_vehicle_problems problem_descr
+ 

@@ -128,7 +128,7 @@
                                                     <%= if vehicle.assignment_status === "1" do %>
                                                     <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#reassignmodal">Reassign Vehicle</a>
                                                     <% end %>
-                                                    <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button>
+                                                    <%# <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button> %>
                                                 </div>
                                             </div>
                                         </div>
@@ -189,7 +189,7 @@
                                     </div>
                                     
                                     <input type="hidden" name="driver_id" value="0">
-                                    <select class="custom-select form-control" name="driver_id">
+                                    <select class="custom-select form-control" name="driver_id" required="required">
                                         <option value="">Select Driver</option>
                                         <%= for driver <-@drivers do %>
                                             <%= if driver.user_role == "driver" && driver.id not in @driver_ids do %>
@@ -305,7 +305,7 @@
 </div>
 
 <!-- ############################### SEND VEHICLE FOR MAINTENANCE MODAL ################### -->
-<div class="modal fade" id="maintain-car" tabindex="-1" role="dialog" aria-hidden="true">
+<!--<div class="modal fade" id="maintain-car" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -400,7 +400,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <!-- ############################## EDIT-VEHICLE ########################################## -->
 <div class="modal fade" id="editmodal"  tabindex="-1" role="dialog" aria-hidden="true"> 
@@ -704,7 +704,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="driver_id" >
+                                    <select class="custom-select form-control" name="driver_id" required="required" >
                                         <option>Select Driver</option>
                                         <%= for driver <-@drivers do %>
                                             <%= if driver.user_role == "driver" && driver.id not in @driver_ids do %>
@@ -774,7 +774,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fal fa-user"></i></span>
                                     </div>
-                                    <select class="custom-select form-control" name="driver_id">
+                                    <select class="custom-select form-control" name="driver_id" required="required">
                                         <option>Select New Driver</option>
                                         <%= for driver <-@drivers do %>
                                             <%= if driver.user_role == "driver" && driver.status === 1 do %>
@@ -803,37 +803,8 @@
     </div>
 </div>
 
-<!-- ################################################# TEST MODAL############# -->
-<%# <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                Confirm Submit
-            </div>
-            <div class="modal-body">
-                Are you sure you want to submit the following details?
-                <table class="table">
-                    <tr>
-                        <th>Road Tax</th>
-                        <td name="rd_tax_exp_dt"></td>
-                    </tr>
-                    <tr>
-                        <th>Road Fitness</th>
-                        <td name="fitness_exp_dt"></td>
-                    </tr>
-                     <tr>
-                        <th>Insurance</th>
-                        <td name="insrnc_exp_dt"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a href="#" id="submit" class="btn btn-success success">Submit</a>
-            </div>
-        </div>
-    </div>
-</div> %>
+<!-- ######################################################################## -->
+
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
