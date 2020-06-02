@@ -177,7 +177,7 @@
                                     <li>
                                         <a href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>" title="Manage Vehicles" data-filter-tags="theme settings layout options">
                                             <i class="fal fa-truck"></i>
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Vehicles</span>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Cars</span>
                                         </a>
                                     </li>
                                 </ul>
