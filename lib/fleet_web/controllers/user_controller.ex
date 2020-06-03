@@ -77,7 +77,6 @@ defmodule FleetWeb.UserController do
       :deactivate_account,
       :dismissed_users,
       :activate_user_on_leave,
-      :suspended_users
       :suspended_users,
       :activate_dismissed_user,
       :retired_users,
@@ -113,7 +112,7 @@ defmodule FleetWeb.UserController do
     [%{""=>count_vehicles}] = Vehicles.vehicles_assigned() 
     [%{""=>total_vehicles}] = Vehicles.total_vehicles()
     [%{""=>total_drivers}] = Vehicles.total_drivers()
-    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, count_vehicles: count_vehicles, total_vehicles: total_vehicles, total_drivers: total_drivers,  problems:  problems)
+    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, count_vehicles: count_vehicles, total_vehicles: total_vehicles, total_drivers: total_drivers,  problems: problems)
   end
 
   defp prepare_dash_result(results) do
