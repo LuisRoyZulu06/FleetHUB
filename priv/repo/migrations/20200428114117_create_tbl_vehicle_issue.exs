@@ -21,6 +21,7 @@ defmodule Fleet.Repo.Migrations.CreateTblVehicleIssue do
       add :v_status, :string
       add :approval_status, :string
       add :decline_reason, :string
+      add :driver_id, references(:tbl_users, column: :id, on_delete: :delete_all)
 
       timestamps()
     end

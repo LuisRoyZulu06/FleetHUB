@@ -100,4 +100,8 @@ defmodule Fleet.Drivers do
   def change_issue_loger(%IssueLoger{} = issue_loger) do
     IssueLoger.changeset(issue_loger, %{})
   end
+
+  # def get_by_user_id(id) do
+  #   Repo.get_by(IssueLoger, driver_id: id)
+  # end
 end

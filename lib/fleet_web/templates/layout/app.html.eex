@@ -182,7 +182,7 @@
                                     </li>
                                      <li>
                                         <a href="<%= Routes.vehicle_path(@conn, :mgt_problem)%>" title="Manage vehicle Problems" data-filter-tags="theme settings layout options">
-                                            <i class="fal fa-truck"></i>
+                                            <i class="fal fa-cog"></i>
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage vehicle Problems</span>
                                         </a>
                                     </li>
@@ -242,7 +242,6 @@
                                     <li>
                                         <a href="<%= Routes.user_path(@conn, :retired_users)%>" title="Manage Retired Users" data-filter-tags="theme settings layout options">
                                             <i class="fal fa-times"></i>
-
                                             <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Retired Users</span>
                                         </a>
                                     </li>

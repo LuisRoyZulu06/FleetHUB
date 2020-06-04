@@ -55,17 +55,21 @@
                             </thead>
                             <tbody>
                             <%= for response <-@responses do %>
-                                <%= if response.approval_status != "rejected" do %>
+                                <%= if  response.driver_id == @user.id do %>
                                 <tr>
                                     <td><%= response.v_make %> <%= response.v_name %></td>
                                     <td><%= response.v_plate_no %></td>
                                     <td><%= response.v_slct_problem %></td>
                                     <td><%= response.dt_issued %></td>
-                                    <%= if response.approval_status == "pending" do %>
-                                        <td>Request is Pending</td>
-                                        <% else %>
-                                        <td>Request Denied</td>
-                                    <% end %>                                    
+                                    <%= if  response.approval_status == "pending" do %>
+                                    <td>Request is pending</td>
+                                    <% end %>
+                                    <%= if response.approval_status == "rejected" do %>
+                                    <td>Request Rejected</td>
+                                    <% end %>
+                                    <%= if response.approval_status == "approved" do %>
+                                    <td>Request Approved</td>
+                                    <% end %>
                                     <td>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -82,7 +86,7 @@
                                         </div>
                                     </td>
                                 </tr> 
-                            <% end %>
+                                <% end %>
                             <% end %>     
                         </table>
                         <!-- datatable end -->

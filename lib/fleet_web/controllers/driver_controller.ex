@@ -133,7 +133,7 @@ defmodule FleetWeb.DriverController do
     end
 
     def create_issue(conn, issues) do
-      case Drivers.create_issue_loger(issues) do
+      case Drivers.create_issue_loger(Map.put(issues, "driver_id", conn.assigns.user.id)) do
           {:ok, _} ->
             conn
             |> put_flash(:info, "Problem with car reported.")
@@ -148,6 +148,20 @@ defmodule FleetWeb.DriverController do
       end
     end
 
+
+
+    # def user_actitvity(conn, %{"id" => user_id}) do
+    #   with :error <- confirm_token(conn, user_id) do
+    #     conn
+    #     |> put_flash(:error, "invalid token received")
+    #     |> redirect(to: Routes.user_path(conn, :list_users))
+    #   else
+    #     {:ok, user} ->
+    #       user_logs = Logs.get_user_logs_by(user.id)
+    #       page = %{first: "Users", last: "Activity logs"}
+    #       render(conn, "activity_logs.html", user_logs: user_logs, page: page)
+    #   end
+    # end
     def file_issue_report(conn, %{"id" => id} = params) do
       issue = Drivers.get_issue_loger!(id)
 
