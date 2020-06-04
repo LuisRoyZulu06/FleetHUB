@@ -21,7 +21,7 @@
     <!-- ################################################################################ -->
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-credit-card'></i> Problem Maintenance
+            <i class='subheader-icon fal fa-cog'></i> Problem Maintenance
         </h1>
         
 
@@ -35,7 +35,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Problem Types <i class='subheader-icon fal fa-credit-card'></i>
+                        Problem Types <i class='subheader-icon fal fa-cog'></i>
                     </h2>
                     <div class="panel-toolbar" style="margin-right: 10px;">
                         <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#addmodal">Add Problem</button>  
@@ -90,7 +90,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Problem<i class='subheader-icon fal fa-credit-card'></i></h5>
+                <h5 class="modal-title">Add Problem<i class='subheader-icon fal fa-cog'></i></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>

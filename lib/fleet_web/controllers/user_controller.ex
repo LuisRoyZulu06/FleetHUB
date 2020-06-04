@@ -77,7 +77,6 @@ defmodule FleetWeb.UserController do
       :deactivate_account,
       :dismissed_users,
       :activate_user_on_leave,
-      :suspended_users
       :suspended_users,
       :activate_dismissed_user,
       :retired_users,

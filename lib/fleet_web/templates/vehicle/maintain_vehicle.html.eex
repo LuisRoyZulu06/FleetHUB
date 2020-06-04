@@ -27,13 +27,14 @@
 
         <div class="d-flex mr-4">
             <div class="mr-2">
-                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }">4/10</span>
+                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @garage %></span>
             </div>
             <div>
                 <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
-                <h4 class="font-weight-bold mb-0">2</h4>
+                <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
             </div>
         </div>
+        
     </div>
 
     <div class="row">
@@ -58,35 +59,41 @@
                                     <th>Vehicle Name</th>
                                     <th>License Plate Number</th>
                                     <th>Assigned To</th>
-                                    <th>Status of Vehicle</th>
                                     <th>Vehicle Problem</th>
-                                    <th>Vendor</th>
+                                    <th>Vendor Garage</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View</a>
-                                                    <a class="dropdown-item" href="#">Edit</a>
-                                                    <a class="dropdown-item" href="#">Delete</a>
+                            <%= for maintenance <-@maintenance do %>
+                                <%= if maintenance.v_status == "garage" do %>
+                                    <tr>
+                                        <td><%= maintenance.v_make %><%= maintenance.v_name %></td>
+                                        <td><%= maintenance.v_plate_no %></td>
+                                        <td><%= maintenance.first_name %><%= maintenance.last_name %></td>
+                                        <td><%= maintenance.v_slct_problem %></td>
+                                        <%= if maintenance.vendor == nil do %>
+                                        <td>Waiting For Vendor to be assigned</td>
+                                        <% else %>
+                                        <td><%= maintenance.vendor %></td>
+                                        <% end %>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class='subheader-icon fal fa-chevron-down'></i>
+                                                    </span>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">View</a>
+                                                        <a class="dropdown-item" href="#">Edit</a>
+                                                        <a class="dropdown-item" href="#">Delete</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>                                              
+                                        </td>
+                                    </tr>   
+                                <% end %>
+                            <% end %>                                               
                         </table>
                         <!-- datatable end -->
                     </div>

@@ -149,33 +149,6 @@ defmodule Fleet.Vehicles do
     |> Repo.all()
   end
 
-
-
-#   |> group_by([c, day], [day.d, fragment("CASE 
-#   WHEN ? = '200' 
-#       THEN 'SUCCESS'
-#   ELSE 'FAILED'
-# END", c.status_code)
-# ])
-# |> order_by([_c, day], day.d)
-# |> select([c, day], %{
-# day: fragment("convert(varchar, ?, 107)", day.d),
-# count: count(c.id),
-# status: fragment("""
-# CASE 
-#     WHEN ? = '200' 
-#         THEN 'SUCCESS'
-#     ELSE 'FAILED'
-# END
-# """, c.status_code
-# )
-# })
-# |> Repo.all()
-# end
-
-
-
-
   def vehicles_assigned do
     query =
     """
@@ -221,7 +194,7 @@ defmodule Fleet.Vehicles do
     query =
     """
     SELECT COUNT(id)
-    FROM tbl_vehicle_issue WHERE v_status = 'in garage';
+    FROM tbl_vehicle_issue WHERE v_status = 'garage';
     """
     {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
     rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))

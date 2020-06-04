@@ -3,6 +3,8 @@ defmodule FleetWeb.VehicleController do
     alias Fleet.Accounts
     alias Fleet.Accounts.User
     alias Fleet.Vehicles
+    alias Fleet.Drivers
+    alias Fleet.Drivers.IssueLoger
     alias Fleet.Vehicles.VehicleDetails
     alias Fleet.{Logs.UserLogs, Repo}
     alias Fleet.Problems
@@ -90,7 +92,9 @@ defmodule FleetWeb.VehicleController do
     end
 
     def maintain_vehicle(conn, _params) do
-        render(conn, "maintain_vehicle.html")
+        [%{""=>garage}] = Vehicles.vehicles_in_maintenance()
+        maintenance = Drivers.list_tbl_vehicle_issue()
+        render(conn, "maintain_vehicle.html", maintenance: maintenance, garage: garage)
     end
 
     def assign_vehicle(conn, %{"id" => id} = params) do
@@ -173,7 +177,6 @@ defmodule FleetWeb.VehicleController do
     end
 
   #  -------------------------------Problem Maintenance-------------------------------------------------
-
   def mgt_problem(conn, _params) do
     problems = Problems.list_tbl_vehicle_problems()
     render(conn, "vehicle_problem.html", problems: problems)
@@ -226,9 +229,4 @@ defmodule FleetWeb.VehicleController do
         |> redirect(to: Routes.vehicle_path(conn, :mgt_problem))
     end
   end
-
-
-
-
-
 end

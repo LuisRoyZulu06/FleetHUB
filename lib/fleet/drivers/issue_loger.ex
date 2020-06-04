@@ -18,12 +18,13 @@ defmodule Fleet.Drivers.IssueLoger do
     field :v_name, :string
     field :v_plate_no, :string
     field :v_slct_problem, :string
-    field :v_status, :string, default: "in garage"
+    field :v_status, :string
     field :vendor, :string
     field :approval_status, :string, default: "pending"
     field :decline_reason, :string
 
-    timestamps()
+    belongs_to :user, Fleet.Accounts.User, foreign_key: :driver_id, type: :id
+    timestamps(type: :utc_datetime)
   end
 
   @doc false
@@ -31,7 +32,7 @@ defmodule Fleet.Drivers.IssueLoger do
     issue_loger
     |> cast(attrs, [:payment_doc])
     |> cast_attachments(attrs, [:payment_doc])
-    |> cast(attrs, [:first_name, :last_name, :phone, :v_make, :v_name, :v_plate_no, :v_descr_problem, :v_slct_problem, :slct_fxd_problem, :descr_fxd_problem, :dt_issued, :dt_resolved, :vendor, :cost, :payment_doc, :v_status, :approval_status, :decline_reason])
+    |> cast(attrs, [:first_name, :last_name, :phone, :v_make, :v_name, :v_plate_no, :v_descr_problem, :v_slct_problem, :slct_fxd_problem, :descr_fxd_problem, :dt_issued, :dt_resolved, :vendor, :cost, :payment_doc, :v_status, :approval_status, :decline_reason, :driver_id])
     # |> validate_required([:first_name, :last_name, :phone, :v_make, :v_name, :v_plate_no, :v_descr_problem, :v_slct_problem, :slct_fxd_problem, :descr_fxd_problem, :dt_issued, :dt_resolved, :vendor, :cost, :payment_doc, :v_status, :approval_status, :decline_reason])
   end
 end
