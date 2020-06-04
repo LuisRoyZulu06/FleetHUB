@@ -355,7 +355,7 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.user_path(@conn, :deactivate_account)%>" method="POST">
+                <form action="<%= Routes.driver_path(@conn, :deactivate_driver_account)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
 

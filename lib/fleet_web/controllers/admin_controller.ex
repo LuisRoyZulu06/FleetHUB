@@ -28,7 +28,7 @@ defmodule FleetWeb.AdminController do
             |> redirect(to: Routes.admin_path(conn, :list_vendors))
         end
     end
-
+  # -------------------- edit_vendor not used--- used modal -----------
     def edit_vendor(conn, %{"id" => id}) do
         vendor = Clients.get_contacts!(id)
         changeset = Clients.change_contacts(vendor)
@@ -36,12 +36,12 @@ defmodule FleetWeb.AdminController do
     end
 
     def update_vendor(conn, %{"id" => id} = params) do
-        contact = Clients.get_contacts!(id)
+       vendor = Clients.get_contacts!(id)
 
         Ecto.Multi.new()
-        |> Ecto.Multi.update(:contact, Contacts.changeset(contact, params))
-        |> Ecto.Multi.run(:userlogs, fn %{contact: contact} ->
-          activity = "Contact updated with ID \"#{contact.id}\""
+        |> Ecto.Multi.update(:vendor, Contacts.changeset(vendor, params))
+        |> Ecto.Multi.run(:userlogs, fn %{vendor: vendor} ->
+          activity = "Contact updated with ID \"#{vendor.id}\""
 
           userlogs = %{
             user_id: conn.assigns.user.id,
@@ -53,7 +53,7 @@ defmodule FleetWeb.AdminController do
         end)
         |> Repo.transaction()
         |> case do
-          {:ok, %{contact: contact, userlogs: _userlogs}} ->
+          {:ok, %{vendor: vendor, userlogs: _userlogs}} ->
             conn
             |> put_flash(:info, "Contact updated successfully.")
             |> redirect(to: Routes.admin_path(conn, :list_vendors))

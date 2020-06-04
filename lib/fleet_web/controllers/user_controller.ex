@@ -753,6 +753,7 @@ defmodule FleetWeb.UserController do
     end
   end
 
+
   def activate_user_on_leave(conn, %{"id" => id} = params) do
     users_on_leaves = Accounts.get_user!(id)
 
@@ -964,4 +965,5 @@ defmodule FleetWeb.UserController do
         |> redirect(to: Routes.user_path(conn, :retired_users))
     end
   end
+  
 end

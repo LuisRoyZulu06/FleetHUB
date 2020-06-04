@@ -66,7 +66,7 @@ defmodule FleetWeb.Router do
 
     # ---------------------- Deactivated ---------------------------
     post "/Deactivate/Account", UserController, :deactivate_account
-    
+   
     # -----------------------Dismissed---------------------------------
     get "/Dismissed/User/Accounts", UserController, :dismissed_users
     post "/Activate/dismissed/Account", UserController, :activate_dismissed_user
@@ -89,6 +89,9 @@ defmodule FleetWeb.Router do
     get "/Request/Response", DriverController, :request_response
     get "/Rejected/Request", DriverController, :rejected_request
 
+    # --------------------------- Deactivated ----------------------------------
+    post "/Deactivate/Driver/Account", DriverController, :deactivate_driver_account
+
     # //////////////////////////////////////////////////////////////////////// Vehicle CONTROLLER
     get "/List/FleetHub/Vehicles", VehicleController, :list_vehicles
     post "/Add/New/Vehicle/To/System", VehicleController, :create_vehicle
@@ -107,14 +110,19 @@ defmodule FleetWeb.Router do
     get "/List/Contacts", AdminController, :list_vendors
     post "/Create/New/FleetHub/Contact", AdminController, :create_vendor
     get "/Delete/FleetHub/Contact", AdminController, :delete_vendor
-    get "/Edit/FleetHub/Contact", AdminController, :edit_vendor
-    post "/Update/FleetHub/Contact", AdminController, :update_vendor
+    # get "/Edit/FleetHub/Contact", AdminController, :edit_vendor
+    # post "/Update/FleetHub/Contact", AdminController, :update_vendor
     get "/GPS/Fleet/Tracking", AdminController, :fleet_tracking
     get "/Issue/Logger/Inbox", AdminController, :inbox
     get "/Resolved/Issues", AdminController, :resolved
     post "/Approve/Request", AdminController, :approve_request
     post "/Reject/Request", AdminController, :reject_request
     get "/Rejected/Issues", AdminController, :rejected
+
+    # --------------------------- Vendors  -----------------------------------------
+    post "/Update/Vendor/Contact", AdminController, :update_vendor
+
+
   end
 
   # Other scopes may use custom stacks.

@@ -65,7 +65,7 @@
                                    Call
                                 </a>
                                 <a class="dropdown-item" href="mailto:<%= vendor.email %>">Send Email</a>
-                                <a class="dropdown-item" href="<%= Routes.admin_path(@conn, :edit_vendor, id: vendor.id)%>">Edit Contact</a>
+                                <a class="dropdown-item" href="#" data-id="<%= vendor.id%>" data-rep_name="<%= vendor.rep_name%>" data-position="<%= vendor.position%>" data-comp_name="<%= vendor.comp_name%>" data-comp_email="<%= vendor.comp_email%>" data-email="<%= vendor.email%>" data-comp_tel="<%= vendor.comp_tel%>" data-comp_address="<%= vendor.comp_address%>" data-comp_info="<%= vendor.comp_info%>" data-toggle="modal" data-target="#edit-vendor">Edit Contact</a>
                                 <a class="dropdown-item" data-toggle="modal" data-target="#delete-alert">Delete Contact</a>
                             </div>
                             <span class="text-truncate text-truncate-xl"><%= vendor.position %>, <%= vendor.comp_name %>.</span>
@@ -202,6 +202,117 @@
     </div>
 </div>
 
+<!-- ############################### EDIT VENDOR MODAL #################################### -->
+<div class="modal fade" id="edit-vendor" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Contact <i class="fal fa-book"></i> </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<%= Routes.admin_path(@conn, :update_vendor)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Company Rep: Full Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                    </div>
+                                    <input type="text" name="rep_name" id="rep_name" placeholder="Name of contact person" class="form-control" required="required">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="id" id="id">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Postion</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-window-alt width-1 text-align-center"></i></span>
+                                    </div>
+                                    <input type="text" name="position" id="position" placeholder="Position held at company" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Company Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-home width-1 text-align-center"></i></span>
+                                    </div>
+                                    <input type="text" name="comp_name" id="comp_name" placeholder="Company Name" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Company Email</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-envelope width-1 text-align-center"></i></span>
+                                    </div>
+                                    <input type="text" name="comp_email" id="comp_email" placeholder="Company Email" class="form-control" required="required">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Company Rep: Email Address</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-envelope"></i></span>
+                                    </div>
+                                    <input type="email" name="email" id="email" placeholder="Company Rep Email Address" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                <label class="form-label">Tel:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-phone"></i></span>
+                                    </div>
+                                    <input type="text" name="comp_tel" id="comp_tel" placeholder="Company Tel" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Office Address</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-home"></i></span>
+                                    </div>
+                                    <input type="text" name="comp_address" id="comp_address" placeholder="Office Address" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Company Details</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-info"></i></span>
+                                    </div>
+                                    <textarea type="text" name="comp_info" id="comp_info" placeholder="Company Details" class="form-control" required="required">
+                                    </textarea>
+                                </div>
+                            </div>                          
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Contact</button>
+                    </div>                   
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ############################## DELETE-ALERT MODAL ################################## -->
 <div class="modal modal-alert fade" id="delete-alert" tabindex="-1" role="dialog" aria-hidden="true">
     <%= for vendor <- @vendors do %>
@@ -226,6 +337,9 @@
 </div>
 
 <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <script>
     $(document).ready(function()
     {
@@ -253,4 +367,35 @@
         //initialize filter
         initApp.listFilter($('#js-contacts'), $('#js-filter-contacts'));
     });
+</script>
+
+<script>
+$(document).ready(function(){
+//Edit msg Account
+$('#edit-vendor').on('show.bs.modal', function (event){
+
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var rep_name = button.data('rep_name')
+    var position = button.data('position')
+    var comp_name = button.data('comp_name')
+    var comp_email = button.data('comp_email')
+    var email = button.data('email')
+    var comp_tel = button.data('comp_tel')
+    var comp_address = button.data('comp_address')
+    var comp_info = button.data('comp_info')
+    
+    var modal = $(this)
+    modal.find('.modal-body #id').val(id);
+    modal.find('.modal-body #rep_name').val(rep_name);
+    modal.find('.modal-body #position').val(position);
+    modal.find('.modal-body #comp_name').val(comp_name);
+    modal.find('.modal-body #comp_email').val(comp_email);
+    modal.find('.modal-body #email').val(email);
+    modal.find('.modal-body #comp_tel').val(comp_tel);
+    modal.find('.modal-body #comp_address').val(comp_address);
+    modal.find('.modal-body #comp_info').val(comp_info);
+
+});
+});
 </script>

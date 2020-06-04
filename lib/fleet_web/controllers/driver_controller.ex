@@ -23,7 +23,8 @@ defmodule FleetWeb.DriverController do
            :logged_issues,
            :create_issue,
            :file_issue_report,
-           :request_response
+           :request_response,
+           :deactivate_driver_account
          ]
   )
 
@@ -202,4 +203,39 @@ defmodule FleetWeb.DriverController do
       rejected = Drivers.list_tbl_vehicle_issue()
       render(conn, "rejected_request.html", rejected: rejected)
     end
+
+    def deactivate_driver_account(conn, %{"id" => id} = params) do
+      list_driver = Accounts.get_user!(id)
+  
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:list_driver, User.changeset(list_driver, params))
+      |> Ecto.Multi.run(:userlogs, fn %{list_driver: list_driver} ->
+        activity = "FleetHUB driver account deactivated with ID \"#{list_driver.id}\""
+  
+        userlogs = %{
+          user_id: conn.assigns.user.id,
+          activity: activity
+        }
+  
+        UserLogs.changeset(%UserLogs{}, userlogs)
+        |> Repo.insert()
+      end)
+      |> Repo.transaction()
+      |> case do
+        {:ok, %{list_driver: list_driver, userlogs: _userlogs}} ->
+          conn
+          |> put_flash(:info, "FleetHUB system driver account deactivated :-) ")
+          |> redirect(to: Routes.driver_path(conn, :list_drivers))
+  
+        {:error, failed_operation, failed_value, changes_so_far} ->
+          reason = DriverController.traverse_errors(failed_value.errors) |> List.first()
+  
+          conn
+          |> put_flash(:error, reason)
+          |> redirect(to: Routes.driver_path(conn, :list_drivers))
+      end
+    end
+
+
+
 end
