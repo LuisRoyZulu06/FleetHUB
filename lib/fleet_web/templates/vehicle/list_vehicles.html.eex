@@ -189,7 +189,7 @@
                                     </div>
                                     
                                     <input type="hidden" name="driver_id" value="0">
-                                    <select class="custom-select form-control" name="driver_id" required="required">
+                                    <select class="custom-select form-control" name="driver_id">
                                         <option value="">Select Driver</option>
                                         <%= for driver <-@drivers do %>
                                             <%= if driver.user_role == "driver" && driver.id not in @driver_ids do %>
