@@ -31,5 +31,5 @@
                         'Elixir.Enumerable.DBConnection.PrepareStream',
                         'Elixir.Enumerable.DBConnection.Stream']},
               {registered,[]},
-              {vsn,"1.1.3"},
+              {vsn,"2.2.2"},
               {mod,{'Elixir.DBConnection.App',[]}}]}.

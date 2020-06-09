@@ -1,5 +1,5 @@
 {application,jason,
-             [{applications,[kernel,stdlib,elixir]},
+             [{applications,[kernel,stdlib,elixir,decimal]},
               {description,"A blazing fast JSON parser and generator in pure Elixir.\n"},
               {modules,['Elixir.Jason','Elixir.Jason.Codegen',
                         'Elixir.Jason.DecodeError','Elixir.Jason.Decoder',
@@ -20,4 +20,4 @@
                         'Elixir.Jason.Encoder.Time','Elixir.Jason.Formatter',
                         'Elixir.Jason.Fragment','Elixir.Jason.Helpers']},
               {registered,[]},
-              {vsn,"1.2.0"}]}.
+              {vsn,"1.2.1"}]}.

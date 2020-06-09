@@ -2,10 +2,15 @@ use Mix.Config
 
 # Configure your database
 config :fleet, Fleet.Repo,
-  adapter: Tds.Ecto,
-  username: "sa",
-  password: "cool",
+  #--------------- mssql
+  # adapter: Tds.Ecto,
+  # username: "sa",
+  #--------------- Postgres
+  username: "postgres",
+  #--------------------------
+  password: "password06",
   database: "fleet_dev",
+  # port: "1433",
   hostname: "127.0.0.1",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
