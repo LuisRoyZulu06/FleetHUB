@@ -95,13 +95,17 @@ defmodule FleetWeb.UserController do
   end
 
   def dashboard(conn, _params) do
-    IO.inspect "=============================================================================================="
-    IO.inspect conn
-
-    summary = Vehicles.dashboard_params() |> prepare_dash_result() |> IO.inspect
-    keys = Enum.map(summary, &(&1.day)) |> Enum.uniq |> Enum.sort()
-    assigned_vihecles = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "assigned")) |> Enum.map(&(&1.count))
-    failed = Enum.sort_by(summary, &(&1.day))  |> Enum.filter(&(&1.status == "not_assigned")) |> Enum.map(&(&1.count))
+    summary = Vehicles.dashboard_params() 
+    #|> prepare_dash_result()
+    keys = Enum.map(summary, &(&1.day)) 
+    |> Enum.uniq 
+    |> Enum.sort()
+    assigned_vihecles = Enum.sort_by(summary, &(&1.day))  
+    |> Enum.filter(&(&1.status == "assigned")) 
+    |> Enum.map(&(&1.count))
+    failed = Enum.sort_by(summary, &(&1.day))  
+    |> Enum.filter(&(&1.status == "not_assigned")) 
+    |> Enum.map(&(&1.count))
 
     accounts = Accounts.list_tbl_users()
     issues = Drivers.list_tbl_vehicle_issue()
@@ -109,10 +113,13 @@ defmodule FleetWeb.UserController do
     problems = Problems.list_tbl_vehicle_problems()
     vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
     user = Accounts.get_user_details(conn.assigns.user.id)
-    [%{""=>count_vehicles}] = Vehicles.vehicles_assigned() 
-    [%{""=>total_vehicles}] = Vehicles.total_vehicles()
-    [%{""=>total_drivers}] = Vehicles.total_drivers()
-    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, count_vehicles: count_vehicles, total_vehicles: total_vehicles, total_drivers: total_drivers,  problems: problems)
+    assigned_vihecles = Vehicles.vehicles_assigned() 
+    total_vehicles = Vehicles.total_vehicles()
+    total_drivers = Vehicles.total_drivers()
+    # [%{""=>count_vehicles}] = Vehicles.vehicles_assigned() 
+    # [%{""=>total_vehicles}] = Vehicles.total_vehicles()
+    # [%{""=>total_drivers}] = Vehicles.total_drivers()
+    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, assigned_vihecles: assigned_vihecles, total_vehicles: total_vehicles, total_drivers: total_drivers,  problems: problems)
   end
 
   defp prepare_dash_result(results) do

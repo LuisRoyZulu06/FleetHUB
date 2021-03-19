@@ -57,7 +57,7 @@ defmodule FleetWeb.DriverController do
               |> redirect(to: Routes.driver_path(conn, :list_drivers))
         end
     end 
-
+    
     def update_driver(conn, %{"id" => id} = params) do
       driver = Accounts.get_user!(id)
 
@@ -235,7 +235,4 @@ defmodule FleetWeb.DriverController do
           |> redirect(to: Routes.driver_path(conn, :list_drivers))
       end
     end
-
-
-
 end

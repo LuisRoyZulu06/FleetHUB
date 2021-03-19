@@ -1,146 +1,155 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
                     </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
+                </div>
+            </div>
+            <!-- ################################################################################ -->
+
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-truck'></i> Vehicle Management
+                </h1>
+
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#cc0066&quot;, &quot;#ff80bf&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @total_vehicles %></span>
                     </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
-
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-truck'></i> Vehicle Management
-        </h1>
-
-        <div class="d-flex mr-4">
-            <div class="mr-2">
-                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#cc0066&quot;, &quot;#ff80bf&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @total_vehicles %></span>
-            </div>
-            <div>
-                <label class="fs-sm mb-0 mt-2 mt-md-0">Total Vehicles</label>
-                <h4 class="font-weight-bold mb-0"><%= @total_vehicles %></h4>
-            </div>
-        </div>
-
-        <div class="d-flex mr-4">
-            <div class="mr-2">
-                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#2196F3&quot;, &quot;#9acffa&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @count_vehicles %>/<%= @total_vehicles %></span>
-            </div>
-            <div>
-                <label class="fs-sm mb-0 mt-2 mt-md-0">Assigned Vehicles</label>
-                <h4 class="font-weight-bold mb-0"><%= @count_vehicles %></h4>
-            </div>
-        </div>
-
-        <div class="d-flex mr-4">
-            <div class="mr-2">
-                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#967bbd&quot;, &quot;#ccbfdf&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @vehicles_unassigned %>/<%= @total_vehicles %></span>
-            </div>
-            <div>
-                <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles not Assigned</label>
-                <h4 class="font-weight-bold mb-0"><%= @vehicles_unassigned %></h4>
-            </div>
-        </div>
-
-        <div class="d-flex mr-4">
-            <div class="mr-2">
-                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }">4/10</span>
-            </div>
-            <div>
-                <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
-                <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        List of Vehicles
-                    </h2>
-                    <div class="panel-toolbar" style="margin-right: 10px;">
-                        <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.vehicle_path(@conn, :maintain_vehicle)%>">Vehicles in maintenance</a>
-                    </div>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#add-vehicle-modal">Add Vehicle</button>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Total Vehicles</label>
+                        <h4 class="font-weight-bold mb-0"><%= @total_vehicles %></h4>
                     </div>
                 </div>
 
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        
-                        <!-- datatable start -->
-                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                                <tr>
-                                    <th>Vehicle Name</th>
-                                    <th>Vehicle Registration Number</th>
-                                    <th>Assigned To</th>
-                                    <th>Status of Vehicle</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%= for vehicle <- @list_vehicles do %>
-                                <tr>
-                                    <td><%= vehicle.v_make %> <%= vehicle.v_name %></td>
-                                    <td><%= vehicle.plate_no %></td>
-                                    <%= if vehicle.assignment_status == "1" do %>
-                                        <td><%= Fleet.Accounts.get_user!(vehicle.driver_id).first_name %> <%= Fleet.Accounts.get_user!(vehicle.driver_id).last_name %></td>
-                                    <% else %>
-                                        <td>Not Assigned</td>
-                                    <% end %>
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#2196F3&quot;, &quot;#9acffa&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @count_vehicles %>/<%= @total_vehicles %></span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Assigned Vehicles</label>
+                        <h4 class="font-weight-bold mb-0"><%= @count_vehicles %></h4>
+                    </div>
+                </div>
 
-                                    <%= if vehicle.v_status == "fit" do %>
-                                        <td>Road Worthy</td>
-                                    <% else %>
-                                        <td>Not Road Worthy</td>
-                                    <% end %>    
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#967bbd&quot;, &quot;#ccbfdf&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @vehicles_unassigned %>/<%= @total_vehicles %></span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles not Assigned</label>
+                        <h4 class="font-weight-bold mb-0"><%= @vehicles_unassigned %></h4>
+                    </div>
+                </div>
 
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#viewmodal">View</a>
-                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                    <%= if vehicle.assignment_status === "0" do %>
-                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#assignmodal">Assign Vehicle to Driver</a>
-                                                    <% end %>
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }">4/10</span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
+                        <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
+                    </div>
+                </div>
+            </div>
 
-                                                    <%= if vehicle.assignment_status === "1" do %>
-                                                    <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#reassignmodal">Reassign Vehicle</a>
-                                                    <% end %>
-                                                    <%# <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button> %>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                List of Vehicles
+                            </h2>
+                            <div class="panel-toolbar" style="margin-right: 10px;">
+                                <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.vehicle_path(@conn, :maintain_vehicle)%>">Vehicles in maintenance</a>
+                            </div>
+                            <div class="panel-toolbar">
+                                <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#add-vehicle-modal">Add Vehicle</button>
+                            </div>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>Vehicle Name</th>
+                                            <th>Vehicle Registration Number</th>
+                                            <th>Assigned To</th>
+                                            <th>Status of Vehicle</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%= for vehicle <- @list_vehicles do %>
+                                        <tr>
+                                            <td><%= vehicle.v_make %> <%= vehicle.v_name %></td>
+                                            <td><%= vehicle.plate_no %></td>
+                                            <%= if vehicle.assignment_status == "1" do %>
+                                                <td><%= Fleet.Accounts.get_user!(vehicle.driver_id).first_name %> <%= Fleet.Accounts.get_user!(vehicle.driver_id).last_name %></td>
+                                            <% else %>
+                                                <td>Not Assigned</td>
+                                            <% end %>
+
+                                            <%= if vehicle.v_status == "fit" do %>
+                                                <td>Road Worthy</td>
+                                            <% else %>
+                                                <td>Not Road Worthy</td>
+                                            <% end %>    
+
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class='subheader-icon fal fa-chevron-down'></i>
+                                                        </span>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#viewmodal">View</a>
+                                                            <a class="dropdown-item" data-id="<%= vehicle.id%>" data-v_make="<%= vehicle.v_make%>" data-v_name="<%= vehicle.v_name%>" data-color="<%= vehicle.color%>" data-plate_no="<%= vehicle.plate_no%>" data-v_status="<%= vehicle.v_status%>" data-assignment_status="<%= vehicle.assignment_status %>" data-mileage="<%= vehicle.mileage %>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#editmodal">Edit</a>
+                                                            <%= if vehicle.assignment_status === "0" do %>
+                                                            <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#assignmodal">Assign Vehicle to Driver</a>
+                                                            <% end %>
+
+                                                            <%= if vehicle.assignment_status === "1" do %>
+                                                            <a class="dropdown-item" data-id="<%= vehicle.id%>" data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#reassignmodal">Reassign Vehicle</a>
+                                                            <% end %>
+                                                            <%# <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button> %>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <% end %>                                                  
-                        </table>
-                        <!-- datatable end -->
+                                            </td>
+                                        </tr>
+                                        <% end %>  
+                                    </tbody>                                                
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 
@@ -543,132 +552,132 @@
             </div>
             <div class="modal-body">
                 <div class="panel-content">
-                <form action="<%= Routes.driver_path(@conn, :update_driver)%>" method="POST">
-                    <div class="row">
-                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
-                    <input type="hidden" name="id" id="id">
-                        <div class="col-md-6">
-                            <!-- Vehicle profile -->
-                            <div class="card mb-g rounded-top">
-                                <div class="row no-gutters row-grid">
-                                    <div class="col-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                                            <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
-                                            <h5 class="mb-0 fw-700 text-center mt-3">
-                                                Mileage<br>
-                                                <input type="text" id="mileage" style="border: none; text-align: center;">
-                                            </h5>
-                                            <div class="mt-4 text-center demo">
-                                                <h5 class="mb-0 fw-700 text-center mt-3">EXPIRATION DATE OF:</h5>
+                    <form action="<%= Routes.driver_path(@conn, :update_driver)%>" method="POST">
+                        <div class="row">
+                        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                        <input type="hidden" name="id" id="id">
+                            <div class="col-md-6">
+                                <!-- Vehicle profile -->
+                                <div class="card mb-g rounded-top">
+                                    <div class="row no-gutters row-grid">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                                <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
+                                                <h5 class="mb-0 fw-700 text-center mt-3">
+                                                    Mileage<br>
+                                                    <input type="text" id="mileage" style="border: none; text-align: center;">
+                                                </h5>
+                                                <div class="mt-4 text-center demo">
+                                                    <h5 class="mb-0 fw-700 text-center mt-3">EXPIRATION DATE OF:</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="text-center py-3">
+                                                <h5 class="mb-0 fw-700">
+                                                    Road Tax
+                                                    <small class="text-muted mb-0"><input type="text" id="rd_tax_exp_dt" class="rdInput" style="border: none; text-align: center;"></small>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="text-center py-3">
+                                                <h5 class="mb-0 fw-700">
+                                                    Vehicle Fittness
+                                                    <small class="text-muted mb-0"><input type="text" id="fitness_exp_dt" class="fitInput" style="border: none; text-align: center;"></small>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="text-center py-3">
+                                                <h5 class="mb-0 fw-700">
+                                                    Insurance
+                                                    <small class="text-muted mb-0"><input type="text" id="insrnc_exp_dt" class="insurInput" style="border: none; text-align: center;"></small>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="p-3 text-center">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-4">
-                                        <div class="text-center py-3">
-                                            <h5 class="mb-0 fw-700">
-                                                Road Tax
-                                                <small class="text-muted mb-0"><input type="text" id="rd_tax_exp_dt" class="rdInput" style="border: none; text-align: center;"></small>
-                                            </h5>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Vehicle Make</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                         </div>
+                                        <input type="text" name="v_make" id="v_make" class="form-control" required="required">
                                     </div>
-                                    <div class="col-4">
-                                        <div class="text-center py-3">
-                                            <h5 class="mb-0 fw-700">
-                                                Vehicle Fittness
-                                                <small class="text-muted mb-0"><input type="text" id="fitness_exp_dt" class="fitInput" style="border: none; text-align: center;"></small>
-                                            </h5>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Vehicle Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                         </div>
+                                        <input type="text" name="v_name" id="v_name" class="form-control" required="required">
                                     </div>
-                                    <div class="col-4">
-                                        <div class="text-center py-3">
-                                            <h5 class="mb-0 fw-700">
-                                                Insurance
-                                                <small class="text-muted mb-0"><input type="text" id="insrnc_exp_dt" class="insurInput" style="border: none; text-align: center;"></small>
-                                            </h5>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Vehicle Registration Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
                                         </div>
+                                        <input type="text" name="plate_no" id="plate_no" class="form-control" required="required">
                                     </div>
-                                    <div class="col-12">
-                                        <div class="p-3 text-center">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Vehicle Color</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-bus"></i></span>
                                         </div>
+                                        <input type="text" name="color" id="color" class="form-control" required="required">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Make</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                <div class="form-group">
+                                    <label class="form-label">Driver Assigned Vehicle</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-user"></i></span>
+                                        </div>
+                                        <input type="text" name="assigned_to" id="assigned_to" class="form-control" >
                                     </div>
-                                    <input type="text" name="v_make" id="v_make" class="form-control" required="required">
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Name</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                <div class="form-group">
+                                    <label class="form-label">Vehicle Assignment Status</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                        </div>
+                                        <input type="text" name="v_status" id="v_status" class="form-control" required="required">
                                     </div>
-                                    <input type="text" name="v_name" id="v_name" class="form-control" required="required">
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Registration Number</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
+                                <div class="form-group">
+                                    <label class="form-label">Vehicle Status</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                        </div>
+                                        <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required">
                                     </div>
-                                    <input type="text" name="plate_no" id="plate_no" class="form-control" required="required">
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Color</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
-                                    </div>
-                                    <input type="text" name="color" id="color" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Driver Assigned Vehicle</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user"></i></span>
-                                    </div>
-                                    <input type="text" name="assigned_to" id="assigned_to" class="form-control" >
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Assignment Status</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-window-alt"></i></span>
-                                    </div>
-                                    <input type="text" name="v_status" id="v_status" class="form-control" required="required">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Vehicle Status</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
-                                    </div>
-                                    <input type="text" name="assignment_status" id="assignment_status" class="form-control" required="required">
-                                </div>
-                            </div>
-                        </div>
-                    </div>  
-                </form>
-            </div>
+                        </div>  
+                    </form>
+                </div>
             </div>
         </div>
     </div>

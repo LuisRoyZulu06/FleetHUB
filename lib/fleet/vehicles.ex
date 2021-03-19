@@ -114,38 +114,63 @@ defmodule Fleet.Vehicles do
 
   def dashboard_params do
     VehicleDetails   
+    # |> join(
+    #   :right,
+    #   [c],      
+    #   day in fragment(
+    #     """
+    #   SELECT CAST(DATEADD(DAY, nbr - 1, DATEADD(month, DATEDIFF(month, 0, CAST(CURRENT_TIMESTAMP AS DATETIME)), 0)) AS DATE) d
+    #   FROM (
+    #     SELECT ROW_NUMBER() OVER (ORDER BY c.object_id) AS Nbr
+    #     FROM sys.columns c
+    #   ) nbrs
+    #   WHERE nbr - 1 <= DATEDIFF(DAY, DATEADD(month, DATEDIFF(month, 0, CAST(CURRENT_TIMESTAMP AS DATETIME)), 0), EOMONTH(CAST(CURRENT_TIMESTAMP AS DATETIME)))
+    #   """
+    #   ),
+    #   day.d == fragment("CAST(? AS DATE)", c.inserted_at)
+    # )
+
+    # |> group_by([c, day], [day.d, fragment("CASE 
+    #     WHEN ? = '1' 
+    #         THEN 'assigned'
+    #     ELSE 'not_assigned'
+    #   END", c.assignment_status)
+    #   ])
+    #   |> order_by([_c, day], day.d)
+    #   |> select([c, day], %{
+    #   day: fragment("convert(varchar, ?, 107)", day.d),
+    #   count: count(c.id),
+    #   status: fragment("""
+    #   CASE 
+    #       WHEN ? = '1' 
+    #           THEN 'assigned'
+    #       ELSE 'not_assigned'
+    #   END
+    #   """, c.assignment_status
+    #   )
+    #   })
+
     |> join(
       :right,
-      [c],      
-      day in fragment("""
-      SELECT CAST(DATEADD(DAY, nbr - 1, DATEADD(month, DATEDIFF(month, 0, CAST(CURRENT_TIMESTAMP AS DATETIME)), 0)) AS DATE) d
-      FROM (
-        SELECT ROW_NUMBER() OVER (ORDER BY c.object_id) AS Nbr
-        FROM sys.columns c
-      ) nbrs
-      WHERE nbr - 1 <= DATEDIFF(DAY, DATEADD(month, DATEDIFF(month, 0, CAST(CURRENT_TIMESTAMP AS DATETIME)), 0), EOMONTH(CAST(CURRENT_TIMESTAMP AS DATETIME)))
-      """),
-      day.d == fragment("CAST(? AS DATE)", c.inserted_at)
+      [c],
+      day in fragment("select generate_series(date_trunc('month',now()),
+      date_trunc('MONTH', now()) + INTERVAL '1 MONTH - 1 day', '1 day')::date AS d"),
+      day.d == fragment("date(?)", c.inserted_at)
     )
-    |> group_by([c, day], [day.d, fragment("CASE 
-        WHEN ? = '1' 
-            THEN 'assigned'
-        ELSE 'not_assigned'
-      END", c.assignment_status)
-      ])
-      |> order_by([_c, day], day.d)
-      |> select([c, day], %{
-      day: fragment("convert(varchar, ?, 107)", day.d),
-      count: count(c.id),
-      status: fragment("""
-      CASE 
-          WHEN ? = '1' 
-              THEN 'assigned'
-          ELSE 'not_assigned'
-      END
-      """, c.assignment_status
-      )
-      })
+    |> group_by([c, day], [day.d, c.assignment_status])
+    |> order_by([_c, day], day.d)
+    |> select([c, day], %{
+        day: fragment("to_char(?, 'YYYY-MM-DD')", day.d),
+        count: count(c.id),
+        status: fragment("""
+        CASE 
+            WHEN ? = '1' 
+                THEN 'assigned'
+            ELSE 'not_assigned'
+        END
+        """, c.assignment_status
+        )
+        })
     |> Repo.all()
   end
 
@@ -161,23 +186,25 @@ defmodule Fleet.Vehicles do
   end
 
   def total_vehicles do
-    query =
-    """
-    SELECT COUNT(id)
-    FROM tbl_vehicles;
-    """ 
-    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
-    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+    # query =
+    # """
+    # SELECT COUNT(id)
+    # FROM tbl_vehicles;
+    # """ 
+    # {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    # rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+    Repo.aggregate(from(v in "tbl_vehicles"), :count, :id)
   end
 
   def total_drivers do
-    query =
-    """
-    SELECT COUNT(id)
-    FROM tbl_users WHERE user_role = 'driver'
-    """ 
-    {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
-    rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+    # query =
+    # """
+    # SELECT COUNT(id)
+    # FROM tbl_users WHERE user_role = 'driver'
+    # """ 
+    # {:ok, %{columns: columns, rows: rows}} = Repo.query(query, [])
+    # rows |> Enum.map(&Enum.zip(columns, &1)) |> Enum.map(&Enum.into(&1, %{}))
+    Repo.aggregate(from(v in "tbl_users", where: v.user_role == "driver"), :count, :id)
   end
 
   def vehicles_unassigned do

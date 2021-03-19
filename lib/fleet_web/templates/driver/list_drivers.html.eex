@@ -1,103 +1,113 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
-                    </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
-    
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-user'></i> Driver Management
-        </h1>
-        <div class="subheader-block" id="loggedIn-user">
-            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
-        </div>
-    </div>
+        <div class="col-md-1"></div>
 
-    <div class="row">
-        <div class="col-xl-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        List of Drivers
-                    </h2>
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <!-- ################################################################################ -->
+            
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-user'></i> Driver Management
+
                     <div class="panel-toolbar">
                         <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#add-driver-modal">Add Driver</button>
                     </div>
+                </h1>
+                
+                <div class="subheader-block" id="loggedIn-user">
+                    <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
                 </div>
+            </div>
 
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        
-                        <!-- datatable start -->
-                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                                <tr>
-                                    <th>Driver Name</th>
-                                    <th>Sex</th>
-                                    <th>Phone Number</th>
-                                    <th>Email Address</th>
-                                    <th>Vehicle Assigned</th>
-                                    <th>Vehicle Plate</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%= for list_driver <- @list_drivers do %>
-                                <%= if list_driver.user_role == "driver" && list_driver.status === 1 do %>
-                                    <tr>
-                                        <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
-                                        <td><%= list_driver.sex%></td>
-                                        <td><%= list_driver.phone%></td>
-                                        <td><%= list_driver.email%></td>
-                                        <%= if Fleet.Accounts.get_by_vehicle_id(list_driver.id) != nil do %>
-                                            <td><%= Fleet.Accounts.get_by_vehicle_id(list_driver.id).v_name%></td>  
-                                            <td><%= Fleet.Accounts.get_by_vehicle_id(list_driver.id).plate_no%></td>
-                                        <% else %>
-                                            <td>Not Assigned</td>  
-                                            <td>Not Assigned</td>
-                                        <% end %>
-                                        <td>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class='subheader-icon fal fa-chevron-down'></i>
-                                                    </span>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-user_role="<%= list_driver.user_role%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#profile-modal">View</a>
-                                                        <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-toggle="modal" data-target="#deactivate">Deactive</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        
-                                    </tr>  
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                List of Drivers
+                            </h2>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
                                 
-                                <% end %>
-                                <% end %>   
-                            </tbody>        
-                        </table>
-                        <!-- datatable end -->
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>Driver Name</th>
+                                            <th>Sex</th>
+                                            <th>Phone Number</th>
+                                            <th>Email Address</th>
+                                            <th>Vehicle Assigned</th>
+                                            <th>Vehicle Plate</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%= for list_driver <- @list_drivers do %>
+                                        <%= if list_driver.user_role == "driver" && list_driver.status === 1 do %>
+                                            <tr>
+                                                <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
+                                                <td><%= list_driver.sex%></td>
+                                                <td><%= list_driver.phone%></td>
+                                                <td><%= list_driver.email%></td>
+                                                <%= if Fleet.Accounts.get_by_vehicle_id(list_driver.id) != nil do %>
+                                                    <td><%= Fleet.Accounts.get_by_vehicle_id(list_driver.id).v_name%></td>  
+                                                    <td><%= Fleet.Accounts.get_by_vehicle_id(list_driver.id).plate_no%></td>
+                                                <% else %>
+                                                    <td>Not Assigned</td>  
+                                                    <td>Not Assigned</td>
+                                                <% end %>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class='subheader-icon fal fa-chevron-down'></i>
+                                                            </span>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#editmodal">Edit</a>
+                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-user_role="<%= list_driver.user_role%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#profile-modal">View</a>
+                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-toggle="modal" data-target="#deactivate">Deactive</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                
+                                            </tr>  
+                                        
+                                        <% end %>
+                                        <% end %>   
+                                    </tbody>        
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 

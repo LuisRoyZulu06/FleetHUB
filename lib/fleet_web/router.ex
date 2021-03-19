@@ -28,7 +28,7 @@ defmodule FleetWeb.Router do
 
   scope "/", FleetWeb do
     pipe_through([:session, :no_layout])
-    
+
     get("/", SessionController, :new)
     post("/", SessionController, :create)
     get("/forgortFleetHub//password", UserController, :forgot_password)
@@ -62,11 +62,11 @@ defmodule FleetWeb.Router do
     # ---------------------- Suspension ---------------------------
     get "/Suspended/Users", UserController, :suspended_users
     post "/Activate/Suspended/Account", UserController, :activate_suspended_user
-    
+
 
     # ---------------------- Deactivated ---------------------------
     post "/Deactivate/Account", UserController, :deactivate_account
-   
+
     # -----------------------Dismissed---------------------------------
     get "/Dismissed/User/Accounts", UserController, :dismissed_users
     post "/Activate/dismissed/Account", UserController, :activate_dismissed_user

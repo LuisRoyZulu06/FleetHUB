@@ -1,91 +1,97 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
                     </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
+                </div>
             </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-credit-card'></i> License Maintenance
-        </h1>
-        
+            <!-- ################################################################################ -->
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-credit-card'></i> License Maintenance
 
-        <div class="subheader-block" id="loggedIn-user">
-            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        License Types <i class='subheader-icon fal fa-credit-card'></i>
-                    </h2>
                     <div class="panel-toolbar" style="margin-right: 10px;">
                         <button class="btn btn-sm btn-primary waves-effect waves-themed" data-toggle="modal" data-target="#addmodal">Add License Type</button>  
                     </div>
-                    <div class="panel-toolbar">
-                        
-                    </div>
-                </div>
+                </h1>
+                
 
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        
-                        <!-- datatable start -->
-                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                                <tr>
-                                   
-                                    <th>Name</th>
-                                    <th>Vehicle Category</th>
-                                    <th>Weight</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <%= for licence <- @licences do %>   
-                                <tr>
-                                    <td><%= licence.name%></td>
-                                    <td><%= licence.vehicle_cat%></td>
-                                    <td><%= licence.weight%></td>
-            
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= licence.id %>" data-name="<%= licence.name %>" data-vehicle_cat="<%= licence.vehicle_cat %>" data-weight="<%= licence.weight %>"  data-toggle="modal" data-target="#editmodal" >Edit</a>
+                <div class="subheader-block" id="loggedIn-user">
+                    <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                License Types <i class='subheader-icon fal fa-credit-card'></i>
+                            </h2>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                        
+                                            <th>Name</th>
+                                            <th>Vehicle Category</th>
+                                            <th>Weight</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%= for licence <- @licences do %>   
+                                        <tr>
+                                            <td><%= licence.name%></td>
+                                            <td><%= licence.vehicle_cat%></td>
+                                            <td><%= licence.weight%></td>
+                    
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class='subheader-icon fal fa-chevron-down'></i>
+                                                        </span>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" data-id="<%= licence.id %>" data-name="<%= licence.name %>" data-vehicle_cat="<%= licence.vehicle_cat %>" data-weight="<%= licence.weight %>"  data-toggle="modal" data-target="#editmodal" >Edit</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr> 
-                            <% end %>                          
-                        </table>
-                        <!-- datatable end -->
+                                            </td>
+                                        </tr> 
+                                    <% end %>                          
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 

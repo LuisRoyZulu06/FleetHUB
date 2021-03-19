@@ -1,105 +1,113 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-success alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
-                    </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
+        <div class="col-md-1"></div>
 
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-cog'></i> Vehicle Maintenance
-        </h1>
-
-        <div class="d-flex mr-4">
-            <div class="mr-2">
-                <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @garage %></span>
-            </div>
-            <div>
-                <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
-                <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="row">
-        <div class="col-xl-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        Vehicles Under Maintenance
-                    </h2>
-                    <div class="panel-toolbar" style="margin-right: 10px;">
-                        <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>">Back</a>
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-success alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
                     </div>
                 </div>
+            </div>
+            <!-- ################################################################################ -->
 
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        
-                        <!-- datatable start -->
-                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                                <tr>
-                                    <th>Vehicle Name</th>
-                                    <th>License Plate Number</th>
-                                    <th>Assigned To</th>
-                                    <th>Vehicle Problem</th>
-                                    <th>Vendor Garage</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <%= for maintenance <-@maintenance do %>
-                                <%= if maintenance.v_status == "garage" do %>
-                                    <tr>
-                                        <td><%= maintenance.v_make %><%= maintenance.v_name %></td>
-                                        <td><%= maintenance.v_plate_no %></td>
-                                        <td><%= maintenance.first_name %><%= maintenance.last_name %></td>
-                                        <td><%= maintenance.v_slct_problem %></td>
-                                        <%= if maintenance.vendor == nil do %>
-                                        <td>Waiting For Vendor to be assigned</td>
-                                        <% else %>
-                                        <td><%= maintenance.vendor %></td>
-                                        <% end %>
-                                        <td>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class='subheader-icon fal fa-chevron-down'></i>
-                                                    </span>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">View</a>
-                                                        <a class="dropdown-item" href="#">Edit</a>
-                                                        <a class="dropdown-item" href="#">Delete</a>
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-cog'></i> Vehicle Maintenance
+                </h1>
+
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @garage %></span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
+                        <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                Vehicles Under Maintenance
+                            </h2>
+                            <div class="panel-toolbar" style="margin-right: 10px;">
+                                <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>">Back</a>
+                            </div>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>Vehicle Name</th>
+                                            <th>License Plate Number</th>
+                                            <th>Assigned To</th>
+                                            <th>Vehicle Problem</th>
+                                            <th>Vendor Garage</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%= for maintenance <-@maintenance do %>
+                                        <%= if maintenance.v_status == "garage" do %>
+                                            <tr>
+                                                <td><%= maintenance.v_make %><%= maintenance.v_name %></td>
+                                                <td><%= maintenance.v_plate_no %></td>
+                                                <td><%= maintenance.first_name %><%= maintenance.last_name %></td>
+                                                <td><%= maintenance.v_slct_problem %></td>
+                                                <%= if maintenance.vendor == nil do %>
+                                                <td>Waiting For Vendor to be assigned</td>
+                                                <% else %>
+                                                <td><%= maintenance.vendor %></td>
+                                                <% end %>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class='subheader-icon fal fa-chevron-down'></i>
+                                                            </span>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="#">View</a>
+                                                                <a class="dropdown-item" href="#">Edit</a>
+                                                                <a class="dropdown-item" href="#">Delete</a>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>   
-                                <% end %>
-                            <% end %>                                               
-                        </table>
-                        <!-- datatable end -->
+                                                </td>
+                                            </tr>   
+                                        <% end %>
+                                    <% end %>                                               
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 

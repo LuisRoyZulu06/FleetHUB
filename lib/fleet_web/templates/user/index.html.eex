@@ -1,298 +1,306 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
-                    </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
+        <div class="col-md-1"></div>
 
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-truck'></i> FleetHUB <span class='fw-300'>Dashboard</span>
-            <small>
-            </small>
-        </h1>
-        <div class="subheader-block" id="loggedIn-user">
-            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
-        </div>
-    </div>
-
-    <!-- ###################################### DRIVER-PANEL ############################ -->
-    <%= if @user.user_role == "driver" do %>
-        <div class="container-fluid" style="margin-top: 2em;">
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
             <div class="row">
-                <div class="col-md-4">
-                <%= if @vehicle != nil do %>
-                    <a href="#" data-id="<%= @vehicle.id%>" data-first_name="<%= @user.first_name%>" data-last_name="<%= @user.last_name%>" data-phone="<%= @user.phone%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-plate_no="<%= @vehicle.plate_no%>" data-dismiss="modal" data-toggle="modal" data-target="#open-issue">
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-danger-600">
-                                Log Issues
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
                             </div>
-                            <div class="card-body p-0 bg-danger-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
-                                        </div>
-                                    </div> 
-                                </div>
-                            <div class="card-footer bg-danger-800 py-2">
-                                <br>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
                             </div>
-                        </div> 
-                    </a>
-                <% else %>
-                    <div id="cp-2" class="card border">
-                            <div class="card-header bg-danger-600">
-                                Log Issues
-                            </div>
-                            <div class="card-body p-0 bg-danger-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
-                                        </div>
-                                    </div> 
-                                </div>
-                            <div class="card-footer bg-danger-800 py-2">
-                                <br>
-                            </div>
-                        </div>       
-                <% end %>                                      
+                        <% end %>
+                    </div>
                 </div>
+            </div>
+            <!-- ################################################################################ -->
 
-                <div class="col-md-4">
-                    <a href="<%= Routes.driver_path(@conn, :logged_issues)%>">
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-info-600">
-                                History of Logged Issues
-                            </div>
-                            <div class="card-body p-0 bg-info-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">HISTORY</h1>  
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-truck'></i> FleetHUB <span class='fw-300'>Dashboard</span>
+                    <small>
+                    </small>
+                </h1>
+                <div class="subheader-block" id="loggedIn-user">
+                    <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+                </div>
+            </div>
+
+            <!-- ###################################### DRIVER-PANEL ############################ -->
+            <%= if @user.user_role == "driver" do %>
+                <div class="container-fluid" style="margin-top: 2em;">
+                    <div class="row">
+                        <div class="col-md-4">
+                        <%= if @vehicle != nil do %>
+                            <a href="#" data-id="<%= @vehicle.id%>" data-first_name="<%= @user.first_name%>" data-last_name="<%= @user.last_name%>" data-phone="<%= @user.phone%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-plate_no="<%= @vehicle.plate_no%>" data-dismiss="modal" data-toggle="modal" data-target="#open-issue">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-danger-600">
+                                        Log Issues
+                                    </div>
+                                    <div class="card-body p-0 bg-danger-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                                </div>
+                                            </div> 
                                         </div>
+                                    <div class="card-footer bg-danger-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a>
+                        <% else %>
+                            <div id="cp-2" class="card border">
+                                    <div class="card-header bg-danger-600">
+                                        Log Issues
+                                    </div>
+                                    <div class="card-body p-0 bg-danger-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
+                                                </div>
 
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-table position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    <div class="card-footer bg-danger-800 py-2">
+                                        <br>
+                                    </div>
+                                </div>       
+                        <% end %>                                      
+                        </div>
+
+                        <div class="col-md-4">
+                            <a href="<%= Routes.driver_path(@conn, :logged_issues)%>">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-info-600">
+                                        History of Logged Issues
+                                    </div>
+                                    <div class="card-body p-0 bg-info-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">HISTORY</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-table position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    <div class="card-footer bg-info-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a>                                     
+                        </div>
+
+                        <div class="col-md-4">
+                            <a href="#" data-id="<%= @user.id%>" data-first_name="<%= @user.first_name %>" data-last_name="<%= @user.last_name%>" data-email="<%= @user.email%>" data-user_role="<%= @user.user_role%>" data-sex="<%= @user.sex%>" data-age="<%= @user.age %>" data-nrc_no="<%= @user.nrc_no %>" data-phone="<%= @user.phone %>" data-home_add="<%= @user.home_add %>" data-dln="<%= @user.dln %>" data-toggle="modal" data-target="#profile-modal">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-primary-600">
+                                        Personal Profile
+                                    </div>
+                                    <div class="card-body p-0 bg-primary-300" style="height: 160px">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <h1 class="opacity-15" id="driver-cards">PROFILE</h1>  
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        <i class="fal fa-user position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        <div class="card-footer bg-primary-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 5em;">
+                        <div class="col-md-4">
+                            <a href="<%= Routes.driver_path(@conn, :request_response)%>">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-success-600">
+                                        Requests Sent
+                                    </div>
+                                    <div class="card-body p-0 bg-success-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">INBOX</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-envelope position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    <div class="card-footer bg-success-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a>                                     
+                        </div>
+
+                        
+                        <div class="col-md-4">
+                            <%= if @vehicle !=nil do %>
+                                <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
+                                    <div id="cp-2" class="card border">
+                                        <div class="card-header bg-warning-600">
+                                            Vehicle Details
+                                        </div>
+                                        <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        <div class="card-footer bg-warning-800 py-2">
+                                            <br>
                                         </div>
                                     </div> 
-                                </div>
-                            <div class="card-footer bg-info-800 py-2">
-                                <br>
-                            </div>
-                        </div> 
-                    </a>                                     
-                </div>
-
-                <div class="col-md-4">
-                    <a href="#" data-id="<%= @user.id%>" data-first_name="<%= @user.first_name %>" data-last_name="<%= @user.last_name%>" data-email="<%= @user.email%>" data-user_role="<%= @user.user_role%>" data-sex="<%= @user.sex%>" data-age="<%= @user.age %>" data-nrc_no="<%= @user.nrc_no %>" data-phone="<%= @user.phone %>" data-home_add="<%= @user.home_add %>" data-dln="<%= @user.dln %>" data-toggle="modal" data-target="#profile-modal">
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-primary-600">
-                                Personal Profile
-                            </div>
-                            <div class="card-body p-0 bg-primary-300" style="height: 160px">
+                                </a> 
+                                <% else %> 
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-warning-600">
+                                        Vehicle Details
+                                    </div>
+                                    <div class="card-body p-0 bg-warning-300" style="height: 160px">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h1 class="opacity-15" id="driver-cards">PROFILE</h1>  
+                                                <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
                                             </div>
 
                                             <div class="col-sm-6">
-                                                <i class="fal fa-user position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                                <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
                                             </div>
                                         </div> 
                                     </div>
-                                <div class="card-footer bg-primary-800 py-2">
-                                <br>
-                            </div>
-                        </div> 
-                    </a>
-                </div>
-            </div>
-
-            <div class="row" style="margin-top: 5em;">
-                <div class="col-md-4">
-                    <a href="<%= Routes.driver_path(@conn, :request_response)%>">
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-success-600">
-                                Requests Sent
-                            </div>
-                            <div class="card-body p-0 bg-success-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">INBOX</h1>  
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-envelope position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
-                                        </div>
-                                    </div> 
-                                </div>
-                            <div class="card-footer bg-success-800 py-2">
-                                <br>
-                            </div>
-                        </div> 
-                    </a>                                     
-                </div>
-
-                
-                <div class="col-md-4">
-                    <%= if @vehicle !=nil do %>
-                        <a href="#" data-id="<%= @vehicle.id%>" data-v_make="<%= @vehicle.v_make%>" data-v_name="<%= @vehicle.v_name%>" data-color="<%= @vehicle.color%>" data-plate_no="<%= @vehicle.plate_no%>" data-v_status="<%= @vehicle.v_status%>" data-assignment_status="<%= @vehicle.assignment_status %>" data-mileage="<%= @vehicle.mileage %>" data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" data-toggle="modal" data-target="#vehicle-modal">
-                            <div id="cp-2" class="card border">
-                                <div class="card-header bg-warning-600">
-                                    Vehicle Details
-                                </div>
-                                <div class="card-body p-0 bg-warning-300" style="height: 160px">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
-                                        </div>
-                                    </div> 
-                                </div>
-                                <div class="card-footer bg-warning-800 py-2">
-                                    <br>
-                                </div>
-                            </div> 
-                        </a> 
-                        <% else %> 
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-warning-600">
-                                Vehicle Details
-                            </div>
-                            <div class="card-body p-0 bg-warning-300" style="height: 160px">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                    <div class="card-footer bg-warning-800 py-2">
+                                        <br>
                                     </div>
+                                </div>    
+                            <%end%>                                         
+                        </div>
+                        
 
-                                    <div class="col-sm-6">
-                                        <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                        <div class="col-md-4">
+                            <a href="#" data-toggle="modal" data-target=".js-modal-settings">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-fusion-600">
+                                        App Settings
+                                    </div>
+                                    <div class="card-body p-0 bg-fusion-300" style="height: 160px">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h1 class="opacity-15" id="driver-cards">SETTINGS</h1>  
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <i class="fal fa-cog position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem"></i>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="card-footer bg-fusion-800 py-2">
+                                        <br>
                                     </div>
                                 </div> 
+                            </a>                                         
+                        </div> 
+                    </div>
+                </div>
+            <%end%>
+            <!-- ############################################################################## -->   
+
+            <!-- ###################################### ADMIN-PANEL ############################ -->
+            <%= if @user.user_role == "admin" do %>
+                <!-- Statistics -->
+                <div class="row">
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="p-3 bg-secondary rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                        <%= @total_drivers %>
+                                    <small class="m-0 l-h-n">Total Number of Drivers</small>
+                                </h3>
                             </div>
-                            <div class="card-footer bg-warning-800 py-2">
-                                <br>
+                            <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="p-3 bg-primary-600 rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                    <%= @total_vehicles %>    
+                                    <small class="m-0 l-h-n">Drivers Assigned Vehicles</small>
+                                </h3>
                             </div>
-                        </div>    
-                    <%end%>                                         
+                            <i class="fal fa-user-circle position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="p-3 bg-success-600 rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                    <%= @total_vehicles %>
+                                    <small class="m-0 l-h-n">Total Number of Vehicles</small>
+                                </h3>
+                            </div>
+                            <i class="fal fa-bus position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                        </div>
+                    </div>
                 </div>
                 
-
-                <div class="col-md-4">
-                    <a href="#" data-toggle="modal" data-target=".js-modal-settings">
-                        <div id="cp-2" class="card border">
-                            <div class="card-header bg-fusion-600">
-                                App Settings
+                <!-- Dashboard -->
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div id="panel-7" class="panel">
+                            <div class="panel-hdr">
+                                <h2>
+                                    FleetHUB
+                                </h2>
                             </div>
-                            <div class="card-body p-0 bg-fusion-300" style="height: 160px">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h1 class="opacity-15" id="driver-cards">SETTINGS</h1>  
+                            <div class="panel-container show">
+                                <div class="panel-content">
+                                    <div id="areaChart">
+                                        <canvas style="width:100%; height:350px;"></canvas>
                                     </div>
-
-                                    <div class="col-sm-6">
-                                        <i class="fal fa-cog position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem"></i>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div class="card-footer bg-fusion-800 py-2">
-                                <br>
-                            </div>
-                        </div> 
-                    </a>                                         
-                </div> 
-            </div>
-        </div>
-    <%end%>
-    <!-- ############################################################################## -->   
-
-    <!-- ###################################### ADMIN-PANEL ############################ -->
-    <%= if @user.user_role == "admin" do %>
-        <!-- Statistics -->
-        <div class="row">
-            <div class="col-sm-6 col-xl-4">
-                <div class="p-3 bg-secondary rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
-                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                <%= @total_drivers %>
-                            <small class="m-0 l-h-n">Total Number of Drivers</small>
-                        </h3>
-                    </div>
-                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-xl-4">
-                <div class="p-3 bg-primary-600 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
-                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            <%= @count_vehicles %>    
-                            <small class="m-0 l-h-n">Drivers Assigned Vehicles</small>
-                        </h3>
-                    </div>
-                    <i class="fal fa-user-circle position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-xl-4">
-                <div class="p-3 bg-success-600 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
-                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            <%= @total_vehicles %>
-                            <small class="m-0 l-h-n">Total Number of Vehicles</small>
-                        </h3>
-                    </div>
-                    <i class="fal fa-bus position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Dashboard -->
-        <div class="row">
-            <div class="col-xl-12">
-                <div id="panel-7" class="panel">
-                    <div class="panel-hdr">
-                        <h2>
-                            FleetHUB
-                        </h2>
-                    </div>
-                    <div class="panel-container show">
-                        <div class="panel-content">
-                            <div id="areaChart">
-                                <canvas style="width:100%; height:450px;"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <% end %>
+            <!-- ############################################################################## -->    
         </div>
-    <% end %>
-    <!-- ############################################################################## -->    
+
+        <div class="col-md-1"></div>
+    </div>
 </main>
 
 <!-- ################################ OPEN ISSUE FORM MODAL ###################### -->

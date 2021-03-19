@@ -1,126 +1,134 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
-                    </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
-    <!-- Page heading removed for composed layout -->
-    <div class="d-flex flex-grow-1 p-0">
-        <!-- left slider -->
-        <div id="js-inbox-menu" class="flex-wrap position-relative bg-white slide-on-mobile slide-on-mobile-left">
-            <div class="position-absolute pos-top pos-bottom w-100">
-                <div class="d-flex h-100 flex-column">
-                    <br>
-
-                    <div class="flex-1 pr-3">
-                        <a href="<%= Routes.admin_path(@conn, :inbox)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md font-weight-bold d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0 ">
-                            <div>
-                                <i class="fas fa-folder-open width-1"></i>Inbox
-                            </div>
-                            <div class="fw-400 fs-xs js-unread-emails-count"></div>
-                        </a>
-                        <a href="<%= Routes.admin_path(@conn, :resolved)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
-                            <div>
-                                <i class="fas fa-paper-plane width-1"></i>Resolved
-                            </div>
-                        </a>
-                        <a href="<% Routes.admin_path(@conn, :inbox)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
-                            <div>
-                                <i class="fas fa-redo width-1"></i>Refresh
-                            </div>
-                        </a>
-                        <a href="<%= Routes.admin_path(@conn, :rejected)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md font-weight-bold d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
-                            <div>
-                                <i class="fas fa-trash width-1"></i>Rejected
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="px-5 py-3 fs-nano fw-500">
-                        FleetHUB
-                        <div class="progress mt-1" style="height: 7px;">
-                            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="slide-backdrop" data-action="toggle" data-class="slide-on-mobile-left-show" data-target="#js-inbox-menu"></div> 
-        <!-- end left slider -->
+        <div class="col-md-1"></div>
         
-        <!-- inbox container -->
-        <div class="d-flex flex-column flex-grow-1 bg-white"> 
-            <div class="flex-wrap align-items-center flex-grow-1 position-relative bg-gray-50">
-                <div class="position-absolute pos-top pos-bottom w-100">
-                    <div class="d-flex h-100 flex-column">
-
-                        <!-- button for mobile -->
-                        <a href="javascript:void(0);" class="pl-3 pr-3 py-2 d-flex d-lg-none align-items-left justify-content-left mr-2 btn" data-action="toggle" data-class="slide-on-mobile-left-show" data-target="#js-inbox-menu">
-                            <i class="fal fa-ellipsis-v h1 mb-0 "></i>
-                        </a>
-                        <!-- end button for mobile -->
-
-                        <div class="container show">
-                            <div class="panel-content">
-                                <!-- datatable start -->
-                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                                        <tr>
-                                            <th>Driver Name</th>
-                                            <th>Ref</th>
-                                            <th>Message</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <%= for list_issue <- @list_issues do %>
-                                            <%= if list_issue.approval_status == "pending" do %>
-                                            <tr>
-                                                <td><%= list_issue.first_name%> <%= list_issue.last_name%></td>
-                                                <td><%= list_issue.v_slct_problem%></td>  
-                                                <td><%= list_issue.v_descr_problem%></td>
-                                                <td>
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <i class='subheader-icon fal fa-chevron-down'></i>
-                                                            </span>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" data-id="<%= list_issue.id%>" data-first_name="<%= list_issue.first_name%>" data-last_name="<%= list_issue.last_name%>" data-v_slct_problem="<%= list_issue.v_slct_problem%>" data-v_descr_problem="<%= list_issue.v_descr_problem%>" data-dt_issued="<%= list_issue.dt_issued%>" data-approval_status="<%= list_issue.approval_status%>" data-toggle="modal" data-target="#view-issue"><i class="fas fa-envelope fs-md"> View Request</i></a>
-                                                                <a class="dropdown-item" data-id="<%= list_issue.id%>" data-first_name="<%= list_issue.first_name%>" data-v_slct_problem="<%= list_issue.v_slct_problem%>" data-decline_reason="<%= list_issue.decline_reason%>" data-toggle="modal" data-target="#panel-compose"><i class="fas fa-edit fs-md"> Reject Request</i></a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>  
-                                            </tr>    
-                                            <% end %>
-                                        <% end %>        
-                                </table>
-                                <!-- datatable end -->
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
                             </div>
-                        </div>
-
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
                     </div>
                 </div>
             </div>
+            <!-- ################################################################################ -->
+            <!-- Page heading removed for composed layout -->
+            <div class="d-flex flex-grow-1 p-0">
+                <!-- left slider -->
+                <div id="js-inbox-menu" class="flex-wrap position-relative bg-white slide-on-mobile slide-on-mobile-left">
+                    <div class="position-absolute pos-top pos-bottom w-100">
+                        <div class="d-flex h-100 flex-column">
+                            <br>
+
+                            <div class="flex-1 pr-3">
+                                <a href="<%= Routes.admin_path(@conn, :inbox)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md font-weight-bold d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0 ">
+                                    <div>
+                                        <i class="fas fa-folder-open width-1"></i>Inbox
+                                    </div>
+                                    <div class="fw-400 fs-xs js-unread-emails-count"></div>
+                                </a>
+                                <a href="<%= Routes.admin_path(@conn, :resolved)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
+                                    <div>
+                                        <i class="fas fa-paper-plane width-1"></i>Resolved
+                                    </div>
+                                </a>
+                                <a href="<% Routes.admin_path(@conn, :inbox)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
+                                    <div>
+                                        <i class="fas fa-redo width-1"></i>Refresh
+                                    </div>
+                                </a>
+                                <a href="<%= Routes.admin_path(@conn, :rejected)%>" class="dropdown-item px-3 px-sm-4 pr-lg-3 pl-lg-5 py-2 fs-md font-weight-bold d-flex justify-content-between rounded-pill border-top-left-radius-0 border-bottom-left-radius-0">
+                                    <div>
+                                        <i class="fas fa-trash width-1"></i>Rejected
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="px-5 py-3 fs-nano fw-500">
+                                FleetHUB
+                                <div class="progress mt-1" style="height: 7px;">
+                                    <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-backdrop" data-action="toggle" data-class="slide-on-mobile-left-show" data-target="#js-inbox-menu"></div> 
+                <!-- end left slider -->
+                
+                <!-- inbox container -->
+                <div class="d-flex flex-column flex-grow-1 bg-white"> 
+                    <div class="flex-wrap align-items-center flex-grow-1 position-relative bg-gray-50">
+                        <div class="position-absolute pos-top pos-bottom w-100">
+                            <div class="d-flex h-100 flex-column">
+
+                                <!-- button for mobile -->
+                                <a href="javascript:void(0);" class="pl-3 pr-3 py-2 d-flex d-lg-none align-items-left justify-content-left mr-2 btn" data-action="toggle" data-class="slide-on-mobile-left-show" data-target="#js-inbox-menu">
+                                    <i class="fal fa-ellipsis-v h1 mb-0 "></i>
+                                </a>
+                                <!-- end button for mobile -->
+
+                                <div class="container show">
+                                    <div class="panel-content">
+                                        <!-- datatable start -->
+                                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                                <tr>
+                                                    <th>Driver Name</th>
+                                                    <th>Ref</th>
+                                                    <th>Message</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <%= for list_issue <- @list_issues do %>
+                                                    <%= if list_issue.approval_status == "pending" do %>
+                                                    <tr>
+                                                        <td><%= list_issue.first_name%> <%= list_issue.last_name%></td>
+                                                        <td><%= list_issue.v_slct_problem%></td>  
+                                                        <td><%= list_issue.v_descr_problem%></td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        <i class='subheader-icon fal fa-chevron-down'></i>
+                                                                    </span>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" data-id="<%= list_issue.id%>" data-first_name="<%= list_issue.first_name%>" data-last_name="<%= list_issue.last_name%>" data-v_slct_problem="<%= list_issue.v_slct_problem%>" data-v_descr_problem="<%= list_issue.v_descr_problem%>" data-dt_issued="<%= list_issue.dt_issued%>" data-approval_status="<%= list_issue.approval_status%>" data-toggle="modal" data-target="#view-issue"><i class="fas fa-envelope fs-md"> View Request</i></a>
+                                                                        <a class="dropdown-item" data-id="<%= list_issue.id%>" data-first_name="<%= list_issue.first_name%>" data-v_slct_problem="<%= list_issue.v_slct_problem%>" data-decline_reason="<%= list_issue.decline_reason%>" data-toggle="modal" data-target="#panel-compose"><i class="fas fa-edit fs-md"> Reject Request</i></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>  
+                                                    </tr>    
+                                                    <% end %>
+                                                <% end %>        
+                                        </table>
+                                        <!-- datatable end -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end inbox container -->
+            </div>
         </div>
-        <!-- end inbox container -->
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 

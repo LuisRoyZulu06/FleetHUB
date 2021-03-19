@@ -1,97 +1,105 @@
 <main id="js-page-content" role="main" class="page-content">
-    <!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
-                    </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-edit'></i> Suspended System Users
-        </h1>
-        
+        <div class="col-md-1"></div>
 
-        <div class="subheader-block" id="loggedIn-user">
-            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        Suspended System users <i class='subheader-icon fal fa-edit'></i>
-                    </h2>
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
+                    </div>
                 </div>
+            </div>
+            <!-- ################################################################################ -->
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-ban'></i> Suspended System Users
+                </h1>
+                
 
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        
-                        <!-- datatable start -->
-                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                            <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>User role</th>
-                                    <th>Status</th>
-                                    <th>Details</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <%= for suspended_user <- @suspended_users do %>  
-                            <%= if suspended_user.status === 3 do %> 
-                                <tr>
-                                    <td><%= suspended_user.id %></td>
-                                    <td><%= suspended_user.first_name %></td>
-                                    <td><%= suspended_user.last_name %></td>
-                                    <td><%= suspended_user.email %></td>
-                                    <td><%= suspended_user.user_role %></td>
-                                    <%= if suspended_user.status == 1 do %>
-                                        <td>Active</td>
-                                        <% else %>
-                                        <td>Suspended</td>
-                                    <% end %>
-                                    <td><%= suspended_user.acc_inactive_reason %></td>
-                                    <td>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class='subheader-icon fal fa-chevron-down'></i>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" data-id="<%= suspended_user.id%>" data-status="<%= suspended_user.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
+                <div class="subheader-block" id="loggedIn-user">
+                    <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                Suspended System users <i class='subheader-icon fal fa-edit'></i>
+                            </h2>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email</th>
+                                            <th>User role</th>
+                                            <th>Status</th>
+                                            <th>Details</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%= for suspended_user <- @suspended_users do %>  
+                                    <%= if suspended_user.status === 3 do %> 
+                                        <tr>
+                                            <td><%= suspended_user.id %></td>
+                                            <td><%= suspended_user.first_name %></td>
+                                            <td><%= suspended_user.last_name %></td>
+                                            <td><%= suspended_user.email %></td>
+                                            <td><%= suspended_user.user_role %></td>
+                                            <%= if suspended_user.status == 1 do %>
+                                                <td>Active</td>
+                                                <% else %>
+                                                <td>Suspended</td>
+                                            <% end %>
+                                            <td><%= suspended_user.acc_inactive_reason %></td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class='subheader-icon fal fa-chevron-down'></i>
+                                                        </span>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" data-id="<%= suspended_user.id%>" data-status="<%= suspended_user.status%>" data-toggle="modal" data-target="#activate_user">Activate</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr> 
-                              <% end %>  
-                            <% end %>                          
-                        </table>
-                        <!-- datatable end -->
+                                            </td>
+                                        </tr> 
+                                    <% end %>  
+                                    <% end %>                          
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 

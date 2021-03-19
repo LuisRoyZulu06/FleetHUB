@@ -1,94 +1,103 @@
 <main id="js-page-content" role="main" class="page-content">
-<!-- ####################################################### FLASH ################## -->
     <div class="row">
-        <div class="col-md-12 col-lg-offset-2">
-            <div class="form-group">
-                <%= if get_flash(@conn, :info) do %>
-                    <div class="alert alert-info alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    <%= get_flash(@conn, :info) %>
-                    </div>
-                <% end %>
-                <%= if get_flash(@conn, :error) do %>
-                    <div class="alert alert-danger alert-styled-left">
-                    <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
-                    Opps! <%= get_flash(@conn, :error) %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <!-- ################################################################################ -->
-    <div class="subheader">
-        <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-plus-circle'></i> Contacts
-            <small>
-                Contacts of Business Associates <br>
-                To add new contact click <a data-toggle="modal" data-target="#add-vendor" href="#">HERE</a>
-            </small>
-        </h1>
-        <div class="subheader-block" id="loggedIn-user">
-            <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="border-faded bg-faded p-3 mb-g d-flex">
-                <input type="text" id="js-filter-contacts" name="filter-contacts" class="form-control shadow-inset-2 form-control-lg" placeholder="Filter contacts">
-                <div class="btn-group btn-group-lg btn-group-toggle hidden-lg-down ml-3" data-toggle="buttons">
-                    <label class="btn btn-default active">
-                        <input type="radio" name="contactview" id="grid" checked="" value="grid"><i class="fas fa-table"></i>
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="contactview" id="table" value="table"><i class="fas fa-th-list"></i>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" id="js-contacts">
-    <%= for vendor <- @vendors do %>
-        <div class="col-xl-4">
-            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="<%= vendor.rep_name %>">
-                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
-                    <div class="d-flex flex-row align-items-center">
-                        <span class="status status-success mr-3">
-                            <img class="profile-image rounded-circle" alt="App user" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>"></span>
-                        </span>
-                        <div class="info-card-text flex-1">
-                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
-                                <%= vendor.rep_name %>
-                                <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="tel:<%= vendor.comp_tel %>" data-toggle="tooltip" data-placement="top" title="Call">
-                                   Call
-                                </a>
-                                <a class="dropdown-item" href="mailto:<%= vendor.email %>">Send Email</a>
-                                <a class="dropdown-item" href="#" data-id="<%= vendor.id%>" data-rep_name="<%= vendor.rep_name%>" data-position="<%= vendor.position%>" data-comp_name="<%= vendor.comp_name%>" data-comp_email="<%= vendor.comp_email%>" data-email="<%= vendor.email%>" data-comp_tel="<%= vendor.comp_tel%>" data-comp_address="<%= vendor.comp_address%>" data-comp_info="<%= vendor.comp_info%>" data-toggle="modal" data-target="#edit-vendor">Edit Contact</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#delete-alert">Delete Contact</a>
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+            <!-- ####################################################### FLASH ################## -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
                             </div>
-                            <span class="text-truncate text-truncate-xl"><%= vendor.position %>, <%= vendor.comp_name %>.</span>
-                        </div>
-                        <button class="js-expand-btn btn btn-sm btn-default d-none" data-toggle="collapse" data-target="#c_1 > .card-body + .card-body" aria-expanded="false">
-                            <span class="collapsed-hidden">+</span>
-                            <span class="collapsed-reveal">-</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-0 collapse show">
-                    <div class="p-3">
-                        <a href="tel:<%= vendor.comp_tel %>" class="mt-1 d-block fs-sm fw-400 text-dark">
-                            <i class="fas fa-mobile-alt text-muted mr-2"></i><%= vendor.comp_tel %></a>
-                        <a href="mailto:<%= vendor.comp_email %>" class="mt-1 d-block fs-sm fw-400 text-dark">
-                            <i class="fas fa-mouse-pointer text-muted mr-2"></i> <%= vendor.comp_email %> </a>
-                        <address class="fs-sm fw-400 mt-4 text-muted">
-                            <i class="fas fa-map-pin mr-2"></i> <%= vendor.comp_address %> </address>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
                     </div>
                 </div>
             </div>
-        </div>    
-    <% end %>    
+            <!-- ################################################################################ -->
+
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-plus-circle'></i> Contacts
+                    <small>
+                        Contacts of Business Associates <br>
+                        To add new contact click <a data-toggle="modal" data-target="#add-vendor" href="#">HERE</a>
+                    </small>
+                </h1>
+                <div class="subheader-block" id="loggedIn-user">
+                    <i class='subheader-icon fal fa-user'></i> <%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> <%= "#{String.capitalize(@conn.assigns.user.last_name)}"%>  | FleetHUB
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="border-faded bg-faded p-3 mb-g d-flex">
+                        <input type="text" id="js-filter-contacts" name="filter-contacts" class="form-control shadow-inset-2 form-control-lg" placeholder="Filter contacts">
+                        <div class="btn-group btn-group-lg btn-group-toggle hidden-lg-down ml-3" data-toggle="buttons">
+                            <label class="btn btn-default active">
+                                <input type="radio" name="contactview" id="grid" checked="" value="grid"><i class="fas fa-table"></i>
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="contactview" id="table" value="table"><i class="fas fa-th-list"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="js-contacts">
+                <%= for vendor <- @vendors do %>
+                    <div class="col-xl-4">
+                        <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="<%= vendor.rep_name %>">
+                            <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                <div class="d-flex flex-row align-items-center">
+                                    <span class="status status-success mr-3">
+                                        <img class="profile-image rounded-circle" alt="App user" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>"></span>
+                                    </span>
+                                    <div class="info-card-text flex-1">
+                                        <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                            <%= vendor.rep_name %>
+                                            <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="tel:<%= vendor.comp_tel %>" data-toggle="tooltip" data-placement="top" title="Call">
+                                            Call
+                                            </a>
+                                            <a class="dropdown-item" href="mailto:<%= vendor.email %>">Send Email</a>
+                                            <a class="dropdown-item" href="#" data-id="<%= vendor.id%>" data-rep_name="<%= vendor.rep_name%>" data-position="<%= vendor.position%>" data-comp_name="<%= vendor.comp_name%>" data-comp_email="<%= vendor.comp_email%>" data-email="<%= vendor.email%>" data-comp_tel="<%= vendor.comp_tel%>" data-comp_address="<%= vendor.comp_address%>" data-comp_info="<%= vendor.comp_info%>" data-toggle="modal" data-target="#edit-vendor">Edit Contact</a>
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#delete-alert">Delete Contact</a>
+                                        </div>
+                                        <span class="text-truncate text-truncate-xl"><%= vendor.position %>, <%= vendor.comp_name %>.</span>
+                                    </div>
+                                    <button class="js-expand-btn btn btn-sm btn-default d-none" data-toggle="collapse" data-target="#c_1 > .card-body + .card-body" aria-expanded="false">
+                                        <span class="collapsed-hidden">+</span>
+                                        <span class="collapsed-reveal">-</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0 collapse show">
+                                <div class="p-3">
+                                    <a href="tel:<%= vendor.comp_tel %>" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <i class="fas fa-mobile-alt text-muted mr-2"></i><%= vendor.comp_tel %></a>
+                                    <a href="mailto:<%= vendor.comp_email %>" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <i class="fas fa-mouse-pointer text-muted mr-2"></i> <%= vendor.comp_email %> </a>
+                                    <address class="fs-sm fw-400 mt-4 text-muted">
+                                        <i class="fas fa-map-pin mr-2"></i> <%= vendor.comp_address %> </address>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                <% end %>    
+            </div>
+        </div>
+
+        <div class="col-md-1"></div>
     </div>
 </main>
 

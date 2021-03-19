@@ -20,7 +20,8 @@ defmodule Fleet.MixProject do
   def application do
     [
       mod: {Fleet.Application, []},
-      extra_applications: [:logger, :runtime_tools, :arc_ecto]
+      extra_applications: [:logger, :runtime_tools, :phoenix_ecto]
+      # extra_applications: [:logger, :runtime_tools, :arc_ecto] , :mariaex
     ]
   end
 
@@ -37,6 +38,11 @@ defmodule Fleet.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 3.2"},
       {:ecto, "~> 2.2.0"},
+      #------- MySQL
+      # {:mariaex, ">= 0.0.0"},
+      # {:mariaex, "~> 0.6.1", override: true},
+      # {:ecto_sql, github: "wojtekmach/ecto_sql", branch: "wm-myxql"},
+      # {:myxql, github: "elixir-ecto/myxql"},
       #------- postgres
       {:postgrex, ">= 0.0.0"},
       #------- mssql
