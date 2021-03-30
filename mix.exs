@@ -20,7 +20,7 @@ defmodule Fleet.MixProject do
   def application do
     [
       mod: {Fleet.Application, []},
-      extra_applications: [:logger, :runtime_tools, :phoenix_ecto]
+      extra_applications: [:logger, :runtime_tools, :bamboo, :bamboo_smtp]
       # extra_applications: [:logger, :runtime_tools, :arc_ecto] , :mariaex
     ]
   end
@@ -36,19 +36,13 @@ defmodule Fleet.MixProject do
     [
       {:phoenix, "~> 1.4.11"},
       {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_ecto, "~> 3.2"},
-      {:ecto, "~> 2.2.0"},
-      #------- MySQL
-      # {:mariaex, ">= 0.0.0"},
-      # {:mariaex, "~> 0.6.1", override: true},
-      # {:ecto_sql, github: "wojtekmach/ecto_sql", branch: "wm-myxql"},
-      # {:myxql, github: "elixir-ecto/myxql"},
-      #------- postgres
+      {:phoenix_ecto, "~> 4.0"},
+      # ------- postgres
+      {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-      #------- mssql
-      # {:tds_ecto, "~> 2.2.0"},
-      # {:tds, "~> 1.1.0"},
-      #---------------------------------------------
+      # ------- mssql
+      # {:tds, "~> 2.1.1"},
+      # ------------------------
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
@@ -58,7 +52,9 @@ defmodule Fleet.MixProject do
       {:arc_ecto, "~> 0.11.3"},
       {:timex, "~> 3.6"},
       {:calendar, "~> 0.17.0"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:bamboo, "~> 1.3"},
+      {:bamboo_smtp, "~> 2.1.0"}
     ]
   end
 

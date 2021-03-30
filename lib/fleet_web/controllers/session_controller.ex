@@ -1,6 +1,6 @@
 defmodule FleetWeb.SessionController do
     use FleetWeb, :controller
-  
+
     alias FleetWeb.UserController
     alias Fleet.Logs
     alias Fleet.Auth
@@ -10,12 +10,12 @@ defmodule FleetWeb.SessionController do
       FleetWeb.Plugs.RequireAuth
       when action in [:signout]
   )
-  
+
     def new(conn, _params) do
       conn = put_layout(conn, false)
       render(conn, "index.html")
     end
-  
+
     def create(conn, params) do
       with {:error, _reason} <- UserController.get_user_by_email(String.trim(params["email"])) do
         conn
@@ -32,14 +32,14 @@ defmodule FleetWeb.SessionController do
           else
             {:ok, _} ->
               cond do
-                user.status == 1 ->
+                user.account_status == "1" ->
                   {:ok, _} = Logs.create_user_logs(%{user_id: user.id, activity: "logged in"})
-  
+
                   conn
                   |> put_session(:current_user, user.id)
                   |> put_session(:session_timeout_at, session_timeout_at())
                   |> redirect(to: Routes.user_path(conn, :dashboard))
-  
+
                 true ->
                   conn
                   |> put_status(405)
@@ -55,14 +55,14 @@ defmodule FleetWeb.SessionController do
     #     |> put_layout(false)
     #     |> render("index.html")
     end
-  
+
     defp session_timeout_at do
       DateTime.utc_now() |> DateTime.to_unix() |> (&(&1 + 3_600)).()
     end
-  
+
     def signout(conn, _params) do
       {:ok, _} = Logs.create_user_logs(%{user_id: conn.assigns.user.id, activity: "logged out"})
-  
+
       conn
       |> configure_session(drop: true)
       |> redirect(to: Routes.session_path(conn, :new))
@@ -73,4 +73,3 @@ defmodule FleetWeb.SessionController do
         |> redirect(to: Routes.session_path(conn, :new))
     end
   end
-  

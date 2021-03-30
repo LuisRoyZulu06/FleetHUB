@@ -149,28 +149,33 @@ defmodule Fleet.Vehicles do
     #   """, c.assignment_status
     #   )
     #   })
+    #    
+    
 
-    |> join(
-      :right,
-      [c],
-      day in fragment("select generate_series(date_trunc('month',now()),
-      date_trunc('MONTH', now()) + INTERVAL '1 MONTH - 1 day', '1 day')::date AS d"),
-      day.d == fragment("date(?)", c.inserted_at)
-    )
-    |> group_by([c, day], [day.d, c.assignment_status])
-    |> order_by([_c, day], day.d)
-    |> select([c, day], %{
-        day: fragment("to_char(?, 'YYYY-MM-DD')", day.d),
-        count: count(c.id),
-        status: fragment("""
-        CASE 
-            WHEN ? = '1' 
-                THEN 'assigned'
-            ELSE 'not_assigned'
-        END
-        """, c.assignment_status
-        )
-        })
+
+
+    #   -------------------------------The code below works just needs to be checked
+    # |> join(
+    #   :right,
+    #   [c],
+    #   day in fragment("select generate_series(date_trunc('month',now()),
+    #   date_trunc('MONTH', now()) + INTERVAL '1 MONTH - 1 day', '1 day')::date AS d"),
+    #   day.d == fragment("date(?)", c.inserted_at)
+    # )
+    # |> group_by([c, day], [day.d, c.assignment_status])
+    # |> order_by([_c, day], day.d)
+    # |> select([c, day], %{
+    #     day: fragment("to_char(?, 'YYYY-MM-DD')", day.d),
+    #     count: count(c.id),
+    #     status: fragment("""
+    #     CASE 
+    #         WHEN ? = '1' 
+    #             THEN 'assigned'
+    #         ELSE 'not_assigned'
+    #     END
+    #     """, c.assignment_status
+    #     )
+    #     })
     |> Repo.all()
   end
 

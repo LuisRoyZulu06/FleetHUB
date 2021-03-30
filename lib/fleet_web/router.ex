@@ -39,6 +39,7 @@ defmodule FleetWeb.Router do
   scope "/", FleetWeb do
     pipe_through([:browser, :no_layout])
     get("/logout/current/user", SessionController, :signout)
+    get("/new/password", UserController, :new_password)
   end
 
   scope "/", FleetWeb do
@@ -49,11 +50,12 @@ defmodule FleetWeb.Router do
     post  "/Create/New/FleetHub/System/User", UserController, :create_user
     get "/Edit/FleetHUB/System/User/", UserController, :edit_user
     post  "/Update/FleetHUB/System/User/", UserController, :update_user
-    get "/View/Mgt/Users", UserController, :view_mgt_user
+    get "/View/User/Details", UserController, :view_user_details
     get "/Manage/License/Type", UserController, :mgt_licences
     post "/Create/License/Type", UserController, :create_license
     post "/Update/License/Type", UserController, :update_license
     get "/Manage/User/Logs", UserController, :user_logs
+    post("/new/password", UserController, :change_password)
 
     # --------------------- On Leave --------------------------------
     get "/Users/On/Leave", UserController, :users_on_leave

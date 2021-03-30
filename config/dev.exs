@@ -2,14 +2,7 @@ use Mix.Config
 
 # Configure your database
 config :fleet, Fleet.Repo,
-  #--------------- MySQL
-  # adapter: Ecto.Adapters.MySQL,
-  #--------------- mssql
-  # adapter: Tds.Ecto,
-  # username: "sa",
-  #--------------- Postgres
   username: "postgres",
-  #--------------------------
   password: "password06",
   database: "FleetHUB",
   # port: "1433",
@@ -24,7 +17,7 @@ config :fleet, Fleet.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :fleet, FleetWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: 5001],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

@@ -1,0 +1,145 @@
+<main id="js-page-content" role="main" class="page-content">
+    <div class="row">
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+                <div class="subheader">
+                    <h1 class="subheader-title">
+                        <i class='subheader-icon fal fa-user-circle'></i> Profile Details
+                        <br>
+                        <a href="<%= Routes.user_path(@conn, :user_mgt)%>" class="btn btn-icon ml-1 fs-lg rounded-circle waves-effect waves-themed">
+                            <i class="fal fa-reply"></i>
+                        </a>
+                    </h1>
+
+                    <div class="info-card-text">
+                        Logged In user:
+                        <small>
+                            <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleeHUB
+                        </small>
+                    </div>
+                </div>
+
+            <%= for view_user <- [@view_users] do %> 
+                <div class="row">
+                    <!-- profile summary -->
+                    <div class="col-lg-6 col-xl-3 order-lg-1 order-xl-1">
+                        <div class="card mb-g rounded-top">
+                            <div class="row no-gutters row-grid">
+                                <div class="col-12">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="id" id="id">
+                                    <div class="d-flex flex-column align-items-center justify-content-center p-4">
+
+                                        <%= if view_user.sex == "M" do %>
+                                        <img class="rounded-circle shadow-2 img-thumbnail" alt="<%= view_user.first_name%> <%= view_user.last_name%>" src="<%= Routes.static_path(@conn, "/images/avatar/3.png") %>">
+                                        <% end %>
+
+                                        <%= if view_user.sex == "F" do %>
+                                        <img class="rounded-circle shadow-2 img-thumbnail" alt="<%= view_user.first_name%> <%= view_user.last_name%>" src="<%= Routes.static_path(@conn, "/images/avatar/2.jpg") %>">
+                                        <% end %>
+
+                                        
+                                        <h5 class="mb-0 fw-700 text-center mt-3">
+                                            <%= view_user.first_name%> <%= view_user.last_name%>
+                                        </h5>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="text-center py-3">
+                                        <h5 class="mb-0 fw-700">
+                                            Sex
+                                            <small class="text-muted mb-0"><%= view_user.sex%></small>
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="p-3 text-center">
+                                        <a href="mailto:<%= view_user.email%>?" class="btn-link font-weight-bold">
+                                            <i class="fal fa-envelope"></i>Email
+                                        </a> 
+                                        <span class="text-primary d-inline-block mx-3">&#9679;</span>
+                                        <a href="tel:<%= view_user.phone%>" class="btn-link font-weight-bold">
+                                            <i class="fal fa-phone"></i>Call
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- profile -->
+                    <div class="col-lg-12 col-xl-9 order-lg-3 order-xl-2">
+                        <div id="panel-1" class="panel">
+                            <div class="panel-hdr">
+                                <h2>
+                                    User Details
+                                </h2>
+                            </div>
+
+                            <div class="panel-container show">
+                                <div class="panel-content">
+                                    <div class="table-responsive w3-animate-top">
+                                        <table class="table table-hover table-clean">
+                                            <tbody>
+                                            <tr>
+                                                <th style="width: 150px">Phone:</th>
+                                                <td><%= view_user.phone%></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Email:</th>
+                                                <td><%= view_user.email%></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Identity Type:</th>
+                                                <td><%= view_user.id_type%></td>
+                                            </tr>
+
+                                            <%= if view_user.user_role != "DRIVER" do %>
+                                                <tr>
+                                                    <th style="width: 150px">ID Number:</th>
+                                                    <td><%= view_user.nrc_no%></td>
+                                                </tr>
+                                            <% end %>
+
+                                            <%= if view_user.user_role == "DRIVER" do %>
+                                                <tr>
+                                                    <th style="width: 150px">ID Number:</th>
+                                                    <td><%= view_user.drvrs_license_no%></td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th style="width: 150px">Drivers License Class:</th>
+                                                    <td><%= view_user.drvrs_license_class%></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th style="width: 150px">Drivers License Expiry Date:</th>
+                                                    <td><%= view_user.drvrs_license_exp_dt%></td>
+                                                </tr>
+                                            <% end %>  
+
+                                            <tr>
+                                                <th style="width: 150px">User Role:</th>
+                                            <td><%= view_user.user_role%></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% end %>    
+        </div>
+
+        <div class="col-md-1"></div>    
+    </div>
+</main>
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>

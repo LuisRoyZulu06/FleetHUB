@@ -16,6 +16,8 @@ mix ecto.gen.migration alter_tbl_drivers
 
 <!-- ----------------Adding License type----------------------- -->
 mix phx.gen.context License Drivers_license tbl_license_type name vehicle_cat weight
+mix phx.gen.context Notifications Email tbl_email attempts mail_body recipient_email sender_email status subject
+mix phx.gen.context Notifications Sms tbl_sms type mobile msg status msg_count date_sent
 
 
 <!-------------------------Vehicle Problems--------------------------->

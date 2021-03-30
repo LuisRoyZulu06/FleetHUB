@@ -38,7 +38,7 @@ defmodule FleetWeb.UserController do
            :delete_user,
            :deactivate_user,
            :deactivate_user_account,
-           :view_mgt_user,
+           :view_user_details,
            :activate_user_account,
            :mgt_licences,
            :create_license,
@@ -55,23 +55,23 @@ defmodule FleetWeb.UserController do
   plug(
     FleetWeb.Plugs.RequireAdminAccess
     when action not in [
-      :new_password, 
-      :change_password, 
-      :dashboard, 
-      :user_actitvity, 
-      :user_mgt, 
-      :create_user, 
-      :edit_user, 
-      :update_user, 
-      :delete_user, 
-      :deactivate_user, 
-      :deactivate_user_account, 
-      :view_mgt_user, 
-      :deactivated_acc, 
-      :activate_user_account, 
-      :mgt_licences, 
-      :create_license, 
-      :update_license, 
+      :new_password,
+      :change_password,
+      :dashboard,
+      :user_actitvity,
+      :user_mgt,
+      :create_user,
+      :edit_user,
+      :update_user,
+      :delete_user,
+      :deactivate_user,
+      :deactivate_user_account,
+      :view_user_details,
+      :deactivated_acc,
+      :activate_user_account,
+      :mgt_licences,
+      :create_license,
+      :update_license,
       :user_logs,
       :users_on_leave,
       :deactivate_account,
@@ -95,16 +95,16 @@ defmodule FleetWeb.UserController do
   end
 
   def dashboard(conn, _params) do
-    summary = Vehicles.dashboard_params() 
+    summary = Vehicles.dashboard_params()
     #|> prepare_dash_result()
-    keys = Enum.map(summary, &(&1.day)) 
-    |> Enum.uniq 
+    keys = Enum.map(summary, &(&1.day))
+    |> Enum.uniq
     |> Enum.sort()
-    assigned_vihecles = Enum.sort_by(summary, &(&1.day))  
-    |> Enum.filter(&(&1.status == "assigned")) 
+    assigned_vihecles = Enum.sort_by(summary, &(&1.day))
+    |> Enum.filter(&(&1.status == "assigned"))
     |> Enum.map(&(&1.count))
-    failed = Enum.sort_by(summary, &(&1.day))  
-    |> Enum.filter(&(&1.status == "not_assigned")) 
+    failed = Enum.sort_by(summary, &(&1.day))
+    |> Enum.filter(&(&1.status == "not_assigned"))
     |> Enum.map(&(&1.count))
 
     accounts = Accounts.list_tbl_users()
@@ -113,10 +113,10 @@ defmodule FleetWeb.UserController do
     problems = Problems.list_tbl_vehicle_problems()
     vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
     user = Accounts.get_user_details(conn.assigns.user.id)
-    assigned_vihecles = Vehicles.vehicles_assigned() 
+    assigned_vihecles = Vehicles.vehicles_assigned()
     total_vehicles = Vehicles.total_vehicles()
     total_drivers = Vehicles.total_drivers()
-    # [%{""=>count_vehicles}] = Vehicles.vehicles_assigned() 
+    # [%{""=>count_vehicles}] = Vehicles.vehicles_assigned()
     # [%{""=>total_vehicles}] = Vehicles.total_vehicles()
     # [%{""=>total_drivers}] = Vehicles.total_drivers()
     render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, assigned_vihecles: assigned_vihecles, total_vehicles: total_vehicles, total_drivers: total_drivers,  problems: problems)
@@ -137,7 +137,6 @@ defmodule FleetWeb.UserController do
     Date.range(%{today | day: 1}, %{today | day: days})
     |> Enum.map(&%{count: 0, day: Timex.format!(&1, "%b #{String.pad_leading(to_string(&1.day), 2, "0")}, %Y", :strftime), status: "assigned"})
   end
-
 
   def user_actitvity(conn, %{"id" => user_id}) do
     with :error <- confirm_token(conn, user_id) do
@@ -242,7 +241,7 @@ defmodule FleetWeb.UserController do
             activity: activity
           }
 
-          User_log.changeset(%UserLogs{}, user_log)
+          UserLogs.changeset(%UserLogs{}, user_log)
           |> Repo.insert()
         end)
         |> Repo.transaction()
@@ -268,49 +267,49 @@ defmodule FleetWeb.UserController do
   end
 
 
-  def create(conn, %{"user" => user_params}) do
-    pwd = random_string(6)
-    user_params = Map.put(user_params, "password", pwd)
+  # def create(conn, %{"user" => user_params}) do
+  #   pwd = random_string(6)
+  #   user_params = Map.put(user_params, "password", pwd)
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.insert(:user, User.changeset(%User{user_id: conn.assigns.user.id}, user_params))
-    |> Ecto.Multi.run(:user_log, fn %{user: user} ->
-      activity =
-        "Created new user with Email \"#{user.email}\" and First Name #{user.first_name}\""
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.insert(:user, User.changeset(%User{id: conn.assigns.user.id}, user_params))
+  #   |> Ecto.Multi.run(:user_log, fn %{user: user} ->
+  #     activity =
+  #       "Created new user with Email \"#{user.email}\" and First Name #{user.first_name}\""
 
-      user_log = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
+  #     user_log = %{
+  #       id: conn.assigns.user.id,
+  #       activity: activity
+  #     }
 
-      User_log.changeset(%UserLogs{}, user_log)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user, user_log: _user_log}} ->
-        Email.password(pwd, user.email)
+  #     User_log.changeset(%UserLogs{}, user_log)
+  #     |> Repo.insert()
+  #   end)
+  #   |> Repo.transaction()
+  #   |> case do
+  #     {:ok, %{user: user, user_log: _user_log}} ->
+  #       Email.password(pwd, user.email)
 
-        conn
-        |> put_flash(
-          :info,
-          "#{String.capitalize(user.first_name)} created successfully and password is: #{pwd}"
-        )
-        |> redirect(to: Routes.user_path(conn, :list_users))
+  #       conn
+  #       |> put_flash(
+  #         :info,
+  #         "#{String.capitalize(user.first_name)} created successfully and password is: #{pwd}"
+  #       )
+  #       |> redirect(to: Routes.user_path(conn, :list_users))
 
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = traverse_errors(failed_value.errors) |> List.first()
+  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
+  #       reason = traverse_errors(failed_value.errors) |> List.first()
 
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :list_users))
-    end
-  rescue
-    _ ->
-      conn
-      |> put_flash(:error, "An error occurred, reason unknown. try again")
-      |> redirect(to: Routes.user_path(conn, :list_users))
-  end
+  #       conn
+  #       |> put_flash(:error, reason)
+  #       |> redirect(to: Routes.user_path(conn, :list_users))
+  #   end
+  # rescue
+  #   _ ->
+  #     conn
+  #     |> put_flash(:error, "An error occurred, reason unknown. try again")
+  #     |> redirect(to: Routes.user_path(conn, :list_users))
+  # end
 
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
@@ -344,11 +343,12 @@ defmodule FleetWeb.UserController do
     end
   end
 
+ # -----------helper functions---------
   def get_user_by_email(email) do
-    case Repo.get_by(User, email: email) do
-      nil -> {:error, "invalid email address"}
-      user -> {:ok, user}
-    end
+  case Repo.get_by(User, email: email) do
+    nil -> {:error, "invalid email address"}
+    user -> {:ok, user}
+  end
   end
 
   def get_user_by(nt_username) do
@@ -364,7 +364,7 @@ defmodule FleetWeb.UserController do
   # ------------------ Password Reset ---------------------
   def new_password(conn, _params) do
     page = %{first: "Settings", last: "Change password"}
-    render(conn, "change_password.html", page: page)
+    render(conn, "login_change_password.html", page: page)
   end
 
   def forgot_password(conn, _params) do
@@ -487,21 +487,21 @@ defmodule FleetWeb.UserController do
               {:ok, %{update: _update, insert: _insert}} ->
                 conn
                 |> put_flash(:info, "Password changed successful")
-                |> redirect(to: Routes.user_path(conn, :new_password))
+                |> redirect(to: Routes.session_path(conn, :new))
 
               {:error, _failed_operation, failed_value, _changes_so_far} ->
                 reason = traverse_errors(failed_value.errors) |> List.first()
 
                 conn
                 |> put_flash(:error, reason)
-                |> redirect(to: Routes.user_path(conn, :new_password))
+                |> redirect(to: Routes.session_path(conn, :new))
             end
         end
     end
   rescue
     _ ->
       conn
-      |> put_flash(:error, "Password changed with errors")
+      |> put_flash(:error, "Failed to change password")
       |> redirect(to: Routes.user_path(conn, :new_password))
   end
 
@@ -512,7 +512,7 @@ defmodule FleetWeb.UserController do
     |> Ecto.Multi.update(:update, User.changeset(user, %{password: pwd, auto_password: "N"}))
     |> Ecto.Multi.insert(
       :insert,
-      User_log.changeset(
+      UserLogs.changeset(
         %UserLogs{},
         %{user_id: user.id, activity: "changed account password"}
       )
@@ -559,20 +559,54 @@ defmodule FleetWeb.UserController do
     licences = License.list_tbl_license_type()
     system_users = Accounts.list_tbl_users()
     render(conn, "user_mgt.html", system_users: system_users, licences: licences)
-  end 
+  end
 
   def create_user(conn, params) do
-    case Accounts.create_user(params) do
-      {:ok, _} ->
-        conn
-        |> put_flash(:info, "New FleetHUB User Added Sccessfully :-)")
-        |> redirect(to: Routes.user_path(conn, :user_mgt))
+    case Accounts.get_user_by_email(params["email"]) do
+      nil ->
+        pwd = random_string(6)
+        params = Map.put(params, "password", pwd)
 
-        conn
+        Ecto.Multi.new()
+        |> Ecto.Multi.insert(:create_user, User.changeset(%User{}, params))
+        |> Ecto.Multi.run(:user_log, fn _repo, %{create_user: user} ->
+          activity = "Created user with id #{user.id}"
 
-      {:error, _} ->
+          user_log = %{
+            user_id: conn.assigns.user.id,
+            activity: activity
+          }
+
+          UserLogs.changeset(%UserLogs{}, user_log)
+          |> Repo.insert()
+        end)
+        |> Repo.transaction()
+        |> case do
+          {:ok, %{create_user: _user, user_log: _user_log}} ->
+            Email.send_alert(pwd, params["email"], params["username"])
+
+            # Sms.create(%{
+            #   type: "SYSTEM",
+            #   mobile: params["phone"],
+            #   msg:
+            #     "Hello #{params["first_name"]}, \nYou can login to our E-Tax platform using username: #{
+            #       params["email"]
+            #     }, password: #{pwd}"
+            # })
+
+            conn
+            |> put_flash(:info, "User created Successfully")
+            |> redirect(to: Routes.user_path(conn, :user_mgt, id: params["company_id"]))
+
+          {:error, _} ->
+            conn
+            |> put_flash(:error, "Failed to create user.")
+            |> redirect(to: Routes.user_path(conn, :user_mgt, id: params["company_id"]))
+        end
+
+      _user ->
         conn
-        |> put_flash(:error, "Failed To Add New FleetHUB User :-(")
+        |> put_flash(:error, "User with #{params["email"]} already exists.")
         |> redirect(to: Routes.user_path(conn, :user_mgt))
     end
   end
@@ -652,7 +686,7 @@ defmodule FleetWeb.UserController do
     system_users = Accounts.get_user!(id)
     changeset = Accounts.change_user(system_users)
     render(conn, "deactivate.html", system_users: system_users, changeset: changeset )
-  end 
+  end
 
   def deactivate_user_account(conn, %{"id" => id} = params) do
     system_user = Accounts.get_user!(id)
@@ -685,17 +719,17 @@ defmodule FleetWeb.UserController do
         |> redirect(to: Routes.user_path(conn, :user_mgt))
     end
   end
-  
-  def view_mgt_user(conn, %{"id" => id}) do
+
+  def view_user_details(conn, %{"id" => id}) do
     view_users  = Accounts.get_user!(id)
-    render(conn, "view_mgt.html", view_users: view_users ) 
+    render(conn, "view_user_details.html", view_users: view_users )
   end
 
   def dismissed_users(conn, _params) do
     dismissed_users = Accounts.list_tbl_users()
     render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
-  end  
-  
+  end
+
   def activate_user_account(conn, %{"id" => id} = params) do
     system_user = Accounts.get_user!(id)
 
@@ -899,7 +933,7 @@ defmodule FleetWeb.UserController do
   def dismissed_users(conn, _params) do
     dismissed_users = Accounts.list_tbl_users()
     render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
-  end 
+  end
 
   def activate_dismissed_user(conn, %{"id" => id} = params) do
     dismissed_users = Accounts.get_user!(id)
@@ -938,9 +972,9 @@ defmodule FleetWeb.UserController do
   def retired_users(conn, _params) do
     retired_users = Accounts.list_tbl_users()
     render(conn, "retired_users.html", retired_users: retired_users)
-  end 
+  end
 
-  
+
   def activate_retired_user(conn, %{"id" => id} = params) do
     retired_users = Accounts.get_user!(id)
 
@@ -972,5 +1006,5 @@ defmodule FleetWeb.UserController do
         |> redirect(to: Routes.user_path(conn, :retired_users))
     end
   end
-  
+
 end

@@ -5,7 +5,7 @@ defmodule Fleet.Accounts do
 
   import Ecto.Query, warn: false
   alias Fleet.Repo
-  
+
   alias Fleet.Accounts.User
   alias Fleet.Vehicles.VehicleDetails
 
@@ -29,7 +29,7 @@ defmodule Fleet.Accounts do
   def get_user_details(id) do
     Repo.get!(User, id)
   end
-  
+
   @doc """
   Gets a single user.
 
@@ -109,5 +109,23 @@ defmodule Fleet.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def get_user_by_email(email) do
+    Repo.all(
+      from(
+        u in User,
+        where: fragment("lower(?) = lower(?)", u.email, ^email),
+        limit: 1,
+        select: u
+      )
+    )
+    |> case do
+      [] ->
+        nil
+
+      user ->
+        user
+    end
   end
 end

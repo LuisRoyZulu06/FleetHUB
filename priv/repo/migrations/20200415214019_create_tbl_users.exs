@@ -3,31 +3,28 @@ defmodule Fleet.Repo.Migrations.CreateTblUsers do
 
   def change do
     create table(:tbl_users) do
+      add :auto_password, :string, default: "Y"
+      add :email, :string
       add :first_name, :string
       add :last_name, :string
-      add :email, :string
       add :password, :string
-      add :user_type, :integer
+      add :account_status, :string
       add :user_role, :string
-      add :status, :integer
-      add :user_id, :string
-      add :auto_password, :string
-      add :sex, :string
-      add :age, :integer
+      add :user_type, :integer
+      add :id_type, :string
       add :nrc_no, :string
+      add :drvrs_license_exp_dt, :string
+      add :drvrs_license_no, :string
+      add :drvrs_license_class, :string
       add :phone, :string
-      add :home_add, :string
-      add :dlt, :string
-      add :dln, :string
-      add :dl_exp_dt, :string
-      add :acc_inactive_reason, :string
-      add :slct_acc_inactive_reason, :string
+      add :sex, :string
+      add :acc_deactive_reason, :string
 
       timestamps()
     end
-    create unique_index(:tbl_users, [:nrc_no], name: :unique_nrc_no)
+    create unique_index(:tbl_users, [:drvrs_license_no], name: :unique_drvrs_license_no)
+    create unique_index(:tbl_users, [:nrc_no], name: :unique_nrc)
     create unique_index(:tbl_users, [:phone], name: :unique_phone)
     create unique_index(:tbl_users, [:email], name: :unique_email)
-    create unique_index(:tbl_users, [:dln], name: :unique_dln)
   end
 end
