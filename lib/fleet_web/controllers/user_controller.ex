@@ -43,7 +43,11 @@ defmodule FleetWeb.UserController do
            :mgt_licences,
            :create_license,
            :update_license,
-           :user_logs
+           :user_logs,
+
+          #  ----------------------
+           :user_pwd_change,
+           :user_profile
          ]
   )
 
@@ -52,37 +56,40 @@ defmodule FleetWeb.UserController do
     when action not in [:new_password, :change_password]
   )
 
-  plug(
-    FleetWeb.Plugs.RequireAdminAccess
-    when action not in [
-      :new_password,
-      :change_password,
-      :dashboard,
-      :user_actitvity,
-      :user_mgt,
-      :create_user,
-      :edit_user,
-      :update_user,
-      :delete_user,
-      :deactivate_user,
-      :deactivate_user_account,
-      :view_user_details,
-      :deactivated_acc,
-      :activate_user_account,
-      :mgt_licences,
-      :create_license,
-      :update_license,
-      :user_logs,
-      :users_on_leave,
-      :deactivate_account,
-      :dismissed_users,
-      :activate_user_on_leave,
-      :suspended_users,
-      :activate_dismissed_user,
-      :retired_users,
-      :activate_retired_user
-    ]
-  )
+  # plug(
+  #   FleetWeb.Plugs.RequireAdminAccess
+  #   when action not in [
+  #     :new_password,
+  #     :change_password,
+  #     :dashboard,
+  #     :user_actitvity,
+  #     :user_mgt,
+  #     :create_user,
+  #     :edit_user,
+  #     :update_user,
+  #     :delete_user,
+  #     :deactivate_user,
+  #     :deactivate_user_account,
+  #     :view_user_details,
+  #     :deactivated_acc,
+  #     :activate_user_account,
+  #     :mgt_licences,
+  #     :create_license,
+  #     :update_license,
+  #     :user_logs,
+  #     :users_on_leave,
+  #     :deactivate_account,
+  #     :dismissed_users,
+  #     :activate_user_on_leave,
+  #     :suspended_users,
+  #     :activate_dismissed_user,
+  #     :retired_users,
+  #     :activate_retired_user,
+  #     #  ----------------------
+  #     :user_pwd_change,
+  #     :user_profile,
+  #   ]
+  # )
 
 
   def list_users(conn, _params) do
@@ -361,6 +368,58 @@ defmodule FleetWeb.UserController do
   defp sign_user_id(conn, id),
     do: Phoenix.Token.sign(conn, "user salt", id, signed_at: System.system_time(:second))
 
+  # ------- user mgt
+  def user_profile(conn, _params) do
+    render(conn, "user_profile.html")
+  end
+
+  def user_pwd_change(conn, _params) do
+    render(conn, "profile_change_pwd.html")
+  end
+
+  def pwd_self_change(conn, %{"user" => user_params}) do
+    case confirm_old_password(conn, user_params) do
+      false ->
+        conn
+        |> put_flash(:error, "some fields were submitted empty!")
+        |> redirect(to: Routes.user_path(conn, :user_pwd_change))
+
+      result ->
+        with {:error, reason} <- result do
+          conn
+          |> put_flash(:error, reason)
+          |> redirect(to: Routes.user_path(conn, :user_pwd_change))
+        else
+          {:ok, _} ->
+            conn.assigns.user
+            |> change_pwd(user_params)
+            |> Repo.transaction()
+            |> case do
+              {:ok, %{update: _update, insert: _insert}} ->
+                conn
+                |> put_flash(
+                  :info,
+                  "Password changed successfully."
+                )
+                |> redirect(to: Routes.user_path(conn, :user_pwd_change))
+
+              {:error, _failed_operation, failed_value, _changes_so_far} ->
+                reason = traverse_errors(failed_value.errors) |> List.first()
+
+                conn
+                |> put_flash(:info, reason)
+                |> redirect(to: Routes.user_path(conn, :user_pwd_change))
+            end
+        end
+    end
+
+    # rescue
+    #   _ ->
+    #     conn
+    #     |> put_flash(:error, "Password changed with errors")
+    #     |> redirect(to: Routes.user_path(conn, :new_password))
+  end
+
   # ------------------ Password Reset ---------------------
   def new_password(conn, _params) do
     page = %{first: "Settings", last: "Change password"}
@@ -533,7 +592,6 @@ defmodule FleetWeb.UserController do
       false -> false
     end
   end
-
   # ------------------ / password reset -------------------
 
   def traverse_errors(errors) do

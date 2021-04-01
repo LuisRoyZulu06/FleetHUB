@@ -28,14 +28,6 @@ defmodule FleetWeb.DriverController do
          ]
   )
 
-
-    def list_drivers(conn, _params) do
-        vehicles = Vehicles.list_tbl_vehicles()
-        list_drivers = Accounts.list_tbl_users()
-        licences = License.list_tbl_license_type()
-        render(conn, "list_drivers.html", list_drivers: list_drivers, vehicles: vehicles, licences: licences)
-    end
-
     def view_driver(conn, %{"id" => id} = params) do
       list_drivers  = Accounts.get_user!(id)
       # list_vehicles = Vehicles.list_tbl_vehicles()
@@ -48,16 +40,18 @@ defmodule FleetWeb.DriverController do
               conn
               |> put_flash(:info, "New Driver Added To System")
               |> redirect(to: Routes.driver_path(conn, :list_drivers))
-  
+
               conn
-  
-            {:error, _} ->
+
+            {:error, whatsapp} ->
+              IO.inspect "================="
+              IO.inspect whatsapp
               conn
-              |> put_flash(:error, "Failed To Add New Driver To system.")
+              |> put_flash(:error, :error)
               |> redirect(to: Routes.driver_path(conn, :list_drivers))
         end
-    end 
-    
+    end
+
     def update_driver(conn, %{"id" => id} = params) do
       driver = Accounts.get_user!(id)
 
@@ -126,7 +120,7 @@ defmodule FleetWeb.DriverController do
       drivers = Drivers.get_driver_details!(id)
       changeset = Drivers.change_driver_details(drivers)
       render(conn, "assign_vehicle.html", drivers: drivers, changeset: changeset)
-    end 
+    end
 
     def logged_issues(conn, _params) do
       list_issues = Drivers.list_tbl_vehicle_issue()
@@ -206,17 +200,17 @@ defmodule FleetWeb.DriverController do
 
     def deactivate_driver_account(conn, %{"id" => id} = params) do
       list_driver = Accounts.get_user!(id)
-  
+
       Ecto.Multi.new()
       |> Ecto.Multi.update(:list_driver, User.changeset(list_driver, params))
       |> Ecto.Multi.run(:userlogs, fn %{list_driver: list_driver} ->
         activity = "FleetHUB driver account deactivated with ID \"#{list_driver.id}\""
-  
+
         userlogs = %{
           user_id: conn.assigns.user.id,
           activity: activity
         }
-  
+
         UserLogs.changeset(%UserLogs{}, userlogs)
         |> Repo.insert()
       end)
@@ -226,10 +220,10 @@ defmodule FleetWeb.DriverController do
           conn
           |> put_flash(:info, "FleetHUB system driver account deactivated :-) ")
           |> redirect(to: Routes.driver_path(conn, :list_drivers))
-  
+
         {:error, failed_operation, failed_value, changes_so_far} ->
           reason = DriverController.traverse_errors(failed_value.errors) |> List.first()
-  
+
           conn
           |> put_flash(:error, reason)
           |> redirect(to: Routes.driver_path(conn, :list_drivers))

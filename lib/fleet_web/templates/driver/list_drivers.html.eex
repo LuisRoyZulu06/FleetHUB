@@ -65,7 +65,7 @@
                                     </thead>
                                     <tbody>
                                         <%= for list_driver <- @list_drivers do %>
-                                        <%= if list_driver.user_role == "driver" && list_driver.status === 1 do %>
+                                        <%= if list_driver.user_role == "DRIVER" && list_driver.account_status === "1" do %>
                                             <tr>
                                                 <td><%= list_driver.first_name%> <%= list_driver.last_name%></td>
                                                 <td><%= list_driver.sex%></td>
@@ -85,8 +85,8 @@
                                                                 <i class='subheader-icon fal fa-chevron-down'></i>
                                                             </span>
                                                             <div class="dropdown-menu">
-                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-dlt="<%= list_driver.dlt%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#editmodal">Edit</a>
-                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-age="<%= list_driver.age%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-home_add="<%= list_driver.home_add%>" data-email="<%= list_driver.email%>" data-user_role="<%= list_driver.user_role%>" data-dln="<%= list_driver.dln%>" data-toggle="modal" data-target="#profile-modal">View</a>
+                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-email="<%= list_driver.email%>" data-toggle="modal" data-target="#editmodal">Edit</a>
+                                                                <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-last_name="<%= list_driver.last_name%>" data-sex="<%= list_driver.sex%>" data-nrc_no="<%= list_driver.nrc_no%>" data-phone="<%= list_driver.phone%>" data-email="<%= list_driver.email%>" data-user_role="<%= list_driver.user_role%>" data-toggle="modal" data-target="#profile-modal">View</a>
                                                                 <a class="dropdown-item" data-id="<%= list_driver.id%>" data-first_name="<%= list_driver.first_name%>" data-toggle="modal" data-target="#deactivate">Deactive</a>
                                                             </div>
                                                         </div>

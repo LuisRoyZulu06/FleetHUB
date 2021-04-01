@@ -17,7 +17,7 @@ defmodule Fleet.Notifications do
       [%Email{}, ...]
 
   """
-  def list_tbl_email do
+  def list_email_logs do
     Repo.all(Email)
   end
 

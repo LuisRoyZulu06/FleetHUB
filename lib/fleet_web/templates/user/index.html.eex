@@ -36,7 +36,7 @@
             </div>
 
             <!-- ###################################### DRIVER-PANEL ############################ -->
-            <%= if @user.user_role == "driver" do %>
+            <%= if @user.user_role == "DRIVER" do %>
                 <div class="container-fluid" style="margin-top: 2em;">
                     <div class="row">
                         <div class="col-md-4">
@@ -110,7 +110,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <a href="#" data-id="<%= @user.id%>" data-first_name="<%= @user.first_name %>" data-last_name="<%= @user.last_name%>" data-email="<%= @user.email%>" data-user_role="<%= @user.user_role%>" data-sex="<%= @user.sex%>" data-age="<%= @user.age %>" data-nrc_no="<%= @user.nrc_no %>" data-phone="<%= @user.phone %>" data-home_add="<%= @user.home_add %>" data-dln="<%= @user.dln %>" data-toggle="modal" data-target="#profile-modal">
+                            <a href="#" data-id="<%= @user.id%>" data-first_name="<%= @user.first_name %>" data-last_name="<%= @user.last_name%>" data-email="<%= @user.email%>" data-user_role="<%= @user.user_role%>" data-sex="<%= @user.sex%>" data-nrc_no="<%= @user.nrc_no %>" data-phone="<%= @user.phone %>" data-toggle="modal" data-target="#profile-modal">
                                 <div id="cp-2" class="card border">
                                     <div class="card-header bg-primary-600">
                                         Personal Profile

@@ -1,0 +1,205 @@
+<main id="js-page-content" role="main" class="page-content">
+    <div class="row">
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+            <!---- Flash -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-envelope'></i> Email Logs
+                </h1>
+
+                <div class="info-card-text">
+                    Logged In user:
+                    <small>
+                        <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleeHUB
+                    </small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                System user logs <i class='subheader-icon fal fa-user-circle'></i>
+                            </h2>
+                            <div class="panel-toolbar">
+                                
+                            </div>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-fusion-50 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>Recipient</th>
+                                            <th>Sender</th>
+                                            <th>Status</th>
+                                            <th>Subject</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%= for email_log <- @email_logs do %>
+                                        <tr>
+                                            <td><%= email_log.recipient_email %></td>
+                                            <td><%= email_log.sender_email%></td>
+                                            <td><%= email_log.status%></td>
+                                            <td><%= email_log.subject%></td>
+                                            <td><%= email_log.inserted_at%></td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <a class="btn btn-sm btn-default waves-effect waves-themed">Options</a>
+                                                        </span>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item"
+                                                            data-toggle="modal"
+                                                            data-target="#mail_details"
+                                                            data-id="<%= email_log.id %>"
+                                                            data-attempts="<%= email_log.attempts %>"
+                                                            data-mail_body="<%= email_log.mail_body %>"
+                                                            data-subject="<%= email_log.subject %>"
+                                                            data-status="<%= email_log.status %>"
+                                                            data-sender_email="<%= email_log.sender_email %>"
+                                                            data-recipient_email="<%= email_log.recipient_email %>"
+                                                            data-inserted_at="<%= email_log.inserted_at %>">
+                                                                <i class='subheader-icon fal fa-info'></i>
+                                                                Mail Details
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>  
+                                    <% end %>                          
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1"></div>
+    </div>
+</main>
+
+<!---- Mail Body -->
+<div class="modal fade" id="mail_details" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(45, 89, 134, 1);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">
+                    Close window
+                </span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="table-responsive w3-animate-top">
+                <table class="table table-hover table-clean">
+                    <tbody>
+                        <tr>
+                            <th style="width: 150px">Sender:</th>
+                            <td id="sender_email"></td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 150px">Recipient:</th>
+                            <td id="recipient_email"></td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 150px">Subject:</th>
+                            <td id="subject"></td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 150px">Email Status:</th>
+                            <td id="status"></td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 150px">Attempts:</th>
+                            <td id="attempts"></td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 150px">Date Sent:</th>
+                            <td id="inserted_at"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div>
+                    Mail Body:
+                    <textarea class="form-control" row="5" id="mail_body" disabled></textarea>
+                </div>
+                <br>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(){
+        // ----------------- Mail Details
+        $('#mail_details').on('show.bs.modal', function (event){
+            console.log("edit");
+
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var recipient_email = button.data('recipient_email')
+            var sender_email = button.data('sender_email')
+            var mail_body = button.data('mail_body')
+            var subject = button.data('subject')
+            var status = button.data('status')
+            var attempts = button.data('attempts')
+            var inserted_at = button.data('inserted_at')
+
+            var modal = $(this)
+            
+            modal.find('.modal-body #id').val(id);
+            modal.find('.modal-body #recipient_email').text(recipient_email);
+            modal.find('.modal-body #sender_email').text(sender_email);
+            modal.find('.modal-body #mail_body').text(mail_body);
+            modal.find('.modal-body #subject ').text(subject);
+            modal.find('.modal-body #status').text(status);
+            modal.find('.modal-body #attempts').text(attempts);
+            modal.find('.modal-body #inserted_at').text(inserted_at);
+        });
+    });
+</script>

@@ -39,12 +39,14 @@ defmodule FleetWeb.Router do
   scope "/", FleetWeb do
     pipe_through([:browser, :no_layout])
     get("/logout/current/user", SessionController, :signout)
+    get "/Account/Disabled", SessionController, :error_405
     get("/new/password", UserController, :new_password)
+    get("/Profile", UserController, :user_profile)
   end
 
   scope "/", FleetWeb do
     pipe_through :browser
-    # //////////////////////////////////////////////////////////////////// User CONTROLLER
+    # ---------- User controller
     get "/Dashboard", UserController, :dashboard
     get "/Manage/System/Users", UserController, :user_mgt
     post  "/Create/New/FleetHub/System/User", UserController, :create_user
@@ -56,6 +58,8 @@ defmodule FleetWeb.Router do
     post "/Update/License/Type", UserController, :update_license
     get "/Manage/User/Logs", UserController, :user_logs
     post("/new/password", UserController, :change_password)
+    get "/Password/Change", UserController, :user_pwd_change
+    post "/User/Self/Password/Change", UserController, :pwd_self_change
 
     # --------------------- On Leave --------------------------------
     get "/Users/On/Leave", UserController, :users_on_leave
@@ -78,8 +82,7 @@ defmodule FleetWeb.Router do
     get "/Retired/User/Accounts", UserController, :retired_users
     post "/Activate/retired/Account", UserController, :activate_retired_user
 
-    # ////////////////////////////////////////////////////////////////////////// Driver CONTROLLER
-    get "/List/FleetHub/Drivers", DriverController, :list_drivers
+    # --------- Driver Controller
     get "/View/Driver", DriverController, :view_driver
     post "/Add/New/Driver/To/System", DriverController, :create_driver
     get "/Delete/Driver/Account", DriverController, :delete_driver
@@ -123,6 +126,9 @@ defmodule FleetWeb.Router do
 
     # --------------------------- Vendors  -----------------------------------------
     post "/Update/Vendor/Contact", AdminController, :update_vendor
+
+    # --------- Notifications Controller
+    get "/email/logs", NotificationsController, :email_logs
 
 
   end

@@ -23,7 +23,7 @@ defmodule Fleet.Emails.Email do
 
   def password(email, password) do
     new_email()
-    |> from("natsaveepay@natsave.co.zm")
+    |> from("FleetHUB")
     |> to("#{email}")
     |> put_html_layout({FleetWeb.LayoutView, "email.html"})
     |> subject("Fleet Login Credentials")
@@ -33,7 +33,7 @@ defmodule Fleet.Emails.Email do
 
   def confirmation_token(token, email) do
     new_email()
-    |> from("natsaveepay@natsave.co.zm")
+    |> from("FleetHUB")
     |> to("#{email}")
     |> put_html_layout({FleetWeb.LayoutView, "email.html"})
     |> subject("Fleet Login Credentials")
@@ -42,14 +42,12 @@ defmodule Fleet.Emails.Email do
   end
 
   def send_alert(pwd, email, first_name) do
-    sender_email = "natsaveepay@natsave.co.zm"
+    sender_email = "FleetHUB"
     sender_name = "Natsave"
     subject = "Fleet Login Credentials"
 
     mail_body =
-      "Hello #{first_name},\nYou can login to our E-Tax platform using username: #{email}, and password: #{
-        pwd
-      }."
+      "Hello #{email},\n your password to FleetHUB is: #{pwd}"
 
     params = %{
       subject: subject,

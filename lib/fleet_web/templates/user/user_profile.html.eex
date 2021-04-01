@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="description" content="Page Titile">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-tap-highlight" content="no">
+            
+        <title>User Profile</title>
+        <!-- base css -->
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/vendors.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/default.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/app.bundle.css") %>" />
+        <link rel="mask-icon" color="#5bbad5" href="<%= Routes.static_path(@conn, "/css/datagrid/datatables/datatables.bundle.css") %>" />
+        <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/img/favicon/apple-touch-icon.png") %>" />
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/favicon-32x32.png") %>" />
+        <link rel="mask-icon" color="#5bbad5" href="<%= Routes.static_path(@conn, "/img/favicon/safari-pinned-tab.svg") %>" />
+    </head>
+
+    <body>
+        <div class="page-wrapper">
+            <div class="page-inner" style="background-color: #e6e6e6;">
+                <div class="page-content-wrapper bg-transparent m-0">
+                    <!--Navbar -->
+                    <nav class="navbar navbar-expand-lg" style="background-color: #6f43c1;">
+                        <a class="navbar-brand d-flex align-items-center fw-500" href="#">
+                            <span class="mr-5 text-white">
+                              FleetHUB
+                            </span>
+                        </a>
+                    </nav>
+
+                    <!--content -->
+                    <div class="container-fluid">
+						<main id="js-page-content" role="main" class="page-content">
+							<div class="row">
+								<div class="col-md-1"></div>
+
+								<div class="col-md-10">
+								    <ol class="breadcrumb page-breadcrumb">
+								        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+								    </ol>
+
+								    <div class="subheader">
+								        <h1 class="subheader-title text-black">
+								            <i class="subheader-icon fal fa-users text-black"></i> Profile
+								            <div class="element-box-content">
+									            <a href="<%= Routes.user_path(@conn, :dashboard)%>" class="btn btn-sm btn-outline-primary btn-pills waves-effect waves-themed" type="button">
+													<i class="fal fa-reply"></i> Back
+												</a>
+									            
+
+									            <%= if @conn.assigns.user.user_type == "2" do %>
+									            	<a href="<%= Routes.teller_path(@conn, :index)%>" class="btn btn-sm btn-info" type="button"> Back</a>
+									            <% end %>
+
+									            <%= if @conn.assigns.user.user_type == "3" do %>
+									            	<a href="<%= Routes.client_path(@conn, :index)%>" class="btn btn-sm btn-info" type="button"> Back</a>
+									            <% end %>
+									        </div>
+								        </h1>								        
+								    </div>
+
+								    <div class="row">
+								        <div class="col-xl-12 sortable-grid ui-sortable">
+								            <div id="panel-1" class="panel panel-sortable" role="widget">
+								                <div class="panel-container show" role="content"><div class="loader"><i class="fal fa-spinner-third fa-spin-4x fs-xxl"></i></div>
+								                    <div class="panel-content">
+								                        <div class="panel-container show">
+								                            <div class="panel-content">
+								                                <div class="card-body pb-0 px-4">
+								                                    <div class="d-flex flex-row pb-3 pt-2  border-top-0 border-left-0 border-right-0">
+								                                        <div class="d-inline-block align-middle mr-3">
+								                                        	<span class="profile-image rounded-circle d-block" style="background-image:url('/images/avatar/1.png'); background-size: cover;"></span>
+								                                        </div>
+
+								                                        <h5 class="mb-0 flex-1 text-dark fw-500">
+								                                            <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%>
+								                                            <small class="m-0 l-h-n">
+								                                            	<%= "#{(@conn.assigns.user.user_role)}"%>
+								                                            </small>
+								                                        </h5>
+								                                    </div>
+
+								                                    <div class="pb-3 pt-2 border-top-0 border-left-0 border-right-0 text-muted">
+								                                    	<div class="table-responsive w3-animate-top">
+															              	<table class="table table-hover table-clean">
+																                <tbody>
+																                  	<tr>
+																	                    <th style="width: 150px">First Name:</th>
+																	                    <td>
+																	                      	<%= "#{(@conn.assigns.user.first_name)}"%>
+																	                    </td>
+																                  	</tr>
+
+																                  	<tr>
+																	                    <th style="width: 150px">Last Name:</th>
+																	                    <td>
+																	                    	<%= "#{(@conn.assigns.user.last_name)}"%>
+																	                    </td>
+																                  	</tr>
+
+																                  	<tr>
+																	                    <th style="width: 150px">Phone:</th>
+																	                    <td>
+																	                    	<%= "#{(@conn.assigns.user.phone)}"%>
+																	                    </td>
+																                  	</tr>
+
+																                  	<tr>
+																	                    <th style="width: 150px">Email:</th>
+																	                    <td>
+																	                      	<%= "#{(@conn.assigns.user.email)}"%>
+																	                    </td>
+																                  	</tr>
+
+																                  	<tr>
+																	                    <th style="width: 150px">User Role:</th>
+																	                    <td>
+																	                    	<%= "#{(@conn.assigns.user.user_role)}"%>
+																	                    </td>
+																                  	</tr>
+
+																                  	<tr>
+																                    	<th style="width: 150px">Created on:</th>
+																                    	<td>
+																                      		<%= "#{(@conn.assigns.user.inserted_at)}"%>
+																                    	</td>
+																                  	</tr>         
+																                </tbody>
+															             	</table>
+															            </div>
+								                                    </div>
+								                                </div>
+								                            </div>
+								                        </div>
+								                    </div>
+								                </div>
+								            </div>
+								        </div>
+								    </div>
+						    	</div>
+
+						    	<div class="col-md-1"></div>
+							</div>
+						</main>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script> 
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/flot/flot.bundle.js") %>"></script> 
+        <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+        <script>
+            $("#js-login-btn").click(function(event)
+            {
+
+                // Fetch form to apply custom Bootstrap validation
+                var form = $("#js-login")
+
+                if (form[0].checkValidity() === false)
+                {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.addClass('was-validated');
+                // Perform ajax submit here...
+            });
+        </script>
+	</body>
+</html>

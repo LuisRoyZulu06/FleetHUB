@@ -68,42 +68,13 @@
                                     <span class="nav-link-text" data-i18n="nav.ui_components">Dashboard</span>
                                 </a>
                             </li>
-
-                            <!-- ###################################### ADMIN-PANEL ############################ -->
-                            <%= if @user.user_role == "driver" do %>
-                                <!-- DRIVER-SIDE-NAV -->
-                            <% end %>
-                            <!-- ############################################################################### -->
-
-                            <!-- ###################################### ADMIN-PANEL ############################ -->
+                            <!--  ADMIN-PANEL  -->
                             <%= if @user.user_role == "ADMIN" do %>
                                 <li>
                                     <a href="<%= Routes.admin_path(@conn, :inbox)%>" title="Issue Logger" data-filter-tags="ui components">
                                         <i class="fal fa-envelope"></i>
                                         <span class="nav-link-text" data-i18n="nav.ui_components">Issue Logger</span>
                                     </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" title="Drivers" data-filter-tags="theme settings">
-                                        <i class="fal fa-user"></i>
-                                        <span class="nav-link-text" data-i18n="nav.theme_settings">Drivers</span>
-                                    </a>
-                                    <ul>
-                                        <li>
-                                            <a href="<%= Routes.driver_path(@conn, :list_drivers)%>" title="Manage Drivers" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-user-circle"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Drivers</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="License Maintainance" data-filter-tags="ui components">
-                                                <i class="fal fa-credit-card"></i>
-                                                <span class="nav-link-text" data-i18n="nav.ui_components">License Maintainance</span>
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </li>
 
                                 <li>
@@ -118,13 +89,20 @@
                                                 <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Cars</span>
                                             </a>
                                         </li>
-                                            <li>
+                                        
+                                        <li>
                                             <a href="<%= Routes.vehicle_path(@conn, :mgt_problem)%>" title="Manage vehicle Problems" data-filter-tags="theme settings layout options">
                                                 <i class="fal fa-cog"></i>
                                                 <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage vehicle Problems</span>
                                             </a>
                                         </li>
-
+                                        
+                                         <li>
+                                            <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="License Maintainance" data-filter-tags="ui components">
+                                                <i class="fal fa-credit-card"></i>
+                                                <span class="nav-link-text" data-i18n="nav.ui_components">License Maintainance</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
 
@@ -192,8 +170,29 @@
                                         </li>
                                     </ul>
                                 </li>
+
+                                <li>
+                                    <a href="#" title="Logs" data-filter-tags="theme settings">
+                                        <i class="fal fa-table"></i>
+                                        <span class="nav-link-text" data-i18n="nav.theme_settings">Logs</span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
+                                                <i class="fal fa-book"></i>
+                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Activity Logs</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="<%= Routes.notifications_path(@conn, :email_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
+                                                <i class="fal fa-envelope"></i>
+                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Email Logs</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             <% end %>
-                            <!-- ############################################################################### -->
 
                         </ul>
                         <div class="filter-message js-filter-message bg-success-600"></div>
@@ -203,7 +202,6 @@
                 <!---------------------------------------------------------------------->
 
                 <div class="page-content-wrapper">
-                    <!---------------------------------------------------------------------Page Header -->
                     <header class="page-header" role="banner">
                         <!-- we need this logo when user switches to nav-function-top -->
                         <div class="page-logo">
@@ -237,77 +235,74 @@
                                 <i class="ni ni-menu"></i>
                             </a>
                         </div>
+
                         <div class="ml-auto d-flex">
-                        <span colspan="7" class="pt-3 pb-2 pl-3 pr-3 text-center">
-                            <div class="js-get-date h5 mb-2"></div>
-                        </span>
-
-                        <%#   <!-- app settings -->
-                            <div class="hidden-md-down">
-                            <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-settings">
-                                <i class="fal fa-cog"></i>
-                            </a>
-                        </div>
-                            <!-------------------> %>
-
-
-                            <!-- ######################################################## APP USER MENU ################################## -->
+                            <!-- /Settings-->
                             <div>
-                                <a href="#" data-toggle="dropdown" title="user" class="header-icon d-flex align-items-center justify-content-center ml-2">
-                                <%= if @user.user_role == "admin" do %>
-                                    <img class="profile-image rounded-circle" alt="App user" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
-                                <% end %>
-                                <%= if @user.user_role == "driver" do %>
-                                    <img class="profile-image rounded-circle" alt="App user" src="<%= Routes.static_path(@conn, "/images/avatar/6.png") %>">
-                                <% end %>    
+                                <a href="#" class="header-icon" data-toggle="dropdown" title="My Apps">
+                                    <i class="fal fa-cog"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
                                     <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
                                         <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
-                                            <span class="mr-2">
-                                            <%= if @user.user_role == "admin" do %>
-                                                <img class="profile-image rounded-circle" alt="App user" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
-                                            <% end %>
-                                            <%= if @user.user_role == "driver" do %>
-                                                <img class="profile-image rounded-circle" alt="App user" src="<%= Routes.static_path(@conn, "/images/avatar/6.png") %>">
-                                            <% end %>
-                                            </span>
                                             <div class="info-card-text">
-                                                <div class="fs-lg text-truncate text-truncate-lg"><%= "#{String.capitalize(@conn.assigns.user.first_name)}"%> | FleetHUB
-                                                </div>
-                                                <span class="text-truncate text-truncate-md opacity-80">
-                                                <%= "#{String.capitalize(@conn.assigns.user.user_role)}"%>
-                                                </span>
+                                                Configuarations
                                             </div>
                                         </div>
                                     </div>
                                     <div class="dropdown-divider m-0"></div>
                                     <div class="dropdown-divider m-0"></div>
-                                    <a href="#" class="dropdown-item" data-action="app-fullscreen">
-                                        <span data-i18n="drpdwn.fullscreen">Fullscreen</span>
-                                        <i class="float-right text-muted fw-n">F11</i>
-                                    </a>
-                                    <div class="dropdown-divider m-0"></div>
-                                    <a class="dropdown-item fw-500 pt-3 pb-3" href="#">
-                                        <span data-i18n="drpdwn.page-logout">Profile</span>
-                                    </a>
 
+                                    <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_pwd_change)%>">
+                                        <span data-i18n="drpdwn.page-change-password">
+                                            <i class="fal fa-window-alt"></i>
+                                            Change Password
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- /Profile dropdown-->
+                            <div>
+                                <a href="#" data-toggle="dropdown" title="FleetHUB User" class="header-icon d-flex align-items-center justify-content-center ml-2">
+                                    <img class="profile-image rounded-circle" alt="FleetHUB User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                                    <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                                        <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                                            <span class="mr-2">
+                                                <img class="profile-image rounded-circle" alt="Proxy User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+                                            </span>
+                                            <div class="info-card-text">
+                                                <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleetHUB
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider m-0"></div>
+                                    <div class="dropdown-divider m-0"></div>
+
+                                    <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_profile)%>">
+                                        <span data-i18n="drpdwn.page-change-password">
+                                            <i class="fal fa-user"></i>
+                                            My Profile
+                                        </span>
+                                    </a>
                                     <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.session_path(@conn, :signout)%>">
-                                        <span data-i18n="drpdwn.page-logout">Logout</span>
+                                        <span data-i18n="drpdwn.page-change-password">
+                                            <i class="fal fa-sign-out"></i>
+                                            Logout
+                                        </span>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </header>
-                    <!------------------------------------------------------------------------------------>
 
 
-                    <!-------------------------------------------------------------------- Page Content -->
+                    <!---- Page Content -->
                     <%= render @view_module, @view_template, assigns %>
-                    <!------------------------------------------------------------------------------------>
 
-
-                    <!-------------------------------------------------------------------- Page Footer -->
+                    <!---- Page Footer -->
                     <footer class="page-footer" role="contentinfo">
                         <div class="d-flex align-items-center flex-1 text-muted">
                             <span class="hidden-md-down fw-700"><%= Timex.today.year %> © FleetHub Powered By&nbsp;
@@ -317,7 +312,6 @@
                             </span>
                         </div>
                     </footer>
-                    <!----------------------------------------------------------------------------------->
                 </div>
             </div>
         </div>
