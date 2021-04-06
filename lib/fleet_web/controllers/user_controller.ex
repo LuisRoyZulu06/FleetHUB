@@ -373,6 +373,70 @@ defmodule FleetWeb.UserController do
     render(conn, "user_profile.html")
   end
 
+  def update_user(conn, %{"id" => id} = params) do
+    system_user = Accounts.get_user!(id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
+    |> Ecto.Multi.run(:userlogs, fn _run, %{system_user: system_user} ->
+      activity = "FleetHUB user updated with ID \"#{system_user.id}\""
+
+      userlogs = %{
+        user_id: conn.assigns.user.id,
+        activity: activity
+      }
+
+      UserLogs.changeset(%UserLogs{}, userlogs)
+      |> Repo.insert()
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
+        conn
+        |> put_flash(:info, "User updated successfully.")
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+        conn
+        |> put_flash(:error, reason)
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+    end
+  end
+
+  def deactivate_account(conn, %{"id" => id} = params) do
+    system_user = Accounts.get_user!(id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
+    |> Ecto.Multi.run(:userlogs, fn _run, %{system_user: system_user} ->
+      activity = "User account deactivated with ID \"#{system_user.id}\""
+
+      userlogs = %{
+        user_id: conn.assigns.user.id,
+        activity: activity
+      }
+
+      UserLogs.changeset(%UserLogs{}, userlogs)
+      |> Repo.insert()
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
+        conn
+        |> put_flash(:info, "FleetHUB system user account deactivated :-) ")
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+
+      {:error, failed_operation, failed_value, changes_so_far} ->
+        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+        conn
+        |> put_flash(:error, reason)
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+    end
+  end
+
   def user_pwd_change(conn, _params) do
     render(conn, "profile_change_pwd.html")
   end
@@ -419,6 +483,12 @@ defmodule FleetWeb.UserController do
     #     |> put_flash(:error, "Password changed with errors")
     #     |> redirect(to: Routes.user_path(conn, :new_password))
   end
+
+
+
+
+
+
 
   # ------------------ Password Reset ---------------------
   def new_password(conn, _params) do
@@ -593,7 +663,6 @@ defmodule FleetWeb.UserController do
     end
   end
   # ------------------ / password reset -------------------
-
   def traverse_errors(errors) do
     for {key, {msg, _opts}} <- errors, do: "#{key} #{msg}"
   end
@@ -675,38 +744,6 @@ defmodule FleetWeb.UserController do
     render(conn, "edit_user.html", system_users: system_users, changeset: changeset)
   end
 
-  def update_user(conn, %{"id" => id} = params) do
-    system_user = Accounts.get_user!(id)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
-    |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
-      activity = "FleetHUB user updated with ID \"#{system_user.id}\""
-
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
-
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system user updated successfully :-) ")
-        |> redirect(to: Routes.user_path(conn, :user_mgt))
-
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
-
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :user_mgt))
-    end
-  end
-
   def delete_user(conn, %{"id" => id}) do
     system_user = Accounts.get_user!(id)
 
@@ -748,10 +785,9 @@ defmodule FleetWeb.UserController do
 
   def deactivate_user_account(conn, %{"id" => id} = params) do
     system_user = Accounts.get_user!(id)
-
     Ecto.Multi.new()
     |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
-    |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
+    |> Ecto.Multi.run(:userlogs, fn _run, %{system_user: system_user} ->
       activity = "FleetHUB user account deactivated with ID \"#{system_user.id}\""
 
       userlogs = %{
@@ -767,6 +803,38 @@ defmodule FleetWeb.UserController do
       {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
         conn
         |> put_flash(:info, "FleetHUB system user account deactivated :-) ")
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+        conn
+        |> put_flash(:error, reason)
+        |> redirect(to: Routes.user_path(conn, :user_mgt))
+    end
+  end
+
+  def activate_user_account(conn, %{"id" => id} = params) do
+    system_user = Accounts.get_user!(id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
+    |> Ecto.Multi.run(:userlogs, fn _run, %{system_user: system_user} ->
+      activity = "FleetHUB user account activated with ID \"#{system_user.id}\""
+
+      userlogs = %{
+        user_id: conn.assigns.user.id,
+        activity: activity
+      }
+
+      UserLogs.changeset(%UserLogs{}, userlogs)
+      |> Repo.insert()
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
+        conn
+        |> put_flash(:info, "FleetHUB system user account activated :-) ")
         |> redirect(to: Routes.user_path(conn, :user_mgt))
 
       {:error, _failed_operation, failed_value, _changes_so_far} ->
@@ -783,140 +851,77 @@ defmodule FleetWeb.UserController do
     render(conn, "view_user_details.html", view_users: view_users )
   end
 
-  def dismissed_users(conn, _params) do
-    dismissed_users = Accounts.list_tbl_users()
-    render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
-  end
-
-  def activate_user_account(conn, %{"id" => id} = params) do
-    system_user = Accounts.get_user!(id)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
-    |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
-      activity = "FleetHUB user account activated with ID \"#{system_user.id}\""
-
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
-
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system user account activated :-) ")
-        |> redirect(to: Routes.user_path(conn, :deactivated_acc))
-
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
-
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :deactivated_acc))
-    end
-  end
-
-  def deactivate_account(conn, %{"id" => id} = params) do
-    system_user = Accounts.get_user!(id)
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:system_user, User.changeset(system_user, params))
-    |> Ecto.Multi.run(:userlogs, fn %{system_user: system_user} ->
-      activity = "FleetHUB user account deactivated with ID \"#{system_user.id}\""
-
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
-
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{system_user: system_user, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system user account deactivated :-) ")
-        |> redirect(to: Routes.user_path(conn, :user_mgt))
-
-      {:error, failed_operation, failed_value, changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
-
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :user_mgt))
-    end
-  end
+  # def dismissed_users(conn, _params) do
+  #   dismissed_users = Accounts.list_tbl_users()
+  #   render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
+  # end
 
 
-  def activate_user_on_leave(conn, %{"id" => id} = params) do
-    users_on_leaves = Accounts.get_user!(id)
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:users_on_leaves, User.changeset(users_on_leaves, params))
-    |> Ecto.Multi.run(:userlogs, fn %{users_on_leaves: users_on_leaves} ->
-      activity = "User Account on leave activated with ID \"#{users_on_leaves.id}\""
+  # def activate_user_on_leave(conn, %{"id" => id} = params) do
+  #   users_on_leaves = Accounts.get_user!(id)
 
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.update(:users_on_leaves, User.changeset(users_on_leaves, params))
+  #   |> Ecto.Multi.run(:userlogs, fn %{users_on_leaves: users_on_leaves} ->
+  #     activity = "User Account on leave activated with ID \"#{users_on_leaves.id}\""
 
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{users_on_leaves: users_on_leaves, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system leave account activated :-) ")
-        |> redirect(to: Routes.user_path(conn, :users_on_leave))
+  #     userlogs = %{
+  #       user_id: conn.assigns.user.id,
+  #       activity: activity
+  #     }
 
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+  #     UserLogs.changeset(%UserLogs{}, userlogs)
+  #     |> Repo.insert()
+  #   end)
+  #   |> Repo.transaction()
+  #   |> case do
+  #     {:ok, %{users_on_leaves: users_on_leaves, userlogs: _userlogs}} ->
+  #       conn
+  #       |> put_flash(:info, "FleetHUB system leave account activated :-) ")
+  #       |> redirect(to: Routes.user_path(conn, :users_on_leave))
 
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :users_on_leave))
-    end
-  end
+  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
+  #       reason = UserController.traverse_errors(failed_value.errors) |> List.first()
 
-  def activate_suspended_user(conn, %{"id" => id} = params) do
-    suspended_user = Accounts.get_user!(id)
+  #       conn
+  #       |> put_flash(:error, reason)
+  #       |> redirect(to: Routes.user_path(conn, :users_on_leave))
+  #   end
+  # end
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:suspended_user, User.changeset(suspended_user, params))
-    |> Ecto.Multi.run(:userlogs, fn %{suspended_user: suspended_user} ->
-      activity = "Suspended account activated with ID \"#{suspended_user.id}\""
+  # def activate_suspended_user(conn, %{"id" => id} = params) do
+  #   suspended_user = Accounts.get_user!(id)
 
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.update(:suspended_user, User.changeset(suspended_user, params))
+  #   |> Ecto.Multi.run(:userlogs, fn %{suspended_user: suspended_user} ->
+  #     activity = "Suspended account activated with ID \"#{suspended_user.id}\""
 
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{suspended_user: suspended_user, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system leave account activated :-) ")
-        |> put_flash(:info, "FleetHUB system suspended account activated :-) ")
-        |> redirect(to: Routes.user_path(conn, :suspended_users))
+  #     userlogs = %{
+  #       user_id: conn.assigns.user.id,
+  #       activity: activity
+  #     }
 
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+  #     UserLogs.changeset(%UserLogs{}, userlogs)
+  #     |> Repo.insert()
+  #   end)
+  #   |> Repo.transaction()
+  #   |> case do
+  #     {:ok, %{suspended_user: suspended_user, userlogs: _userlogs}} ->
+  #       conn
+  #       |> put_flash(:info, "FleetHUB system leave account activated :-) ")
+  #       |> put_flash(:info, "FleetHUB system suspended account activated :-) ")
+  #       |> redirect(to: Routes.user_path(conn, :suspended_users))
 
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :suspended_users))
-    end
-  end
+  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
+  #       reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+
+  #       conn
+  #       |> put_flash(:error, reason)
+  #       |> redirect(to: Routes.user_path(conn, :suspended_users))
+  #   end
+  # end
 
   # ------------------------  License type ---------------------------------
   def mgt_licences(conn, _params) do
@@ -977,92 +982,91 @@ defmodule FleetWeb.UserController do
     render(conn, "user_logs.html", logs: logs)
   end
 
-  def users_on_leave(conn, params) do
-    users_on_leave = Accounts.list_tbl_users()
-    render(conn, "users_on_leave.html", users_on_leave: users_on_leave)
-  end
+  # def users_on_leave(conn, params) do
+  #   users_on_leave = Accounts.list_tbl_users()
+  #   render(conn, "users_on_leave.html", users_on_leave: users_on_leave)
+  # end
 
-  def suspended_users(conn, params) do
-    suspended_users = Accounts.list_tbl_users()
-    render(conn, "suspended_users.html", suspended_users: suspended_users)
-  end
+  # def suspended_users(conn, params) do
+  #   suspended_users = Accounts.list_tbl_users()
+  #   render(conn, "suspended_users.html", suspended_users: suspended_users)
+  # end
 # -------------------------- Dismissed Account ------------------------------------------
 
-  def dismissed_users(conn, _params) do
-    dismissed_users = Accounts.list_tbl_users()
-    render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
-  end
+  # def dismissed_users(conn, _params) do
+  #   dismissed_users = Accounts.list_tbl_users()
+  #   render(conn, "dismissed_users.html", dismissed_users: dismissed_users)
+  # end
 
-  def activate_dismissed_user(conn, %{"id" => id} = params) do
-    dismissed_users = Accounts.get_user!(id)
+  # def activate_dismissed_user(conn, %{"id" => id} = params) do
+  #   dismissed_users = Accounts.get_user!(id)
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:dismissed_users, User.changeset(dismissed_users, params))
-    |> Ecto.Multi.run(:userlogs, fn %{dismissed_users: dismissed_users} ->
-      activity = "FleetHUB dismissed account activated with ID \"#{dismissed_users.id}\""
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.update(:dismissed_users, User.changeset(dismissed_users, params))
+  #   |> Ecto.Multi.run(:userlogs, fn %{dismissed_users: dismissed_users} ->
+  #     activity = "FleetHUB dismissed account activated with ID \"#{dismissed_users.id}\""
 
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
+  #     userlogs = %{
+  #       user_id: conn.assigns.user.id,
+  #       activity: activity
+  #     }
 
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{dismissed_users: dismissed_users, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system dismissed account activated :-) ")
-        |> redirect(to: Routes.user_path(conn, :dismissed_users))
+  #     UserLogs.changeset(%UserLogs{}, userlogs)
+  #     |> Repo.insert()
+  #   end)
+  #   |> Repo.transaction()
+  #   |> case do
+  #     {:ok, %{dismissed_users: dismissed_users, userlogs: _userlogs}} ->
+  #       conn
+  #       |> put_flash(:info, "FleetHUB system dismissed account activated :-) ")
+  #       |> redirect(to: Routes.user_path(conn, :dismissed_users))
 
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
+  #       reason = UserController.traverse_errors(failed_value.errors) |> List.first()
 
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :dismissed_users))
-    end
-  end
+  #       conn
+  #       |> put_flash(:error, reason)
+  #       |> redirect(to: Routes.user_path(conn, :dismissed_users))
+  #   end
+  # end
 
   # ----------------------- Retired Account  --------------------------------------------------------
 
-  def retired_users(conn, _params) do
-    retired_users = Accounts.list_tbl_users()
-    render(conn, "retired_users.html", retired_users: retired_users)
-  end
+  # def retired_users(conn, _params) do
+  #   retired_users = Accounts.list_tbl_users()
+  #   render(conn, "retired_users.html", retired_users: retired_users)
+  # end
 
 
-  def activate_retired_user(conn, %{"id" => id} = params) do
-    retired_users = Accounts.get_user!(id)
+  # def activate_retired_user(conn, %{"id" => id} = params) do
+  #   retired_users = Accounts.get_user!(id)
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:retired_users, User.changeset(retired_users, params))
-    |> Ecto.Multi.run(:userlogs, fn %{retired_users: retired_users} ->
-      activity = "FleetHUB retired account activated with ID \"#{retired_users.id}\""
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.update(:retired_users, User.changeset(retired_users, params))
+  #   |> Ecto.Multi.run(:userlogs, fn %{retired_users: retired_users} ->
+  #     activity = "FleetHUB retired account activated with ID \"#{retired_users.id}\""
 
-      userlogs = %{
-        user_id: conn.assigns.user.id,
-        activity: activity
-      }
+  #     userlogs = %{
+  #       user_id: conn.assigns.user.id,
+  #       activity: activity
+  #     }
 
-      UserLogs.changeset(%UserLogs{}, userlogs)
-      |> Repo.insert()
-    end)
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{retired_users: retired_users, userlogs: _userlogs}} ->
-        conn
-        |> put_flash(:info, "FleetHUB system retired account activated :-) ")
-        |> redirect(to: Routes.user_path(conn, :retired_users))
+  #     UserLogs.changeset(%UserLogs{}, userlogs)
+  #     |> Repo.insert()
+  #   end)
+  #   |> Repo.transaction()
+  #   |> case do
+  #     {:ok, %{retired_users: retired_users, userlogs: _userlogs}} ->
+  #       conn
+  #       |> put_flash(:info, "FleetHUB system retired account activated :-) ")
+  #       |> redirect(to: Routes.user_path(conn, :retired_users))
 
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        reason = UserController.traverse_errors(failed_value.errors) |> List.first()
+  #     {:error, _failed_operation, failed_value, _changes_so_far} ->
+  #       reason = UserController.traverse_errors(failed_value.errors) |> List.first()
 
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: Routes.user_path(conn, :retired_users))
-    end
-  end
-
+  #       conn
+  #       |> put_flash(:error, reason)
+  #       |> redirect(to: Routes.user_path(conn, :retired_users))
+  #   end
+  # end
 end

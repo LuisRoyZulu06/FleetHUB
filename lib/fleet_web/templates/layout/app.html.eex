@@ -1,443 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>FleetHub</title>
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/loader.css") %>">
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/custom.css") %>">
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/vendors.bundle.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/app.bundle.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/fa-solid.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/fa-brands.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/default.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/statistics/c3/c3.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/statistics/chartjs/chartjs.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/formplugins/smartwizard/smartwizard.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/datagrid/datatables/datatables.bundle.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/fa-solid.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/fullcalendar/fullcalendar.bundle.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/notifications/sweetalert2/sweetalert2.bundle.css") %>" />
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="description" content="Basic">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Remove Tap Highlight on Windows Phone IE -->
+        <meta name="msapplication-tap-highlight" content="no">
+        <!-- Call App Mode on ios devices -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+        <meta name="csrf-token"  csrf-param="_csrf_token" csrf-header="x-csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>"/>      
+        <title>FleetHub</title>
 
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/reactions/reactions.css") %>" />
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/jqvmap/jqvmap.bundle.css") %>" />
+        <!-- Base CSS -->
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/loader.css") %>">
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/custom.css") %>">
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/app.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/vendors.bundle.css") %>" />
+        
+        <!-- Alternative CSS -->
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/default.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/theme-demo.css") %>" />
+        <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/img/favicon/apple-touch-icon.png") %>" />
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/favicon-32x32.png") %>" />
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/safari-pinned-tab.svg") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/statistics/chartjs/chartjs.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/formplugins/smartwizard/smartwizard.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/datagrid/datatables/datatables.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/fullcalendar/fullcalendar.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/notifications/sweetalert2/sweetalert2.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/reactions/reactions.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/jqvmap/jqvmap.bundle.css") %>" />
+    </head>
 
-    <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/theme-demo.css") %>" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/img/favicon/apple-touch-icon.png") %>" />
-    <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/favicon-32x32.png") %>" />
-    <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/safari-pinned-tab.svg") %>" />
-    <link rel="mask-icon" color="#5bbad5" href="<%= Routes.static_path(@conn, "/img/favicon/safari-pinned-tab.svg") %>" color="#5bbad5"/>
-  </head>
-
-  <body>
-    <main role="main">
-        <div class="page-wrapper">
-            <div class="page-inner">
-                <!-------------------------------------------------------- Left Aside -->
-                <aside class="page-sidebar">
-                    <div class="page-logo">
-                        <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
-                            <img src="<%= Routes.static_path(@conn, "/images/logos/3.png") %>" alt="Zambia Railways Ltd Logo" aria-roledescription="logo">
-                            <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
-                            <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
-                        </a>
-                    </div>
-
-                    <!---------------------------------------------Primary Navigation -->
-                    <nav id="js-primary-nav" class="primary-nav" role="navigation">
-                        <div class="nav-filter">
-                            <div class="position-relative">
-                                <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
-                                <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
-                                    <i class="fal fa-chevron-up"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="info-card">
-                            <img src="<%= Routes.static_path(@conn, "/images/card-backgrounds/card-cover-3.png") %>" class="cover" alt="cover">
-                            <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
-                            <i class="fal fa-angle-down"></i>
-                            </a>
-                        </div>
-                        <ul id="js-nav-menu" class="nav-menu">
-                            <li class="nav-title">FleetHUB</li>
-                            <li>
-                                <a href="<%= Routes.user_path(@conn, :dashboard)%>" title="Dashboard" data-filter-tags="ui components">
-                                    <i class="fal fa-home"></i>
-                                    <span class="nav-link-text" data-i18n="nav.ui_components">Dashboard</span>
-                                </a>
-                            </li>
-                            <!--  ADMIN-PANEL  -->
-                            <%= if @user.user_role == "ADMIN" do %>
-                                <li>
-                                    <a href="<%= Routes.admin_path(@conn, :inbox)%>" title="Issue Logger" data-filter-tags="ui components">
-                                        <i class="fal fa-envelope"></i>
-                                        <span class="nav-link-text" data-i18n="nav.ui_components">Issue Logger</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" title="Vehicles" data-filter-tags="theme settings">
-                                        <i class="fal fa-bus"></i>
-                                        <span class="nav-link-text" data-i18n="nav.theme_settings">Vehicles</span>
-                                    </a>
-                                    <ul>
-                                        <li>
-                                            <a href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>" title="Manage Vehicles" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-truck"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Cars</span>
-                                            </a>
-                                        </li>
-                                        
-                                        <li>
-                                            <a href="<%= Routes.vehicle_path(@conn, :mgt_problem)%>" title="Manage vehicle Problems" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-cog"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage vehicle Problems</span>
-                                            </a>
-                                        </li>
-                                        
-                                         <li>
-                                            <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="License Maintainance" data-filter-tags="ui components">
-                                                <i class="fal fa-credit-card"></i>
-                                                <span class="nav-link-text" data-i18n="nav.ui_components">License Maintainance</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <a href="<%= Routes.admin_path(@conn, :list_vendors)%>" title="Contacts" data-filter-tags="ui components">
-                                        <i class="fal fa-book"></i>
-                                        <span class="nav-link-text" data-i18n="nav.ui_components">Vendors</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="<%= Routes.admin_path(@conn, :fleet_tracking)%>" title="Fleet Tracking" data-filter-tags="ui components">
-                                        <i class="fal fa-globe"></i>
-                                        <span class="nav-link-text" data-i18n="nav.ui_components">Fleet Tracking</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" title="System Users" data-filter-tags="theme settings">
-                                        <i class="fal fa-cog"></i>
-                                        <span class="nav-link-text" data-i18n="nav.theme_settings">System Users</span>
-                                    </a>
-                                    <ul>
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :user_mgt)%>" title="Manage Active Users" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-user"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Users</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :users_on_leave)%>" title="Manage Users on Leave" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-info"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Users on Leave</span>
-                                            </a>
-                                        </li>                                    
-
-                                            <li>
-                                            <a href="<%= Routes.user_path(@conn, :suspended_users)%>" title="Manage Suspended Users" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-ban"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Suspended Users</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :dismissed_users)%>" title="Manage Dismissed Users" data-filter-tags="theme settings layout options">
-
-                                                <i class="fal fa-times"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Dismissed Users</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :retired_users)%>" title="Manage Retired Users" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-times"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Retired Users</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-file"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">User Logs</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <a href="#" title="Logs" data-filter-tags="theme settings">
-                                        <i class="fal fa-table"></i>
-                                        <span class="nav-link-text" data-i18n="nav.theme_settings">Logs</span>
-                                    </a>
-                                    <ul>
-                                        <li>
-                                            <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-book"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Activity Logs</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="<%= Routes.notifications_path(@conn, :email_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
-                                                <i class="fal fa-envelope"></i>
-                                                <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Email Logs</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            <% end %>
-
-                        </ul>
-                        <div class="filter-message js-filter-message bg-success-600"></div>
-                    </nav>
-                    <!------------------------------------------------------------------>
-                </aside>
-                <!---------------------------------------------------------------------->
-
-                <div class="page-content-wrapper">
-                    <header class="page-header" role="banner">
-                        <!-- we need this logo when user switches to nav-function-top -->
+    <body>
+        <main role="main">
+            <div class="page-wrapper">
+                <div class="page-inner">
+                
+                    <aside class="page-sidebar">
                         <div class="page-logo">
                             <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
-                                <img src="<%= Routes.static_path(@conn, "/images/logos/2.png") %>" alt="ProBASE Logo" aria-roledescription="logo">
+                                <img src="<%= Routes.static_path(@conn, "/images/logos/3.png") %>" alt="Zambia Railways Ltd Logo" aria-roledescription="logo">
                                 <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
                                 <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
                             </a>
                         </div>
-                        <!-- DOC: nav menu layout change shortcut -->
-                        <div class="hidden-md-down dropdown-icon-menu position-relative">
-                            <a href="#" class="header-btn btn js-waves-off" data-action="toggle" data-class="nav-function-hidden" title="Hide Navigation">
-                                <i class="ni ni-menu"></i>
-                            </a>
-                            <ul>
+
+                        <!---- Primary Navigation -->
+                        <nav id="js-primary-nav" class="primary-nav" role="navigation">
+                            <div class="nav-filter">
+                                <div class="position-relative">
+                                    <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
+                                    <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
+                                        <i class="fal fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <img src="<%= Routes.static_path(@conn, "/images/card-backgrounds/card-cover-3.png") %>" class="cover" alt="cover">
+                                
+                                <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
+                                    <i class="fal fa-angle-down"></i>
+                                </a>
+                            </div>
+
+                            <ul id="js-nav-menu" class="nav-menu">
+                                <li class="nav-title">FleetHUB</li>
+
                                 <li>
-                                    <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" title="Minify Navigation">
-                                        <i class="ni ni-minify-nav"></i>
+                                    <a href="<%= Routes.user_path(@conn, :dashboard)%>" title="Dashboard" data-filter-tags="ui components">
+                                        <i class="fal fa-home"></i>
+                                        <span class="nav-link-text" data-i18n="nav.ui_components">Dashboard</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" title="Lock Navigation">
-                                        <i class="ni ni-lock-nav"></i>
-                                    </a>
-                                </li>
+
+                                <!--  ADMIN-PANEL  -->
+                                <%= if @user.user_role == "ADMIN" do %>
+                                    <li>
+                                        <a href="<%= Routes.admin_path(@conn, :inbox)%>" title="Issue Logger" data-filter-tags="ui components">
+                                            <i class="fal fa-envelope"></i>
+                                            <span class="nav-link-text" data-i18n="nav.ui_components">Issue Logger</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" title="Vehicles" data-filter-tags="theme settings">
+                                            <i class="fal fa-bus"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings">Vehicles</span>
+                                        </a>
+                                        <ul>
+                                            <li>
+                                                <a href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>" title="Manage Vehicles" data-filter-tags="theme settings layout options">
+                                                    <i class="fal fa-truck"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Cars</span>
+                                                </a>
+                                            </li>
+                                            
+                                            <li>
+                                                <a href="<%= Routes.vehicle_path(@conn, :mgt_problem)%>" title="Manage vehicle Problems" data-filter-tags="theme settings layout options">
+                                                    <i class="fal fa-cog"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage vehicle Problems</span>
+                                                </a>
+                                            </li>
+                                            
+                                            <li>
+                                                <a href="<%= Routes.user_path(@conn, :mgt_licences)%>" title="License Maintainance" data-filter-tags="ui components">
+                                                    <i class="fal fa-credit-card"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.ui_components">License Maintainance</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="<%= Routes.admin_path(@conn, :list_vendors)%>" title="Contacts" data-filter-tags="ui components">
+                                            <i class="fal fa-book"></i>
+                                            <span class="nav-link-text" data-i18n="nav.ui_components">Vendors</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="<%= Routes.admin_path(@conn, :fleet_tracking)%>" title="Fleet Tracking" data-filter-tags="ui components">
+                                            <i class="fal fa-globe"></i>
+                                            <span class="nav-link-text" data-i18n="nav.ui_components">Fleet Tracking</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" title="System Users" data-filter-tags="theme settings">
+                                            <i class="fal fa-cog"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings">System Users</span>
+                                        </a>
+                                        <ul>
+                                            <li>
+                                                <a href="<%= Routes.user_path(@conn, :user_mgt)%>" title="Manage Active Users" data-filter-tags="theme settings layout options">
+                                                    <i class="fal fa-user"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Users</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" title="Logs" data-filter-tags="theme settings">
+                                            <i class="fal fa-table"></i>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings">Logs</span>
+                                        </a>
+                                        <ul>
+                                            <li>
+                                                <a href="<%= Routes.user_path(@conn, :user_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
+                                                    <i class="fal fa-book"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Activity Logs</span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="<%= Routes.notifications_path(@conn, :email_logs)%>" title="User Logs" data-filter-tags="theme settings layout options">
+                                                    <i class="fal fa-envelope"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Email Logs</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                <% end %>
                             </ul>
-                        </div>
-                        <!-- DOC: mobile button appears during mobile width -->
-                        <div class="hidden-lg-up">
-                            <a href="#" class="header-btn btn press-scale-down" data-action="toggle" data-class="mobile-nav-on">
-                                <i class="ni ni-menu"></i>
-                            </a>
-                        </div>
 
-                        <div class="ml-auto d-flex">
-                            <!-- /Settings-->
-                            <div>
-                                <a href="#" class="header-icon" data-toggle="dropdown" title="My Apps">
-                                    <i class="fal fa-cog"></i>
+                            <div class="filter-message js-filter-message bg-success-600"></div>
+                        </nav>
+                    </aside>
+
+                    <div class="page-content-wrapper">
+                        <header class="page-header" role="banner">
+                            <!-- we need this logo when user switches to nav-function-top -->
+                            <div class="page-logo">
+                                <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                                    <img src="<%= Routes.static_path(@conn, "/images/logos/2.png") %>" alt="ProBASE Logo" aria-roledescription="logo">
+                                    <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+                                    <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
-                                    <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
-                                        <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
-                                            <div class="info-card-text">
-                                                Configuarations
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-divider m-0"></div>
-                                    <div class="dropdown-divider m-0"></div>
-
-                                    <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_pwd_change)%>">
-                                        <span data-i18n="drpdwn.page-change-password">
-                                            <i class="fal fa-window-alt"></i>
-                                            Change Password
-                                        </span>
-                                    </a>
-                                </div>
                             </div>
 
-                            <!-- /Profile dropdown-->
-                            <div>
-                                <a href="#" data-toggle="dropdown" title="FleetHUB User" class="header-icon d-flex align-items-center justify-content-center ml-2">
-                                    <img class="profile-image rounded-circle" alt="FleetHUB User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+                            <!-- DOC: nav menu layout change shortcut -->
+                            <div class="hidden-md-down dropdown-icon-menu position-relative">
+                                <a href="#" class="header-btn btn js-waves-off" data-action="toggle" data-class="nav-function-hidden" title="Hide Navigation">
+                                    <i class="ni ni-menu"></i>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
-                                    <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
-                                        <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
-                                            <span class="mr-2">
-                                                <img class="profile-image rounded-circle" alt="Proxy User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" title="Minify Navigation">
+                                            <i class="ni ni-minify-nav"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" title="Lock Navigation">
+                                            <i class="ni ni-lock-nav"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- DOC: mobile button appears during mobile width -->
+                            <div class="hidden-lg-up">
+                                <a href="#" class="header-btn btn press-scale-down" data-action="toggle" data-class="mobile-nav-on">
+                                    <i class="ni ni-menu"></i>
+                                </a>
+                            </div>
+
+                            <div class="ml-auto d-flex">
+                                <!-- /Settings-->
+                                <div>
+                                    <a href="#" class="header-icon" data-toggle="dropdown" title="My Apps">
+                                        <i class="fal fa-cog"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                                        <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                                            <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                                                <div class="info-card-text">
+                                                    Configuarations
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-divider m-0"></div>
+                                        <div class="dropdown-divider m-0"></div>
+
+                                        <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_pwd_change)%>">
+                                            <span data-i18n="drpdwn.page-change-password">
+                                                <i class="fal fa-window-alt"></i>
+                                                Change Password
                                             </span>
-                                            <div class="info-card-text">
-                                                <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleetHUB
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- /Profile dropdown-->
+                                <div>
+                                    <a href="#" data-toggle="dropdown" title="FleetHUB User" class="header-icon d-flex align-items-center justify-content-center ml-2">
+                                        <img class="profile-image rounded-circle" alt="FleetHUB User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                                        <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                                            <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                                                <span class="mr-2">
+                                                    <img class="profile-image rounded-circle" alt="Proxy User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+                                                </span>
+                                                <div class="info-card-text">
+                                                    <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleetHUB
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="dropdown-divider m-0"></div>
-                                    <div class="dropdown-divider m-0"></div>
+                                        <div class="dropdown-divider m-0"></div>
+                                        <div class="dropdown-divider m-0"></div>
 
-                                    <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_profile)%>">
-                                        <span data-i18n="drpdwn.page-change-password">
-                                            <i class="fal fa-user"></i>
-                                            My Profile
-                                        </span>
-                                    </a>
-                                    <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.session_path(@conn, :signout)%>">
-                                        <span data-i18n="drpdwn.page-change-password">
-                                            <i class="fal fa-sign-out"></i>
-                                            Logout
-                                        </span>
-                                    </a>
+                                        <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_profile)%>">
+                                            <span data-i18n="drpdwn.page-change-password">
+                                                <i class="fal fa-user"></i>
+                                                My Profile
+                                            </span>
+                                        </a>
+                                        <a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.session_path(@conn, :signout)%>">
+                                            <span data-i18n="drpdwn.page-change-password">
+                                                <i class="fal fa-sign-out"></i>
+                                                Logout
+                                            </span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </header>
+                        </header>
 
 
-                    <!---- Page Content -->
-                    <%= render @view_module, @view_template, assigns %>
+                        <!---- Page Content -->
+                        <main id="js-page-content" role="main" class="page-content">
+                            <%= render @view_module, @view_template, assigns %>
+                        </main>
 
-                    <!---- Page Footer -->
-                    <footer class="page-footer" role="contentinfo">
-                        <div class="d-flex align-items-center flex-1 text-muted">
-                            <span class="hidden-md-down fw-700"><%= Timex.today.year %> © FleetHub Powered By&nbsp;
-                                <a href='http://www.probasegroup.com/' class='text-primary fw-500' title='proBASE' target='_blank'>
-                                    <img class="img-responsive" width="100" alt="proBASE Logo" src="<%= Routes.static_path(@conn, "/images/logos/1.png") %>">
-                                </a>
-                            </span>
-                        </div>
-                    </footer>
+                        <!---- Page Footer -->
+                        <footer class="page-footer" role="contentinfo">
+                            <div class="d-flex align-items-center flex-1 text-muted">
+                                <span class="hidden-md-down fw-700"><%= Timex.today.year %> © FleetHub Powered By&nbsp;
+                                    <a href='http://www.probasegroup.com/' class='text-primary fw-500' title='proBASE' target='_blank'>
+                                        <img class="img-responsive" width="100" alt="proBASE Logo" src="<%= Routes.static_path(@conn, "/images/logos/1.png") %>">
+                                    </a>
+                                </span>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="/js/statistics/peity/peity.bundle.js"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/chartjs/chartjs.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/sparkline/sparkline.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/easypiechart/easypiechart.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.export.js") %>"></script>
+
+        <!-- Datatables -->
+        <script>
+            $(document).ready(function()
+            {
+
+                // initialize datatable
+                $('#dt-basic-example').dataTable(
+                {
+                    responsive: true,
+                    lengthChange: false,
+                    dom:
+                        /*  --- Layout Structure
+                            --- Options
+                            l - length changing input control
+                            f - filtering input
+                            t - The table!
+                            i - Table information summary
+                            p - pagination control
+                            r - processing display element
+                            B - buttons
+                            R - ColReorder
+                            S - Select
+
+                            --- Markup
+                            < and >       - div element
+                            <"class" and >    - div with a class
+                            <"#id" and >    - div with an ID
+                            <"#id.class" and >  - div with an ID and a class
+
+                            --- Further reading
+                            https://datatables.net/reference/option/dom
+                            --------------------------------------
+                            */
+                        "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                    buttons: [
+                        /*{
+                            extend:    'colvis',
+                            text:      'Column Visibility',
+                            titleAttr: 'Col visibility',
+                            className: 'mr-sm-3'
+                        },*/
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'PDF',
+                            titleAttr: 'Generate PDF',
+                            className: 'btn-outline-danger btn-sm mr-1'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Excel',
+                            titleAttr: 'Generate Excel',
+                            className: 'btn-outline-success btn-sm mr-1'
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            text: 'CSV',
+                            titleAttr: 'Generate CSV',
+                            className: 'btn-outline-primary btn-sm mr-1'
+                        },
+                        {
+                            extend: 'copyHtml5',
+                            text: 'Copy',
+                            titleAttr: 'Copy to clipboard',
+                            className: 'btn-outline-primary btn-sm mr-1'
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            titleAttr: 'Print Table',
+                            className: 'btn-outline-primary btn-sm'
+                        }
+                    ]
+                });
+
+            });
+        </script>    
+
+        <div class="loader-wrapper-custom">
+            <div style="position:absolute; top: 50%; left: 50%; width:30em; height:18em; margin-top: -9em; margin-left: -15em;">
+                <img class="image" src="<%= Routes.static_path(@conn, "/images/load.png")%>" alt="" style="height: 70px; width: 70px;" class="center">
+                <br>
+                <div class="wrapper" style="margin-top:8em;">
+                    <h4>
+                        Please wait. Loading...
+                    </h4>
                 </div>
             </div>
         </div>
-        <!--------------------------------------------------------------------------------------------------------------->
-    </main>
 
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
-    <%# <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> %>
-    
-    <script src="/js/statistics/peity/peity.bundle.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/statistics/c3/c3.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/statistics/d3/d3.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/statistics/chartjs/chartjs.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/statistics/demo-data/demo-c3.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/statistics/sparkline/sparkline.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/statistics/easypiechart/easypiechart.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/formplugins/bootstrap-datepicker/bootstrap-datepicker.j") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.export.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/notifications/sweetalert2/sweetalert2.bundle.js") %>"></script>
-    <script src="<%= Routes.static_path(@conn, "/js/formplugins/inputmask/inputmask.bundle.js") %>"></script>
-    <script>
-        $(document).ready(function()
-        {
-            $(":input").inputmask();
-        });
-    </script>
-
-    <!-- ############################### DATATABLES ##################################### -->
-    <script>
-        $(document).ready(function()
-        {
-
-            // initialize datatable
-            $('#dt-basic-example').dataTable(
-            {
-                responsive: true,
-                lengthChange: false,
-                dom:
-                    /*  --- Layout Structure
-                        --- Options
-                        l - length changing input control
-                        f - filtering input
-                        t - The table!
-                        i - Table information summary
-                        p - pagination control
-                        r - processing display element
-                        B - buttons
-                        R - ColReorder
-                        S - Select
-
-                        --- Markup
-                        < and >       - div element
-                        <"class" and >    - div with a class
-                        <"#id" and >    - div with an ID
-                        <"#id.class" and >  - div with an ID and a class
-
-                        --- Further reading
-                        https://datatables.net/reference/option/dom
-                        --------------------------------------
-                        */
-                    "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-                buttons: [
-                    /*{
-                        extend:    'colvis',
-                        text:      'Column Visibility',
-                        titleAttr: 'Col visibility',
-                        className: 'mr-sm-3'
-                    },*/
-                    {
-                        extend: 'pdfHtml5',
-                        text: 'PDF',
-                        titleAttr: 'Generate PDF',
-                        className: 'btn-outline-danger btn-sm mr-1'
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        text: 'Excel',
-                        titleAttr: 'Generate Excel',
-                        className: 'btn-outline-success btn-sm mr-1'
-                    },
-                    {
-                        extend: 'csvHtml5',
-                        text: 'CSV',
-                        titleAttr: 'Generate CSV',
-                        className: 'btn-outline-primary btn-sm mr-1'
-                    },
-                    {
-                        extend: 'copyHtml5',
-                        text: 'Copy',
-                        titleAttr: 'Copy to clipboard',
-                        className: 'btn-outline-primary btn-sm mr-1'
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        titleAttr: 'Print Table',
-                        className: 'btn-outline-primary btn-sm'
-                    }
-                ]
+        <script>
+            $(window).on("load",function(){
+                $(".loader-wrapper-custom").fadeOut("slow");
             });
+        </script>
 
-        });
-    </script>    
-
-    <div class="loader-wrapper-custom">
-        <div style="position:absolute; top: 50%; left: 50%; width:30em; height:18em; margin-top: -9em; margin-left: -15em;">
-            <img class="image" src="<%= Routes.static_path(@conn, "/images/load.png")%>" alt="" style="height: 70px; width: 70px;" class="center">
-            <br>
-            <div class="wrapper" style="margin-top:8em;">
-                <h4>
-                    Please wait. Loading...
-                </h4>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        $(window).on("load",function(){
-            $(".loader-wrapper-custom").fadeOut("slow");
-        });
-    </script>
-  </body>
+        <script type="text/javascript">
+            /* Activate smart panels */
+            $('#js-page-content').smartPanel();
+        </script>
+    </body>
 </html>

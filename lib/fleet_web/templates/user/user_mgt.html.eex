@@ -71,64 +71,79 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <%= for system_user <- @system_users do %>  
-                                    <%= if system_user.account_status === "1" do %> 
-                                        <tr>
-                                            <td><%= system_user.id %></td>
-                                            <td><%= system_user.first_name %></td>
-                                            <td><%= system_user.last_name %></td>
-                                            <td><%= system_user.email %></td>
-                                            <td><%= system_user.user_role %></td>
-                                            <%= if system_user.account_status === "1" do %>
-                                                <td>Active</td>
-                                                <% else %>
-                                                <td>Deactivated</td>
-                                            <% end %>
-                                            <td>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <button class="btn btn-sm btn-outline-dark btn-pills waves-effect waves-themed">
-                                                                Options
-                                                            </button>
-                                                        </span>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="<%= Routes.user_path(@conn, :view_user_details, id: system_user.id)%>">
-                                                                <i class="fal fa-info"></i>
-                                                                Profile Details
-                                                            </a>
+                                        <%= for system_user <- @system_users do %>   
+                                            <tr>
+                                                <td><%= system_user.id %></td>
+                                                <td><%= system_user.first_name %></td>
+                                                <td><%= system_user.last_name %></td>
+                                                <td><%= system_user.email %></td>
+                                                <td><%= system_user.user_role %></td>
+                                                <%= if system_user.account_status === "1" do %>
+                                                    <td style="font-size: 14px; color: #00cc00;">Active</td>
+                                                    <% else %>
+                                                    <td style="font-size: 14px; color: #ff0000;">Deactivated</td>
+                                                <% end %>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <button class="btn btn-sm btn-outline-dark btn-pills waves-effect waves-themed">
+                                                                    Options
+                                                                </button>
+                                                            </span>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="<%= Routes.user_path(@conn, :view_user_details, id: system_user.id)%>">
+                                                                    <i class="fal fa-info"></i>
+                                                                    Profile Details
+                                                                </a>
 
-                                                            <button type="button" class="dropdown-item" 
-                                                                data-id="<%= system_user.id %>" 
-                                                                data-first_name="<%= system_user.first_name %>" 
-                                                                data-last_name="<%= system_user.last_name %>" 
-                                                                data-sex="<%= system_user.sex %>" 
-                                                                data-phone="<%= system_user.phone %>" 
-                                                                data-email="<%= system_user.email %>" 
-                                                                data-drvrs_license_no="<%= system_user.drvrs_license_no %>" 
-                                                                data-drvrs_license_class="<%= system_user.drvrs_license_class %>" 
-                                                                data-drvrs_license_exp_dt="<%= system_user.drvrs_license_exp_dt %>" 
-                                                                data-user_type="<%= system_user.user_type %>" 
-                                                                data-user_role="<%= system_user.user_role %>" 
-                                                                data-toggle="modal" data-target="#editUser">
-                                                                <i class="fal fa-edit"></i>
-                                                                Edit
-                                                            </button> 
+                                                                <%= if system_user.account_status == "1" do %>
+                                                                    <button type="button" class="dropdown-item" 
+                                                                        data-id="<%= system_user.id %>" 
+                                                                        data-first_name="<%= system_user.first_name %>" 
+                                                                        data-last_name="<%= system_user.last_name %>" 
+                                                                        data-sex="<%= system_user.sex %>" 
+                                                                        data-phone="<%= system_user.phone %>" 
+                                                                        data-email="<%= system_user.email %>" 
+                                                                        data-drvrs_license_no="<%= system_user.drvrs_license_no %>" 
+                                                                        data-drvrs_license_class="<%= system_user.drvrs_license_class %>" 
+                                                                        data-drvrs_license_exp_dt="<%= system_user.drvrs_license_exp_dt %>" 
+                                                                        data-user_type="<%= system_user.user_type %>" 
+                                                                        data-user_role="<%= system_user.user_role %>" 
+                                                                        data-toggle="modal" data-target="#editUser">
+                                                                        <i class="fal fa-edit"></i>
+                                                                        Edit
+                                                                    </button> 
+                                                                <% end %>
 
-                                                            <a class="dropdown-item" 
-                                                                data-id="<%= system_user.id%>" 
-                                                                data-status="<%= system_user.account_status%>" 
-                                                                data-toggle="modal" 
-                                                                data-target="#deactivate_user">
-                                                                Deactive
-                                                            </a>
+                                                                <%= if system_user.account_status === "1" do %>
+                                                                    <a class="dropdown-item" 
+                                                                        data-id="<%= system_user.id%>" 
+                                                                        data-status="<%= system_user.account_status%>" 
+                                                                        data-toggle="modal" 
+                                                                        data-target="#deactivate_user">
+                                                                        <i class="fal fa-ban"></i>
+                                                                        Deactivate Account
+                                                                    </a>
+                                                                <% end %>
+
+                                                                <%= if system_user.account_status != "1" do %>
+                                                                    <a class="dropdown-item" 
+                                                                        data-id="<%= system_user.id%>" 
+                                                                        data-status="<%= system_user.account_status%>" 
+                                                                        data-toggle="modal" 
+                                                                        data-target="#activate_user">
+                                                                        <i class="fal fa-check"></i>
+                                                                        Activate Account
+                                                                    </a>
+                                                                <% end %>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr> 
-                                    <% end %>  
-                                    <% end %>                          
+                                                </td>
+                                            </tr>   
+                                        <% end %>   
+                                    </tbody>                       
                                 </table>
                                 <!-- datatable end -->
                             </div>
@@ -270,7 +285,7 @@
 </div>  
 
 <!-- Edit user -->
-<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -315,7 +330,7 @@
                             <div class="form-group">
                                 <label class="form-label">ID Type</label>
                                 <div class="input-group">
-                                    <select id="idType" class="custom-select form-control" name="id_type" id="id_type">
+                                    <select id="editIdType" class="custom-select form-control" name="id_type" id="id_type">
                                         <option selected="">Select ID Type</option>
                                         <option value="NRC">NRC</option>
                                         <option value="Drivers License">Drivers License</option>
@@ -354,7 +369,7 @@
                                 </span>
                             </div>
 
-                            <div class="form-group" id="license-class" style="display: none;">
+                            <div class="form-group" id="edit-license-class" style="display: none;">
                                 <label class="form-label">Drivers License Category</label>
                                 <div class="input-group">
                                     <select class="custom-select form-control" name="drvrs_license_class">
@@ -377,7 +392,7 @@
                                 </span>
                             </div>
 
-                            <div class="form-group" id="nrc-no" style="display: none;">
+                            <div class="form-group" id="edit-nrc-no" style="display: none;">
                                 <label class="form-label">Enter NRC number</label>
                                 <div class="input-group">
                                     <input type="text" name="nrc_no" id="nrc_no" class="form-control" placeholder="NRC Number">
@@ -396,67 +411,40 @@
     </div>
 </div>
 
-<!-- ############################## DEACTIVATE-ACCOUNT ########################################## -->
-<div class="modal fade" id="deactivate_user"  tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Deactivate user -->
+<div class="modal fade" id="deactivate_user"  tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title text-black">
-                    Deactivate Account
-                </h4>
-                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                </button>
-            </div>
             <div class="modal-body">
                 <div class="panel-content">
                 <form action="<%= Routes.user_path(@conn, :deactivate_account)%>" method="POST">
                     <div class="row">
                         <div class="col-md-12">
-
                             <div class="form-group">
-                                <label class="form-label">Deactivate Account</label>
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-user-circle width-1 text-align-center"></i></span>
-                                    </div>
-                                    <select class="custom-select form-control" name="status" required="required">
+                                    <select class="custom-select form-control" name="acc_deactive_reason" required="required">
                                         <option>Select Reason of Deactivation</option>
-                                        <option value="2">On Leave</option>
-                                        <option value="3">Suspend</option>
-                                        <option value="4">Dismissed</option>
-                                        <option value="5">Retired</option>
+                                        <option value="SUSPENDED">Suspend</option>
+                                        <option value="DISMISSED">Dismissed</option>
+                                        <option value="RETIRED">Retired</option>
                                     </select>
-                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                                     <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="account_status" value="0">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
                                 </div>
                             </div>
 
-                            
-                            <div class="form-group">
-                                <label class="form-label">Reason For Deactivation</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fal fa-edit"></i></span>
-                                    </div>
-                                    <select class="custom-select form-control" name="slct_acc_inactive_reason" required="required">
-                                        <option>Select Why Account is Being Deactivated</option>
-                                        <option value="On Leave">On Leave.</option>
-                                        <option value="Suspended">Driver Has Been Suspended.</option>
-                                        <option value="Dismissed">Driver was dismissed.</option>
-                                        <option value="Retired">Driver retired.</option>
-                                    </select>
-                                    <input type="text" name="acc_inactive_reason" placeholder="Explain why account is being deactivated" class="form-control" required="required">
-                                </div>
-                            </div>
-
+                            <h3 style="text-align: center;">
+                                Are you sure you want to deactivate this account?
+                                <br>
+                            </h3> 
                         </div>
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Deactivate Account</button>
-                    </div>   
+                    <div class="float-center" style="text-align: center;">
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>  
                 </form>
             </div>
             </div>
@@ -464,7 +452,41 @@
     </div>
 </div>
 
-<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<!-- Activate user -->
+<div class="modal fade" id="activate_user"  tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form-horizontal" action="<%= Routes.user_path(@conn, :activate_user_account)%>" method="post">
+                    <div class="row">
+                        <div class="col-md-12">  
+                            <div class="form-group"> 
+                                <h3 style="text-align: center;">
+                                    Are you sure you want to activate this account?
+                                    <br><br>
+                                </h3>                               
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="hidden" name="id" id="id">
+                                        <input type="hidden" name="account_status" value="1">
+                                        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+
+                    <div class="float-center" style="text-align: center;">
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -484,19 +506,19 @@
     } 
     });
 
-    $('#idType').on('change', function() {
+
+    $('#editIdType').on('change', function() {
         //------- Editing user
     if(this.value == "Drivers License") {
-        $('#license-class').show();
-        $('#nrc-no').hide();
+        $('#edit-license-class').show();
+        $('#edit-nrc-no').hide();
     }
 
     if(this.value == "NRC") {
-        $('#nrc-no').show();
-        $('#license-class').hide();
+        $('#edit-nrc-no').show();
+        $('#edit-license-class').hide();
     } 
     });
-
 
 
     $('#slct-user-rol').on('change', function() {
@@ -516,57 +538,60 @@
 
 <script>
     $(document).ready(function(){
-    //---------------Edit Profile
-    $('#editUser').on('show.bs.modal', function (event){
+        //---------------Edit Profile
+        $('#editUser').on('show.bs.modal', function (event){
+            console.log("edit")
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var first_name = button.data('first_name')
+            var last_name = button.data('last_name')
+            var sex = button.data('sex')
+            var phone = button.data('phone')
+            var email = button.data('email')
+            var drvrs_license_no = button.data('drvrs_license_no')
+            var drvrs_license_class = button.data('drvrs_license_class')
+            var drvrs_license_exp_dt = button.data('drvrs_license_exp_dt')
+            var user_type = button.data('user_type')
+            var user_role = button.data('user_role')
+            
 
-    console.log("edit")
+            var modal = $(this)
+            
+            modal.find('.modal-body #id').val(id);
+            modal.find('.modal-body #first_name').val(first_name);
+            modal.find('.modal-body #last_name').val(last_name);
+            modal.find('.modal-body #sex').val(sex);
+            modal.find('.modal-body #phone').val(phone);
+            modal.find('.modal-body #email').val(email);
+            modal.find('.modal-body #drvrs_license_no').val(drvrs_license_no);
+            modal.find('.modal-body #drvrs_license_class').val(drvrs_license_class);
+            modal.find('.modal-body #drvrs_license_exp_dt').val(drvrs_license_exp_dt);
+            modal.find('.modal-body #user_type').val(user_type);
+            modal.find('.modal-body #user_role').val(user_role);
+            
+        });
 
-        var button = $(event.relatedTarget)
-        var id = button.data('id')
-        var first_name = button.data('first_name')
-        var last_name = button.data('last_name')
-        var sex = button.data('sex')
-        var phone = button.data('phone')
-        var email = button.data('email')
-        var drvrs_license_no = button.data('drvrs_license_no')
-        var drvrs_license_class = button.data('drvrs_license_class')
-        var drvrs_license_exp_dt = button.data('drvrs_license_exp_dt')
-        var user_type = button.data('user_type')
-        var user_role = button.data('user_role')
+        //---------------Profil Details
+
+        //Deactivate Account
+        $('#deactivate_user').on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var status = button.data('status')
+            
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id);
+            modal.find('.modal-body #status').val(status);
+        })
         
+        //Activate Account
+        $('#activate_user').on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id);
+        });
 
-        var modal = $(this)
-        
-        modal.find('.modal-body #id').val(id);
-        modal.find('.modal-body #first_name').val(first_name);
-        modal.find('.modal-body #last_name').val(last_name);
-        modal.find('.modal-body #sex').val(sex);
-        modal.find('.modal-body #phone').val(phone);
-        modal.find('.modal-body #email').val(email);
-        modal.find('.modal-body #drvrs_license_no').val(drvrs_license_no);
-        modal.find('.modal-body #drvrs_license_class').val(drvrs_license_class);
-        modal.find('.modal-body #drvrs_license_exp_dt').val(drvrs_license_exp_dt);
-        modal.find('.modal-body #user_type').val(user_type);
-        modal.find('.modal-body #user_role').val(user_role);
-        
-    });
-
-    //---------------Profil Details
-    });
-</script>
-
-<script>
-    $(document).ready(function(){
-    //Deactivate msg Account
-    $('#deactivate_user').on('show.bs.modal', function (event){
-
-        var button = $(event.relatedTarget)
-        var id = button.data('id')
-        var status = button.data('status')
-        
-        var modal = $(this)
-        modal.find('.modal-body #id').val(id);
-        modal.find('.modal-body #status').val(status);
-    });
     });
 </script>

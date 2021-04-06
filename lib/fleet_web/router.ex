@@ -2,13 +2,13 @@ defmodule FleetWeb.Router do
   use FleetWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "json"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug(FleetWeb.Plugs.SetUser)
-    plug(FleetWeb.Plugs.SessionTimeout, timeout_after_seconds: 3_600)
+    plug(FleetWeb.Plugs.SessionTimeout, timeout_after_seconds: 3000)
   end
 
   pipeline :session do
@@ -19,7 +19,11 @@ defmodule FleetWeb.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["html", "json"]
+  end
+
+  pipeline :app do
+    plug(:put_layout, {FleetWeb.LayoutView, :app})
   end
 
   pipeline :no_layout do
@@ -27,17 +31,13 @@ defmodule FleetWeb.Router do
   end
 
   scope "/", FleetWeb do
-    pipe_through([:session, :no_layout])
+    pipe_through([:browser, :no_layout])
 
     get("/", SessionController, :new)
     post("/", SessionController, :create)
     get("/forgortFleetHub//password", UserController, :forgot_password)
     post("/confirmation/token", UserController, :token)
     get("/reset/FleetHub/password", UserController, :default_password)
-  end
-
-  scope "/", FleetWeb do
-    pipe_through([:browser, :no_layout])
     get("/logout/current/user", SessionController, :signout)
     get "/Account/Disabled", SessionController, :error_405
     get("/new/password", UserController, :new_password)
@@ -45,7 +45,7 @@ defmodule FleetWeb.Router do
   end
 
   scope "/", FleetWeb do
-    pipe_through :browser
+    pipe_through([:browser, :app])
     # ---------- User controller
     get "/Dashboard", UserController, :dashboard
     get "/Manage/System/Users", UserController, :user_mgt
@@ -62,25 +62,26 @@ defmodule FleetWeb.Router do
     post "/User/Self/Password/Change", UserController, :pwd_self_change
 
     # --------------------- On Leave --------------------------------
-    get "/Users/On/Leave", UserController, :users_on_leave
-    post "/Activate/Leave/Account", UserController, :activate_user_on_leave
+    # get "/Users/On/Leave", UserController, :users_on_leave
+    # post "/Activate/Leave/Account", UserController, :activate_user_on_leave
 
     # ---------------------- Suspension ---------------------------
-    get "/Suspended/Users", UserController, :suspended_users
-    post "/Activate/Suspended/Account", UserController, :activate_suspended_user
+    # get "/Suspended/Users", UserController, :suspended_users
+
 
 
     # ---------------------- Deactivated ---------------------------
     post "/Deactivate/Account", UserController, :deactivate_account
+    post "/Activate/Suspended/Account", UserController, :activate_user_account
 
     # -----------------------Dismissed---------------------------------
-    get "/Dismissed/User/Accounts", UserController, :dismissed_users
-    post "/Activate/dismissed/Account", UserController, :activate_dismissed_user
+    # get "/Dismissed/User/Accounts", UserController, :dismissed_users
+    # post "/Activate/dismissed/Account", UserController, :activate_dismissed_user
 
 
     # ------------------------Retired -------------------------------
-    get "/Retired/User/Accounts", UserController, :retired_users
-    post "/Activate/retired/Account", UserController, :activate_retired_user
+    # get "/Retired/User/Accounts", UserController, :retired_users
+    # post "/Activate/retired/Account", UserController, :activate_retired_user
 
     # --------- Driver Controller
     get "/View/Driver", DriverController, :view_driver
@@ -129,8 +130,6 @@ defmodule FleetWeb.Router do
 
     # --------- Notifications Controller
     get "/email/logs", NotificationsController, :email_logs
-
-
   end
 
   # Other scopes may use custom stacks.

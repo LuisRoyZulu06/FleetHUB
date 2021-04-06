@@ -7,8 +7,8 @@
                     <h1 class="subheader-title">
                         <i class='subheader-icon fal fa-user-circle'></i> Profile Details
                         <br>
-                        <a href="<%= Routes.user_path(@conn, :user_mgt)%>" class="btn btn-icon ml-1 fs-lg rounded-circle waves-effect waves-themed">
-                            <i class="fal fa-reply"></i>
+                        <a href="<%= Routes.user_path(@conn, :user_mgt)%>" class="btn btn-outline-dark btn-sm btn-pills waves-effect waves-themed">
+                            <i class="fal fa-reply"></i> Back
                         </a>
                     </h1>
 
@@ -42,6 +42,14 @@
                                         
                                         <h5 class="mb-0 fw-700 text-center mt-3">
                                             <%= view_user.first_name%> <%= view_user.last_name%>
+                                        </h5>
+
+                                        <h5 class="mb-0 fw-700 text-center mt-3">
+                                            Account Status: <%= if view_user.account_status === "1" do %>
+                                                                <b style="font-size: 14px; color: #00cc00;">Active</b>
+                                                            <% else %>
+                                                                <b style="font-size: 14px; color: #ff0000;">Deactivated</b>
+                                                            <% end %>
                                         </h5>
                                     </div>
                                 </div>
@@ -125,8 +133,15 @@
 
                                             <tr>
                                                 <th style="width: 150px">User Role:</th>
-                                            <td><%= view_user.user_role%></td>
+                                                <td><%= view_user.user_role%></td>
                                             </tr>
+                                            
+                                            <%= if view_user.account_status != "1" do %>
+                                                <tr>
+                                                    <th>Deactivation Reason:</th>
+                                                    <td><%= view_user.acc_deactive_reason%></td>
+                                                </tr>
+                                            <% end %>
                                             </tbody>
                                         </table>
                                     </div>

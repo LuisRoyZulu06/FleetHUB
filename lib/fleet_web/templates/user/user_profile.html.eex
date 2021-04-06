@@ -64,84 +64,103 @@
 								        </h1>								        
 								    </div>
 
-								    <div class="row">
-								        <div class="col-xl-12 sortable-grid ui-sortable">
-								            <div id="panel-1" class="panel panel-sortable" role="widget">
-								                <div class="panel-container show" role="content"><div class="loader"><i class="fal fa-spinner-third fa-spin-4x fs-xxl"></i></div>
-								                    <div class="panel-content">
-								                        <div class="panel-container show">
-								                            <div class="panel-content">
-								                                <div class="card-body pb-0 px-4">
-								                                    <div class="d-flex flex-row pb-3 pt-2  border-top-0 border-left-0 border-right-0">
-								                                        <div class="d-inline-block align-middle mr-3">
-								                                        	<span class="profile-image rounded-circle d-block" style="background-image:url('/images/avatar/1.png'); background-size: cover;"></span>
-								                                        </div>
+									<!------------------------------------------------------------------------------->
+									<div class="row">
+										<!-- profile summary -->
+										<div class="col-lg-6 col-xl-3 order-lg-1 order-xl-1">
+											<div class="card mb-g rounded-top">
+												<div class="row no-gutters row-grid">
+													<div class="col-12">
+														<div class="d-flex flex-column align-items-center justify-content-center p-4">
+																
+															<%= if @conn.assigns.user.sex == "M" do %>
+																<img class="rounded-circle shadow-2 img-thumbnail" alt="<%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%>" src="<%= Routes.static_path(@conn, "/images/avatar/3.png") %>">
+															<% end %>
 
-								                                        <h5 class="mb-0 flex-1 text-dark fw-500">
-								                                            <%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%>
-								                                            <small class="m-0 l-h-n">
-								                                            	<%= "#{(@conn.assigns.user.user_role)}"%>
-								                                            </small>
-								                                        </h5>
-								                                    </div>
+															<%= if @conn.assigns.user.sex == "F" do %>
+																<img class="rounded-circle shadow-2 img-thumbnail" alt="<%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%>" src="<%= Routes.static_path(@conn, "/images/avatar/2.jpg") %>">
+															<% end %>
 
-								                                    <div class="pb-3 pt-2 border-top-0 border-left-0 border-right-0 text-muted">
-								                                    	<div class="table-responsive w3-animate-top">
-															              	<table class="table table-hover table-clean">
-																                <tbody>
-																                  	<tr>
-																	                    <th style="width: 150px">First Name:</th>
-																	                    <td>
-																	                      	<%= "#{(@conn.assigns.user.first_name)}"%>
-																	                    </td>
-																                  	</tr>
+															
+															<h5 class="mb-0 fw-700 text-center mt-3">
+																<%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%>
+															</h5>
+														</div>
+													</div>
 
-																                  	<tr>
-																	                    <th style="width: 150px">Last Name:</th>
-																	                    <td>
-																	                    	<%= "#{(@conn.assigns.user.last_name)}"%>
-																	                    </td>
-																                  	</tr>
+													<div class="col-12">
+														<div class="p-3 text-center">
+															<a href="mailto:<%= "#{(@conn.assigns.user.email)}"%>?" class="btn-link font-weight-bold">
+																<i class="fal fa-envelope"></i>Email
+															</a> 
+															<span class="text-primary d-inline-block mx-3">&#9679;</span>
+															<a href="tel:<%= "#{(@conn.assigns.user.phone)}"%>" class="btn-link font-weight-bold">
+																<i class="fal fa-phone"></i>Call
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+										<!-- profile -->
+										<div class="col-lg-12 col-xl-9 order-lg-3 order-xl-2">
+											<div id="panel-1" class="panel">
+												<div class="panel-hdr">
+													<h2>
+														User Details
+													</h2>
+												</div>
 
-																                  	<tr>
-																	                    <th style="width: 150px">Phone:</th>
-																	                    <td>
-																	                    	<%= "#{(@conn.assigns.user.phone)}"%>
-																	                    </td>
-																                  	</tr>
+												<div class="panel-container show">
+													<div class="panel-content">
+														<div class="table-responsive w3-animate-top">
+															<table class="table table-hover table-clean">
+																<tbody>
+																<tr>
+																	<th style="width: 150px">Sex:</th>
+																	<td><%= "#{(@conn.assigns.user.sex)}"%></td>
+																</tr>
 
-																                  	<tr>
-																	                    <th style="width: 150px">Email:</th>
-																	                    <td>
-																	                      	<%= "#{(@conn.assigns.user.email)}"%>
-																	                    </td>
-																                  	</tr>
+																<tr>
+																	<th style="width: 150px">Phone:</th>
+																	<td><%= "#{(@conn.assigns.user.phone)}"%></td>
+																</tr>
 
-																                  	<tr>
-																	                    <th style="width: 150px">User Role:</th>
-																	                    <td>
-																	                    	<%= "#{(@conn.assigns.user.user_role)}"%>
-																	                    </td>
-																                  	</tr>
+																<tr>
+																	<th style="width: 150px">Email:</th>
+																	<td><%= "#{(@conn.assigns.user.email)}"%></td>
+																</tr>
 
-																                  	<tr>
-																                    	<th style="width: 150px">Created on:</th>
-																                    	<td>
-																                      		<%= "#{(@conn.assigns.user.inserted_at)}"%>
-																                    	</td>
-																                  	</tr>         
-																                </tbody>
-															             	</table>
-															            </div>
-								                                    </div>
-								                                </div>
-								                            </div>
-								                        </div>
-								                    </div>
-								                </div>
-								            </div>
-								        </div>
-								    </div>
+																<tr>
+																	<th style="width: 150px">Identity Type:</th>
+																	<td><%= "#{(@conn.assigns.user.id_type)}"%></td>
+																</tr>
+
+																<tr>
+																	<th style="width: 150px">ID Number:</th>
+																	<td><%= "#{(@conn.assigns.user.nrc_no)}"%></td>
+																</tr>
+
+																<tr>
+																	<th style="width: 150px">User Role:</th>
+																	<td><%= "#{(@conn.assigns.user.user_role)}"%></td>
+																</tr>
+
+																<tr>
+																	<th style="width: 150px">Created on:</th>
+																	<td>
+																		<%= "#{(@conn.assigns.user.inserted_at)}"%>
+																	</td>
+																</tr>   
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 						    	</div>
 
 						    	<div class="col-md-1"></div>
@@ -151,27 +170,5 @@
 				</div>
 			</div>
 		</div>
-
-		<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
-        <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script> 
-        <script src="<%= Routes.static_path(@conn, "/js/statistics/flot/flot.bundle.js") %>"></script> 
-        <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-        <script>
-            $("#js-login-btn").click(function(event)
-            {
-
-                // Fetch form to apply custom Bootstrap validation
-                var form = $("#js-login")
-
-                if (form[0].checkValidity() === false)
-                {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.addClass('was-validated');
-                // Perform ajax submit here...
-            });
-        </script>
 	</body>
 </html>
