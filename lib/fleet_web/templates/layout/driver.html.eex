@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+        <meta charset="utf-8"/>
+        <meta name="description" content="Basic">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Remove Tap Highlight on Windows Phone IE -->
+        <meta name="msapplication-tap-highlight" content="no">
+        <!-- Call App Mode on ios devices -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+        <meta name="csrf-token"  csrf-param="_csrf_token" csrf-header="x-csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>"/>      
+        <title>FleetHub</title>
+
+        <!-- Base CSS -->
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/loader.css") %>">
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/custom.css") %>">
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/app.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/vendors.bundle.css") %>" />
+        
+        <!-- Alternative CSS -->
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/default.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/theme-demo.css") %>" />
+        <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/img/favicon/apple-touch-icon.png") %>" />
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/favicon-32x32.png") %>" />
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/img/favicon/safari-pinned-tab.svg") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/statistics/chartjs/chartjs.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/formplugins/smartwizard/smartwizard.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/datagrid/datatables/datatables.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/fullcalendar/fullcalendar.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/notifications/sweetalert2/sweetalert2.bundle.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/reactions/reactions.css") %>" />
+        <link rel="stylesheet" media="screen, print" href="<%= Routes.static_path(@conn, "/css/miscellaneous/jqvmap/jqvmap.bundle.css") %>" />
+    </head>
+
+  	<body class="mod-bg-1 nav-function-top">
+	    <!-- Page Wrapper -->
+	    <div class="page-wrapper">
+	      	<div class="page-inner" id="mypage" data-loader_url="<%= Routes.static_path(@conn, "/css/loader/load.png") %>">
+
+		        <!---- Mobile Mode Navigation menu -->
+		        <aside class="page-sidebar hidden-lg-up" style="background-color: #ffff;">
+		            <div class="page-logo" style="background-color: #2d5986;">
+		              	<a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative">
+		                	FleetHUB
+		                	<span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+		                	<i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+		              	</a>
+		            </div>
+
+		            <nav id="js-primary-nav" class="primary-nav hidden-lg-up" role="navigation" style="background-color: #ffff; ">
+		                <div class="nav-filter">
+		                    <div class="position-relative">
+		                        <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
+		                        <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
+		                            <i class="fal fa-chevron-up"></i>
+		                        </a>
+		                    </div>
+		                </div>
+
+		                <ul id="js-nav-menu" class="nav-menu hidden-lg-up">
+		                  	<li>
+		                      	<a href="<%= Routes.driver_path(@conn, :index)%>" title="Application Intel" data-filter-tags="application intel">
+		                          	<i class="fal fa-home" id="nav_menu_and_icon"></i>
+		                          	<span class="nav-link-text" data-i18n="nav.application_intel" id="nav_menu_and_icon">Dashboard</span>
+		                      	</a>
+		                  	</li>
+
+		                  	<li>
+			                    <a href="#" title="Bill Payments">
+			                        <i class="fal fa-calculator" id="nav_menu_and_icon"></i>
+			                        <span class="nav-link-text" data-i18n="nav.application_intel" id="nav_menu_and_icon">Bill Payments</span>
+			                    </a>
+			                </li>
+
+			                <li class="nav-item">
+			                  <a class="nav-link" href="#" role="tab">
+			                    <i class="fal fa-building" id="nav_menu_and_icon"></i>
+			                    <span class="nav-link-text" data-i18n="nav.miscellaneous" id="nav_menu_and_icon">Regulatory Payments</span>
+			                  </a>
+			                </li>
+
+		                  	<li class="nav-item">
+		                    	<a class="nav-link" href="#" role="tab">
+		                      		<i class="fal fa-question-circle" id="nav_menu_and_icon"></i>
+		                      		<span class="nav-link-text" data-i18n="nav.miscellaneous" id="nav_menu_and_icon">Support</span>
+		                    	</a>
+		                  	</li>
+		                </ul>
+
+		                <div class="filter-message js-filter-message bg-success-600"></div>
+		            </nav>
+		        </aside>
+
+		        <!---- Desktop Mode Navigation menu -->
+		        <aside class="page-sidebar hidden-sm-down">
+		          	<div class="page-logo" style="background-color: #ffffff;">
+		            	<a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative">
+		              		FleetHUB
+		              		<span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+		              		<i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+		            	</a>
+		          	</div>
+
+		          	<nav id="js-primary-nav" class="primary-nav hidden-sm-down" role="navigation">
+		              	<div class="nav-filter">
+		                  	<div class="position-relative">
+		                      	<input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
+		                      	<a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
+		                          	<i class="fal fa-chevron-up"></i>
+		                      	</a>
+		                  	</div>
+		              	</div>
+
+		              	<ul id="js-nav-menu" class="nav-menu position-absolute pos-top pos-right hidden-sm-down">
+			                <li>
+			                    <a href="<%= Routes.driver_path(@conn, :index)%>" title="Dashboard">
+			                        <i class="fal fa-home" id="nav_menu_and_icon"></i>
+			                        <span class="nav-link-text" data-i18n="nav.application_intel" id="nav_menu_and_icon">Dashboard</span>
+			                    </a>
+			                </li>
+
+			                <li>
+			                    <a href="#" title="Bill Payments">
+			                        <i class="fal fa-calculator" id="nav_menu_and_icon"></i>
+			                        <span class="nav-link-text" data-i18n="nav.application_intel" id="nav_menu_and_icon">Bill Payments</span>
+			                    </a>
+			                </li>
+
+			                <li class="nav-item">
+			                  <a class="nav-link" href="#" role="tab">
+			                    <i class="fal fa-building" id="nav_menu_and_icon"></i>
+			                    <span class="nav-link-text" data-i18n="nav.miscellaneous" id="nav_menu_and_icon">Regulatory Payments</span>
+			                  </a>
+			                </li>
+
+			                <li class="nav-item">
+			                  <a class="nav-link" href="#" role="tab">
+			                    <i class="fal fa-question-circle" id="nav_menu_and_icon"></i>
+			                    <span class="nav-link-text" data-i18n="nav.miscellaneous" id="nav_menu_and_icon">Support</span>
+			                  </a>
+			                </li>
+		              	</ul>
+
+		              	<div class="filter-message js-filter-message bg-success-600"></div>
+		          	</nav>
+		        </aside>
+
+		        <div class="page-content-wrapper">
+		          	<!-- Navigation -->
+		          	<header class="page-header" role="banner"  style="background-color: #544f84;">
+			            <div class="page-logo">
+			              	<a href="<%= Routes.driver_path(@conn, :index)%>" class="page-logo-link press-scale-down d-flex align-items-center position-relative text-white">
+			                	FleetHUB
+			              	</a>
+			            </div>
+
+			            <!-- Mobile button appears during mobile width -->
+			            <div class="hidden-lg-up">
+			              	<a href="#" class="btn btn-default press-scale-down waves-effect waves-themed" data-action="toggle" data-class="mobile-nav-on">
+			                	<i class="ni ni-menu"></i>
+			              	</a>
+			            </div>
+
+			            <div class="ml-auto d-flex">
+			              	<!-- /Profile dropdown-->
+			              	<div class="nav-link">
+			                	<a data-toggle="dropdown" title="FleetHUB User">
+			                  		<i class="fal fa-user text-white"></i>
+			                	</a>
+
+				                <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+				                  	<div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+					                    <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+					                      	<span class="mr-2">
+					                        	<img class="profile-image rounded-circle" alt="FleetHUB User" src="<%= Routes.static_path(@conn, "/images/avatar/1.png") %>">
+					                      	</span>
+
+					                      	<div class="info-card-text">
+					                        	<%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleetHUB
+					                      	</div>
+					                    </div>
+				                  	</div>
+
+				                  	<a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.user_path(@conn, :user_profile)%>">
+				                    	<span data-i18n="drpdwn.page-change-password">
+				                      		<i class="fal fa-cog"></i>
+				                      		Profile
+				                    	</span>
+				                  	</a>
+
+				                  	<a class="dropdown-item fw-500 pt-3 pb-3" href="<%= Routes.session_path(@conn, :signout)%>">
+				                      	<span data-i18n="drpdwn.page-change-password">
+				                        	<i class="fal fa-sign-out"></i>
+				                        	Logout
+				                      	</span>
+				                  	</a>
+				                </div>
+			              	</div>
+			            </div>
+		          	</header>
+
+		          	<!-- Page Content -->
+		          	<main id="js-page-content" role="main" class="page-content" style="overflow: hidden;">
+		            	<%= render @view_module, @view_template, assigns %>
+		          	</main>
+
+		          	<!--Page Footer -->
+		          	<footer class="page-footer" role="contentinfo">
+			            <div class="d-flex align-items-right flex-1 text-muted">
+			              	<span class="hidden-md-down fw-700"><%= Timex.today.year %> © FleetHUB Powered By&nbsp;
+				                <a href='http://www.probasegroup.com/' class='text-info fw-500' title='proBASE' target='_blank'>
+				                  	<img src="<%= Routes.static_path(@conn, "/images/logos/1.png") %>" width="100">
+				                </a>
+			              	</span>
+			            </div>
+		          	</footer>
+		        </div>
+	      	</div>
+	    </div>
+
+
+
+	    <!-------------------------------------------------------------------------CoreScripts -->
+	    <script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+         <script src="/js/statistics/peity/peity.bundle.js"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/chartjs/chartjs.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/sparkline/sparkline.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/statistics/easypiechart/easypiechart.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.bundle.js") %>"></script>
+        <script src="<%= Routes.static_path(@conn, "/js/datagrid/datatables/datatables.export.js") %>"></script>
+
+        <!-- Datatables -->
+        <script>
+            $(document).ready(function()
+            {
+
+                // initialize datatable
+                $('#dt-basic-example').dataTable(
+                {
+                    responsive: true,
+                    lengthChange: false,
+                    dom:
+                        /*  --- Layout Structure
+                            --- Options
+                            l - length changing input control
+                            f - filtering input
+                            t - The table!
+                            i - Table information summary
+                            p - pagination control
+                            r - processing display element
+                            B - buttons
+                            R - ColReorder
+                            S - Select
+
+                            --- Markup
+                            < and >       - div element
+                            <"class" and >    - div with a class
+                            <"#id" and >    - div with an ID
+                            <"#id.class" and >  - div with an ID and a class
+
+                            --- Further reading
+                            https://datatables.net/reference/option/dom
+                            --------------------------------------
+                            */
+                        "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                    buttons: [
+                        /*{
+                            extend:    'colvis',
+                            text:      'Column Visibility',
+                            titleAttr: 'Col visibility',
+                            className: 'mr-sm-3'
+                        },*/
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'PDF',
+                            titleAttr: 'Generate PDF',
+                            className: 'btn-outline-danger btn-sm mr-1'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Excel',
+                            titleAttr: 'Generate Excel',
+                            className: 'btn-outline-success btn-sm mr-1'
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            text: 'CSV',
+                            titleAttr: 'Generate CSV',
+                            className: 'btn-outline-primary btn-sm mr-1'
+                        },
+                        {
+                            extend: 'copyHtml5',
+                            text: 'Copy',
+                            titleAttr: 'Copy to clipboard',
+                            className: 'btn-outline-primary btn-sm mr-1'
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            titleAttr: 'Print Table',
+                            className: 'btn-outline-primary btn-sm'
+                        }
+                    ]
+                });
+
+            });
+        </script>    
+
+        <div class="loader-wrapper-custom">
+            <div style="position:absolute; top: 50%; left: 50%; width:30em; height:18em; margin-top: -9em; margin-left: -15em;">
+                <img class="image" src="<%= Routes.static_path(@conn, "/images/load.png")%>" alt="" style="height: 70px; width: 70px;" class="center">
+                <br>
+                <div class="wrapper" style="margin-top:8em;">
+                    <h4>
+                        Please wait. Loading...
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(window).on("load",function(){
+                $(".loader-wrapper-custom").fadeOut("slow");
+            });
+        </script>
+
+        <script type="text/javascript">
+            /* Activate smart panels */
+            $('#js-page-content').smartPanel();
+        </script>
+  	</body>
+</html>

@@ -35,15 +35,26 @@ defmodule FleetWeb.SessionController do
                 user.account_status == "1" ->
                   {:ok, _} = Logs.create_user_logs(%{user_id: user.id, activity: "logged in"})
 
-                  conn
-                  |> put_session(:current_user, user.id)
-                  |> put_session(:session_timeout_at, session_timeout_at())
-                  |> redirect(to: Routes.user_path(conn, :dashboard))
+                cond do
+                  # --------------------- FleetHUB ADMIN
+                  user.user_type == 1 ->
+                    conn
+                    |> put_session(:current_user, user.id)
+                    |> put_session(:session_timeout_at, session_timeout_at())
+                    |> redirect(to: Routes.user_path(conn, :dashboard))
+
+                  # --------------------- FleetHUB DRIVER
+                  user.user_type == 2 ->
+                    conn
+                    |> put_session(:current_user, user.id)
+                    |> put_session(:session_timeout_at, session_timeout_at())
+                    |> redirect(to: Routes.driver_path(conn, :index))
+                end
 
                 true ->
                   conn
-                  |> put_status(405)
-                  |> put_layout(false)
+                  # |> put_status(405)
+                  # |> put_layout(false)
                   |> render(FleetWeb.ErrorView, :"405")
               end
           end

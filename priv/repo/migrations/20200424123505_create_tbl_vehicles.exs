@@ -3,22 +3,25 @@ defmodule Fleet.Repo.Migrations.CreateTblVehicles do
 
   def change do
     create table(:tbl_vehicles) do
-      add :v_make, :string
+      add :brand, :string
       add :v_name, :string
-      add :color, :string
+      add :ext_color, :string
       add :plate_no, :string
-      add :v_status, :string
       add :mileage, :string
       add :rd_tax_exp_dt, :string
       add :fitness_exp_dt, :string
       add :insrnc_exp_dt, :string
       add :assignment_status, :string
+      add :man_year, :string
+      add :v_type, :string
+      add :chassis_no, :string
       add :driver_id, references(:tbl_users, column: :id, on_delete: :delete_all)
 
       timestamps()
     end
     # create unique_index(:tbl_vehicles, [:driver_id], name: :unique_driver_id)
     create unique_index(:tbl_vehicles, [:plate_no], name: :unique_plate_no)
+    create unique_index(:tbl_vehicles, [:chassis_no], name: :unique_chassis_no)
 
   end
 end

@@ -1,0 +1,876 @@
+<main id="js-page-content" role="main" class="page-content">
+    <div class="row">
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+            <!---- Flash -->
+            <div class="row">
+                <div class="col-md-12 col-lg-offset-2">
+                    <div class="form-group">
+                        <%= if get_flash(@conn, :info) do %>
+                            <div class="alert alert-info alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            <%= get_flash(@conn, :info) %>
+                            </div>
+                        <% end %>
+                        <%= if get_flash(@conn, :error) do %>
+                            <div class="alert alert-danger alert-styled-left">
+                            <button type="button" class="close" data-dismiss="alert">&times; <span class="sr-only">Close</span></button>
+                            Opps! <%= get_flash(@conn, :error) %>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <button type="button" class="btn btn-sm btn-outline-dark btn-pills waves-effect waves-themed" data-toggle="modal" data-target="#add-vehicle-modal">
+                        <i class="fal fa-bus"></i> New Vehicle
+                    </button>
+                </h1>
+
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#cc0066&quot;, &quot;#ff80bf&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @total_vehicles %></span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Total Vehicles</label>
+                        <h4 class="font-weight-bold mb-0"><%= @total_vehicles %></h4>
+                    </div>
+                </div>
+
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#2196F3&quot;, &quot;#9acffa&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @count_vehicles %>/<%= @total_vehicles %></span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Assigned Vehicles</label>
+                        <h4 class="font-weight-bold mb-0"><%= @count_vehicles %></h4>
+                    </div>
+                </div>
+
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#967bbd&quot;, &quot;#ccbfdf&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }"><%= @vehicles_unassigned %>/<%= @total_vehicles %></span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles not Assigned</label>
+                        <h4 class="font-weight-bold mb-0"><%= @vehicles_unassigned %></h4>
+                    </div>
+                </div>
+
+                <div class="d-flex mr-4">
+                    <div class="mr-2">
+                        <span class="peity-donut" data-peity="{ &quot;fill&quot;: [&quot;#808080&quot;, &quot;#a6a6a6&quot;],  &quot;innerRadius&quot;: 14, &quot;radius&quot;: 20 }">4/10</span>
+                    </div>
+                    <div>
+                        <label class="fs-sm mb-0 mt-2 mt-md-0">Vehicles under maintenance</label>
+                        <h4 class="font-weight-bold mb-0"><%= @garage %></h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div id="panel-1" class="panel">
+                        <div class="panel-hdr">
+                            <h2>
+                                List of Vehicles
+                            </h2>
+                        </div>
+
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                
+                                <!-- datatable start -->
+                                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                    <thead class="p-3 bg-fusion-50 rounded overflow-hidden position-relative text-white mb-g">
+                                        <tr>
+                                            <th>Vehicle Name</th>
+                                            <th>Vehicle Registration Number</th>
+                                            <th>Assigned To</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%= for vehicle <- @list_vehicles do %>
+                                        <tr>
+                                            <td><%= vehicle.brand %> <%= vehicle.v_name %></td>
+                                            <td><%= vehicle.plate_no %></td>
+                                            <%= if vehicle.assignment_status == "1" do %>
+                                                <td><%= Fleet.Accounts.get_user!(vehicle.driver_id).first_name %> <%= Fleet.Accounts.get_user!(vehicle.driver_id).last_name %></td>
+                                            <% else %>
+                                                <td>Not Assigned</td>
+                                            <% end %>
+   
+
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <button type="button" class="btn btn-sm btn-outline-dark waves-effect waves-themed">
+                                                                Options
+                                                            </button>
+                                                        </span>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" 
+                                                                data-id="<%= vehicle.id%>" 
+                                                                data-brand="<%= vehicle.brand%>" 
+                                                                data-v_name="<%= vehicle.v_name%>" 
+                                                                data-ext_color="<%= vehicle.ext_color%>" 
+                                                                data-man_year="<%= vehicle.man_year%>"
+                                                                data-v_type="<%= vehicle.v_type%>" 
+                                                                data-chassis_no="<%= vehicle.chassis_no%>" 
+                                                                data-plate_no="<%= vehicle.plate_no%>" 
+                                                                data-assignment_status="<%= vehicle.assignment_status %>" 
+                                                                data-mileage="<%= vehicle.mileage %>" 
+                                                                data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" 
+                                                                data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" 
+                                                                data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>"
+                                                                data-toggle="modal" 
+                                                                data-target="#viewmodal">
+                                                                <i class="fal fa-info"></i>
+                                                                View Vehicle Info
+                                                            </a>
+
+                                                            <a class="dropdown-item" 
+                                                                data-id="<%= vehicle.id%>" 
+                                                                data-brand="<%= vehicle.brand%>" 
+                                                                data-v_name="<%= vehicle.v_name%>" 
+                                                                data-ext_color="<%= vehicle.ext_color%>" 
+                                                                data-man_year="<%= vehicle.man_year%>"
+                                                                data-v_type="<%= vehicle.v_type%>" 
+                                                                data-chassis_no="<%= vehicle.chassis_no%>" 
+                                                                data-plate_no="<%= vehicle.plate_no%>" 
+                                                                data-assignment_status="<%= vehicle.assignment_status %>" 
+                                                                data-mileage="<%= vehicle.mileage %>" 
+                                                                data-rd_tax_exp_dt="<%= vehicle.rd_tax_exp_dt %>" 
+                                                                data-fitness_exp_dt="<%= vehicle.fitness_exp_dt %>" 
+                                                                data-insrnc_exp_dt="<%= vehicle.insrnc_exp_dt %>" 
+                                                                data-toggle="modal" 
+                                                                data-target="#editmodal">
+                                                                <i class="fal fa-edit"></i>
+                                                                Edit
+                                                            </a>
+                                                            <%= if vehicle.assignment_status === "0" do %>
+                                                            <a class="dropdown-item" 
+                                                                data-id="<%= vehicle.id%>" 
+                                                                data-toggle="modal" 
+                                                                data-target="#assignmodal"> 
+                                                                <i class="fal fa-link"></i>
+                                                                Assign Vehicle to Driver
+                                                            </a>
+                                                            <% end %>
+
+                                                            <%= if vehicle.assignment_status === "1" do %>
+                                                            <a class="dropdown-item" 
+                                                                data-id="<%= vehicle.id%>" " 
+                                                                data-toggle="modal" 
+                                                                data-target="#reassignmodal">
+                                                                <i class="fal fa-link"></i>
+                                                                Reassign Vehicle
+                                                            </a>
+                                                            <% end %>
+                                                            <%# <button class="dropdown-item" data-toggle="modal" data-target="#maintain-car">Send for Maintenance</button> %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% end %>  
+                                    </tbody>                                                
+                                </table>
+                                <!-- datatable end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1"></div>
+    </div>
+</main>
+
+<!---- New Vehicle -->
+<div class="modal fade" id="add-vehicle-modal" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        Close window
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<%= Routes.vehicle_path(@conn, :create_vehicle)%>" method="POST">
+                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Brand</label>
+                                <div class="input-group">
+                                    <input type="text" name="brand" placeholder="Vehicle Make" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Type</label>
+                                <div class="input-group">                            
+                                    <select class="custom-select form-control" name="v_type">
+                                        <option selected="true" disabled="disabled">Select vehicle type</option>
+                                        <option value="COUPE">Coupe</option>
+                                        <option value="SEDDAN">Seddan</option>
+                                        <option value="VAN">Van</option>
+                                        <option value="PICKUP">Pick up</option>
+                                        <option value="HATCHBACK">Hatchback</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                <label class="form-label">Chassis Number</label>
+                                <div class="input-group">
+                                    <input type="text" name="chassis_no" placeholder="Chassis Year" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Exterior Color</label>
+                                <div class="input-group">
+                                    <input type="text" name="ext_color" placeholder="Vehicle color" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Driver Assigned Vehicle</label>
+                                <div class="input-group">                                    
+                                    <input type="hidden" name="driver_id" value="0">
+                                    <select class="custom-select form-control" name="driver_id" id="assignment_user">
+                                        <option selected="true" disabled="disabled">Select Driver</option>
+                                        <option value="">Not Assigning</option>
+                                        <%= for driver <-@drivers do %>
+                                            <%= if driver.user_role == "DRIVER" && driver.id not in @driver_ids do %>
+                                                <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <% end %>
+                                        <% end %>
+                                    </select>
+                                </div>
+                                <span class="help-block" style="display:none;">
+                                    Assignment Status: <input type="text" name="assignment_status" id="assignment_status" class="form-control form-control-lg rounded-0 border-bottom-0 border-top-0 border-left-0 border-right-0 px-0 help-block">
+                                </span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Road Tax Expiration Date</label>
+                                <div class="input-group">
+                                    <input type="date" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="form-control" required="required">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <div class="input-group">
+                                    <input type="text" name="v_name" placeholder="Vehicle Name" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Manufacture Year</label>
+                                <div class="input-group">
+                                    <input type="text" name="man_year" placeholder="Manufacture Year" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Registration Number</label>
+                                <div class="input-group">
+                                    <input type="text" name="plate_no" placeholder="Vehicle Registration Number" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Mileage</label>
+                                <div class="input-group">
+                                    <input type="text" name="mileage" placeholder="Vehicle Mileage" class="form-control" required="required">
+                                </div>
+                            </div>    
+
+                            <div class="form-group">
+                                <label class="form-label">Expiration Date of Fitness</label>
+                                <div class="input-group">
+                                    <input type="date" name="fitness_exp_dt" id="fitness_exp_dt" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Insurance Expiration Date</label>
+                                <div class="input-group">
+                                    <input type="date" name="insrnc_exp_dt" id="insrnc_exp_dt" class="form-control" required="required">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Vehicle</button>
+                    </div>        
+                </form>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---- View Vehicle Details -->
+<div class="modal fade" id="viewmodal" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Vehicle Details
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        Close window
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-content">
+                    <form action="<%= Routes.driver_path(@conn, :update_driver)%>" method="POST">
+                        <div class="row">
+                        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                        <input type="hidden" name="id" id="id">
+                            <div class="col-md-6">
+                                <!-- Vehicle profile -->
+                                <div class="card mb-g rounded-top">
+                                    <div class="row no-gutters row-grid">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                                <img class="rounded-circle shadow-2 img-thumbnail" src="<%= Routes.static_path(@conn, "/images/avatar/5.png") %>">
+                                                <h5 class="mb-0 fw-700 text-center mt-3">
+
+                                                    <div class="table-responsive w3-animate-top">
+                                                        <table class="table table-hover table-clean">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td id="brand"></td>
+                                                                    <td id="v_name"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>    
+
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="table-responsive w3-animate-top">
+                                    <table class="table table-hover table-clean">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 150px">Vehicle Type:</th>
+                                                <td id="v_type"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Vehicle Color:</th>
+                                                <td id="ext_color"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Registration Number:</th>
+                                                <td id="plate_no"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Chassis Number:</th>
+                                                <td id="chassis_no"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Manufacture Year:</th>
+                                                <td id="man_year"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Mileage:</th>
+                                                <td id="mileage"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Road Tax:</th>
+                                                <td id="rd_tax_exp_dt"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Vehicle Fitnessx:</th>
+                                                <td id="fitness_exp_dt"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Vehicle Insurance:</th>
+                                                <td id="insrnc_exp_dt"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th style="width: 150px">Assignment Status:</th>
+                                                <td id="assignment_status"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>    
+
+                            </div>
+                        </div>  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---- Edit Vehicle -->
+<div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        Close window
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<%= Routes.vehicle_path(@conn, :update_vehicle)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Brand</label>
+                                <div class="input-group">
+                                    <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="text" name="brand" id="brand" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Type</label>
+                                <div class="input-group">                            
+                                    <select class="custom-select form-control" name="v_type" id="v_type">
+                                        <option selected="true" disabled="disabled">Select vehicle type</option>
+                                        <option value="COUPE">Coupe</option>
+                                        <option value="SEDDAN">Seddan</option>
+                                        <option value="VAN">Van</option>
+                                        <option value="PICKUP">Pick up</option>
+                                        <option value="HATCHBACK">Hatchback</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                <label class="form-label">Chassis Number</label>
+                                <div class="input-group">
+                                    <input type="text" name="chassis_no" id="chassis_no" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Exterior Color</label>
+                                <div class="input-group">
+                                    <input type="text" name="ext_color" id="ext_color" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Road Tax Expiration Date</label>
+                                <div class="input-group">
+                                    <input type="date" name="rd_tax_exp_dt" id="rd_tax_exp_dt" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Insurance Expiration Date</label>
+                                <div class="input-group">
+                                    <input type="date" name="insrnc_exp_dt" id="insrnc_exp_dt" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <div class="input-group">
+                                    <input type="text" name="v_name" id="v_name" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Manufacture Year</label>
+                                <div class="input-group">
+                                    <input type="text" name="man_year" id="man_year" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Registration Number</label>
+                                <div class="input-group">
+                                    <input type="text" name="plate_no" id="plate_no" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Mileage</label>
+                                <div class="input-group">
+                                    <input type="text" name="mileage" id="mileage" class="form-control">
+                                </div>
+                            </div>    
+
+                            <div class="form-group">
+                                <label class="form-label">Expiration Date of Fitness</label>
+                                <div class="input-group">
+                                    <input type="date" name="fitness_exp_dt" id="fitness_exp_dt" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div> 
+                        </div>
+                    </div> 
+                </form>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---- Assign Vehicle -->
+<div class="modal fade" id="assignmodal"  tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Assign Vehicle To Driver
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="<%= Routes.vehicle_path(@conn, :assign_vehicle)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Assign Vehicle</label>
+                                <div class="input-group">                                    
+                                    <input type="hidden" name="driver_id" value="0">
+                                    <select class="custom-select form-control" name="driver_id" id="assign_vehicle">
+                                        <option selected="true" disabled="disabled">Select Driver</option>
+                                        <option value="">Not Assigning</option>
+                                        <%= for driver <-@drivers do %>
+                                            <%= if driver.user_role == "DRIVER" && driver.id not in @driver_ids do %>
+                                                <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <% end %>
+                                        <% end %>
+                                    </select>
+                                </div>
+                                <span class="help-block" style="display:none;">
+                                    Assignment Status: 
+                                    <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="text" name="assignment_status" id="assigned_status" class="form-control form-control-lg rounded-0 border-bottom-0 border-top-0 border-left-0 border-right-0 px-0 help-block">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Assign Vehicle</button>
+                    </div>   
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---- Reassign Vehicle -->
+<div class="modal fade" id="reassignmodal"  tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(204, 204, 204, 0.8);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-black">
+                    Reassign Vehicle To New Driver
+                </h4>
+                <button type="button" class="close text-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="panel-content">
+                <form action="<%= Routes.vehicle_path(@conn, :assign_vehicle)%>" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Assign Vehicle</label>
+                                <div class="input-group">                           
+                                    <select class="custom-select form-control" name="driver_id">
+                                        <option selected="true" disabled="disabled">Select Driver</option>
+                                        <%= for driver <-@drivers do %>
+                                            <%= if driver.user_role == "DRIVER" && driver.id not in @driver_ids do %>
+                                                <option  value="<%= driver.id %>"><%= driver.first_name%> <%= driver.last_name%></option>
+                                            <% end %>
+                                        <% end %>
+                                    </select>
+                                    <input type="hidden" name="id" id="id">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Reassign Vehicle</button>
+                    </div>   
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ############################### SEND VEHICLE FOR MAINTENANCE MODAL ################### -->
+<!--<div class="modal fade" id="maintain-car" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Fill Form To Send Car For Maintenance <i class="fal fa-truck"></i> </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form action="#">
+                <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Name</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-bus"></i></span>
+                                    </div>
+                                    <input type="text" name="v_name" placeholder="Vehicle Name" class="form-control" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Assigned To</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user width-1 text-align-center"></i></span>
+                                    </div>
+                                    <input type="text" name="assigned_to" placeholder="Driver Assigned To Vehicle" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Status of Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="assigned_to">
+                                        <option>Select Status of Vehicle</option>
+                                        <option value="in garage">In Garage</option>
+                                        <option value="under maintenance">Under Maintenance</option>
+                                        <option value="fixed">Fixed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Registration Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-car width-1 text-align-center"></i></span>
+                                    </div>
+                                    <input type="text" name="plate_no" placeholder="Vehicle Registration Number" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Vendor</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-user width-1 text-align-center"></i></span>
+                                    </div>
+                                    <select class="custom-select form-control" name="assigned_to">
+                                        <option>Select Vendor To Work on Vehicle</option>
+                                        <option value="vendor">Vendor</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Problem With Vehicle</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fal fa-car width-1 text-align-center"></i></span>
+                                    </div>
+                                    <textarea type="text" name="#" placeholder="Describe problem with vehicle" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Vehicle</button>
+                    </div>        
+                </form>    
+            </div>
+        </div>
+    </div>
+</div>-->
+
+
+<script src="<%= Routes.static_path(@conn, "/js/vendors.bundle.js") %>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.3.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script>
+    $('#assignment_user').on('change', function() {
+    //------ Add New Vehicle
+      if(this.value == "") {
+        $('#assignment_status').val("0");
+      }
+      else{
+        $('#assignment_status').val("1");
+      }
+    });
+
+    
+    $('#assign_vehicle').on('change', function() {
+    //------ Assign vehicle to user
+      if(this.value == "") {
+        $('#assigned_status').val("0");
+      }
+      else{
+        $('#assigned_status').val("1");
+      }
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        // --------- View Vehicle Details
+        $('#viewmodal').on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var brand = button.data('brand')
+            var v_name = button.data('v_name')
+            var v_type = button.data('v_type')
+            var man_year = button.data('man_year')
+            var chassis_no = button.data('chassis_no')
+            var ext_color = button.data('ext_color')
+            var plate_no = button.data('plate_no')
+            var assigned_to = button.data('assigned_to')
+            var assignment_status = button.data('assignment_status')
+            var mileage = button.data('mileage')
+            var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
+            var fitness_exp_dt = button.data('fitness_exp_dt')
+            var insrnc_exp_dt = button.data('insrnc_exp_dt')
+            
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id);
+            modal.find('.modal-body #brand').text(brand);
+            modal.find('.modal-body #v_name').text(v_name);
+            modal.find('.modal-body #v_type').text(v_type);
+            modal.find('.modal-body #man_year').text(man_year);
+            modal.find('.modal-body #chassis_no').text(chassis_no);
+            modal.find('.modal-body #ext_color').text(ext_color);
+            modal.find('.modal-body #plate_no').text(plate_no);
+            modal.find('.modal-body #assigned_to').text(assigned_to);
+            modal.find('.modal-body #assignment_status').text(assignment_status);
+            modal.find('.modal-body #mileage').text(mileage);
+            modal.find('.modal-body #rd_tax_exp_dt').text(rd_tax_exp_dt);
+            modal.find('.modal-body #fitness_exp_dt').text(fitness_exp_dt);
+            modal.find('.modal-body #insrnc_exp_dt').text(insrnc_exp_dt);
+        });
+
+        // --------- Edit Vehicle Details
+        $('#editmodal').on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var brand = button.data('brand')
+            var v_name = button.data('v_name')
+            var v_type = button.data('v_type')
+            var man_year = button.data('man_year')
+            var chassis_no = button.data('chassis_no')
+            var ext_color = button.data('ext_color')
+            var plate_no = button.data('plate_no')
+            var assigned_to = button.data('assigned_to')
+            var assignment_status = button.data('assignment_status')
+            var mileage = button.data('mileage')
+            var rd_tax_exp_dt = button.data('rd_tax_exp_dt')
+            var fitness_exp_dt = button.data('fitness_exp_dt')
+            var insrnc_exp_dt = button.data('insrnc_exp_dt')
+            
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id);
+            modal.find('.modal-body #brand').val(brand);
+            modal.find('.modal-body #v_name').val(v_name);
+            modal.find('.modal-body #v_type').val(v_type);
+            modal.find('.modal-body #man_year').val(man_year);
+            modal.find('.modal-body #chassis_no').val(chassis_no);
+            modal.find('.modal-body #ext_color').val(ext_color);
+            modal.find('.modal-body #plate_no').val(plate_no);
+            modal.find('.modal-body #assigned_to').val(assigned_to);
+            modal.find('.modal-body #assignment_status').val(assignment_status);
+            modal.find('.modal-body #mileage').val(mileage);
+            modal.find('.modal-body #rd_tax_exp_dt').val(rd_tax_exp_dt);
+            modal.find('.modal-body #fitness_exp_dt').val(fitness_exp_dt);
+            modal.find('.modal-body #insrnc_exp_dt').val(insrnc_exp_dt);
+        });
+
+        // --------- Assigning Vehicle
+        $('#assignmodal').on('show.bs.modal', function (event){
+
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id);
+        });
+
+        // --------- Reassigning Vehicle
+        $('#reassignmodal').on('show.bs.modal', function (event){
+
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id);
+        });
+    });
+</script>

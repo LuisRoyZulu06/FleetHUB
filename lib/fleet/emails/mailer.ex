@@ -1,3 +1,3 @@
-defmodule SmartPAY.Emails.Mailer do
-  use Bamboo.Mailer, otp_app: :SmartPAY
+defmodule FleetHUB.Emails.Mailer do
+  use Bamboo.Mailer, otp_app: :FleetHUB
 end

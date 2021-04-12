@@ -117,8 +117,8 @@ defmodule FleetWeb.UserController do
     accounts = Accounts.list_tbl_users()
     issues = Drivers.list_tbl_vehicle_issue()
     vendors = Clients.list_tbl_vendors()
-    problems = Problems.list_tbl_vehicle_problems()
-    vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
+    # problems = Problems.list_tbl_vehicle_problems()
+    # vehicle = Vehicles.get_by_user_id(conn.assigns.user.id)
     user = Accounts.get_user_details(conn.assigns.user.id)
     assigned_vihecles = Vehicles.vehicles_assigned()
     total_vehicles = Vehicles.total_vehicles()
@@ -126,7 +126,7 @@ defmodule FleetWeb.UserController do
     # [%{""=>count_vehicles}] = Vehicles.vehicles_assigned()
     # [%{""=>total_vehicles}] = Vehicles.total_vehicles()
     # [%{""=>total_drivers}] = Vehicles.total_drivers()
-    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, vehicle: vehicle, user: user, success: assigned_vihecles, failed: failed, keys: keys, assigned_vihecles: assigned_vihecles, total_vehicles: total_vehicles, total_drivers: total_drivers,  problems: problems)
+    render(conn, "index.html", accounts: accounts, issues: issues, vendors: vendors, user: user, success: assigned_vihecles, failed: failed, keys: keys, assigned_vihecles: assigned_vihecles, total_vehicles: total_vehicles, total_drivers: total_drivers)
   end
 
   defp prepare_dash_result(results) do

@@ -10,6 +10,8 @@ defmodule FleetWeb.DriverController do
     alias Fleet.{Logs.UserLogs, Repo}
     alias Fleet.License
     alias Fleet.License.Drivers_license
+    alias Fleet.Problems
+    alias Fleet.Problems.Vehicle_problem
 
     plug(
       FleetWeb.Plugs.RequireAuth
@@ -27,6 +29,16 @@ defmodule FleetWeb.DriverController do
            :deactivate_driver_account
          ]
   )
+
+    def index(conn, _params) do
+      user = conn.assigns.user
+      IO.inspect "=============== What id am I getting Daisy ====="
+      IO.inspect user
+      problems = Problems.list_tbl_vehicle_problems()
+      vehicle = Vehicles.get_by_user_id(user.id)
+      vehicle_details = Accounts.get_vehicle_details(user.id)
+      render(conn, "index.html",vehicle_details: vehicle_details, vehicle: vehicle, problems: problems)
+    end
 
     def view_driver(conn, %{"id" => id} = params) do
       list_drivers  = Accounts.get_user!(id)
@@ -127,19 +139,19 @@ defmodule FleetWeb.DriverController do
       render(conn, "logged_issues.html", list_issues: list_issues)
     end
 
-    def create_issue(conn, issues) do
+    def report_issue(conn, issues) do
       case Drivers.create_issue_loger(Map.put(issues, "driver_id", conn.assigns.user.id)) do
           {:ok, _} ->
             conn
             |> put_flash(:info, "Problem with car reported.")
-            |> redirect(to: Routes.user_path(conn, :dashboard))
+            |> redirect(to: Routes.driver_path(conn, :index))
 
             conn
 
           {:error, _} ->
             conn
             |> put_flash(:error, "Failed to report problem with vehicle.")
-            |> redirect(to: Routes.user_path(conn, :dashboard))
+            |> redirect(to: Routes.driver_path(conn, :index))
       end
     end
 

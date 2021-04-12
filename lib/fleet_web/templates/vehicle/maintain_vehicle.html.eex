@@ -48,9 +48,6 @@
                             <h2>
                                 Vehicles Under Maintenance
                             </h2>
-                            <div class="panel-toolbar" style="margin-right: 10px;">
-                                <a class="btn btn-sm btn-secondary waves-effect waves-themed" href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>">Back</a>
-                            </div>
                         </div>
 
                         <div class="panel-container show">
@@ -58,7 +55,7 @@
                                 
                                 <!-- datatable start -->
                                 <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                                    <thead class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                                    <thead class="p-3 bg-fusion-50 rounded overflow-hidden position-relative text-white mb-g">
                                         <tr>
                                             <th>Vehicle Name</th>
                                             <th>License Plate Number</th>

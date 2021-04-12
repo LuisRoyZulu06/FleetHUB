@@ -80,22 +80,29 @@
                                 <!--  ADMIN-PANEL  -->
                                 <%= if @user.user_role == "ADMIN" do %>
                                     <li>
-                                        <a href="<%= Routes.admin_path(@conn, :inbox)%>" title="Issue Logger" data-filter-tags="ui components">
+                                        <a href="<%= Routes.admin_path(@conn, :inbox)%>" title="Report Notifications" data-filter-tags="ui components">
                                             <i class="fal fa-envelope"></i>
-                                            <span class="nav-link-text" data-i18n="nav.ui_components">Issue Logger</span>
+                                            <span class="nav-link-text" data-i18n="nav.ui_components">Report Notifications</span>
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="#" title="Vehicles" data-filter-tags="theme settings">
+                                        <a href="#" title="Fleet Management" data-filter-tags="theme settings">
                                             <i class="fal fa-bus"></i>
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings">Vehicles</span>
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings">Fleet Management</span>
                                         </a>
                                         <ul>
                                             <li>
-                                                <a href="<%= Routes.vehicle_path(@conn, :list_vehicles)%>" title="Manage Vehicles" data-filter-tags="theme settings layout options">
+                                                <a href="<%= Routes.vehicle_path(@conn, :vehicle_mgt)%>" title="Manage Vehicles" data-filter-tags="theme settings layout options">
                                                     <i class="fal fa-truck"></i>
                                                     <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Manage Cars</span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="<%= Routes.vehicle_path(@conn, :maintain_vehicle)%>" title="Manage Vehicles" data-filter-tags="theme settings layout options">
+                                                    <i class="fal fa-cogs"></i>
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Garage</span>
                                                 </a>
                                             </li>
                                             

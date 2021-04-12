@@ -13,7 +13,7 @@ defmodule FleetWeb.VehicleController do
     plug(
       FleetWeb.Plugs.RequireAuth
     when action in [
-           :list_vehicles,
+           :vehicle_mgt,
            :create_vehicle,
            :maintain_vehicle,
            :reassign_vehicle,
@@ -23,7 +23,7 @@ defmodule FleetWeb.VehicleController do
          ]
   )
 
-    def list_vehicles(conn, _params) do
+    def vehicle_mgt(conn, _params) do
         list_vehicles = Vehicles.list_tbl_vehicles()
         drivers=Accounts.list_tbl_users()
         driver_ids= for driver <- list_vehicles, into: [] do driver.driver_id end
@@ -32,7 +32,7 @@ defmodule FleetWeb.VehicleController do
         [%{"count"=>count_vehicles}] = Vehicles.vehicles_assigned()
         total_vehicles = Vehicles.total_vehicles()
         [%{"count"=>vehicles_unassigned}] = Vehicles.vehicles_unassigned()
-        render(conn, "list_vehicles.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned, driver_ids: driver_ids, garage: garage)
+        render(conn, "index.html", list_vehicles: list_vehicles, drivers: drivers, count_vehicles: count_vehicles, total_vehicles: total_vehicles, vehicles_unassigned: vehicles_unassigned, driver_ids: driver_ids, garage: garage)
     end
 
     def create_vehicle(conn, params) do
@@ -41,7 +41,7 @@ defmodule FleetWeb.VehicleController do
             {:ok, _} ->
               conn
               |> put_flash(:info, "New Vehicle Added To System")
-              |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+              |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
 
               conn
 
@@ -50,7 +50,7 @@ defmodule FleetWeb.VehicleController do
               IO.inspect err
               conn
               |> put_flash(:error, "Failed To Add New Vehicle To system.")
-              |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+              |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
         end
     end
 
@@ -59,7 +59,7 @@ defmodule FleetWeb.VehicleController do
 
         Ecto.Multi.new()
         |> Ecto.Multi.update(:vehicle, VehicleDetails.changeset(vehicle, params))
-        |> Ecto.Multi.run(:userlogs, fn %{vehicle: vehicle} ->
+        |> Ecto.Multi.run(:userlogs, fn _run,  %{vehicle: vehicle} ->
           activity = "FleetHUB vehicle updated with ID \"#{vehicle.id}\""
 
           userlogs = %{
@@ -75,12 +75,12 @@ defmodule FleetWeb.VehicleController do
           {:ok, %{vehicle: vehicle, userlogs: _userlogs}} ->
             conn
             |> put_flash(:info, "Vehicle details updated")
-            |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+            |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
 
             {:error, %{vehicle: vehicle, userlogs: _userlogs}} ->
               conn
               |> put_flash(:error, "Failedd to update vehicle details.")
-              |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+              |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
             # {:error, _failed_operation, failed_value, _changes_so_far} ->
             #   reason = VehicleController.traverse_errors(failed_value.errors) |> List.first()
 
@@ -91,7 +91,7 @@ defmodule FleetWeb.VehicleController do
     end
 
     def maintain_vehicle(conn, _params) do
-        [%{""=>garage}] = Vehicles.vehicles_in_maintenance()
+        [%{"count"=>garage}] = Vehicles.vehicles_in_maintenance()
         maintenance = Drivers.list_tbl_vehicle_issue()
         render(conn, "maintain_vehicle.html", maintenance: maintenance, garage: garage)
     end
@@ -101,7 +101,7 @@ defmodule FleetWeb.VehicleController do
 
         Ecto.Multi.new()
         |> Ecto.Multi.update(:vehicle, VehicleDetails.changeset(vehicle, params))
-        |> Ecto.Multi.run(:userlogs, fn %{vehicle: vehicle} ->
+        |> Ecto.Multi.run(:userlogs, fn _run, %{vehicle: vehicle} ->
           activity = "FleetHUB vehicle updated with ID \"#{vehicle.id}\""
 
           userlogs = %{
@@ -117,14 +117,14 @@ defmodule FleetWeb.VehicleController do
           {:ok, %{vehicle: vehicle, userlogs: _userlogs}} ->
             conn
             |> put_flash(:info, "Vehicle Assigned To Driver:-) ")
-            |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+            |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
 
           {:error, _failed_operation, failed_value, _changes_so_far} ->
             reason = VehicleController.traverse_errors(failed_value.errors) |> List.first()
 
             conn
             |> put_flash(:error, reason)
-            |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+            |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
         end
     end
 
@@ -162,7 +162,7 @@ defmodule FleetWeb.VehicleController do
           {:ok, %{assign: vehicle, userlogs: _userlogs}} ->
             conn
             |> put_flash(:info, "Vehicle Reassigned To New Driver:-) ")
-            |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+            |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
 
           {:error, _failed_operation, failed_value, _changes_so_far} ->
             IO.inspect "==============================================================================================================="
@@ -171,7 +171,7 @@ defmodule FleetWeb.VehicleController do
 
             conn
             |> put_flash(:error, reason)
-            |> redirect(to: Routes.vehicle_path(conn, :list_vehicles))
+            |> redirect(to: Routes.vehicle_path(conn, :vehicle_mgt))
         end
     end
 

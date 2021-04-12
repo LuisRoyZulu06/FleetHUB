@@ -46,6 +46,22 @@ defmodule Fleet.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+
+  def get_vehicle_details(id) do
+    # id = String.to_integer(id)
+    User
+    |> join(:left, [c], t in "tbl_vehicles", on: c.id == t.driver_id)
+    |> where([c, t], t.driver_id == ^id)
+    |> select([c, t], %{
+      id: c.id,
+      brand: t.brand,
+      name: t.v_name,
+      plate_no: t.plate_no,
+      chassis_no: t.chassis_no
+    })
+    |> Repo.one()
+  end
+
   @doc """
   Creates a user.
 

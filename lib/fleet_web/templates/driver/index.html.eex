@@ -1,0 +1,302 @@
+<main id="js-page-content" role="main" class="page-content">
+    <div class="row">
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+            <div class="subheader">
+                <h1 class="subheader-title">
+                    <i class='subheader-icon fal fa-chart-area'></i> Dashboard
+                    <br>
+                    <small>
+                        FleetHUB Dashboard
+                    </small>
+                </h1>
+
+                <div class="info-card-text">
+                    LoggedIn user: <small><%= "#{(@conn.assigns.user.first_name)}"%> <%= "#{(@conn.assigns.user.last_name)}"%> | FleetHUB </small>
+                </div>
+            </div>
+            <%# ----------------------- Panels ----------------------------------- %>
+            <div id="panel-1" class="panel">
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <ul class="nav nav-tabs nav-tabs-clean" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab-reports" role="tab">Reports</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-vehicle-profile" role="tab">Vehicle Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-time" role="tab">Time</a></li>
+                        </ul>
+                        <div class="tab-content p-3">
+                            <div class="tab-pane fade show active" id="tab-reports" role="tabpanel" aria-labelledby="tab-reports">
+                                <form action="<%= Routes.driver_path(@conn, :report_issue)%>" onsubmit="putDate(this);" enctype="multipart/form-data" method="POST">
+                                    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token()%>">
+                                    <input type="hidden" name="approval_status" value="pending">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label" for="dropdown-on-left">Select Problem With Vehicle</label>
+                                               <div class="input-group">
+                                                    <textarea row="10" class="form-control" name="issue_descript" placeholder="Problem description"></textarea>
+                                                    <input type="hidden" name="first_name" class="form-control" value="<%= "#{(@conn.assigns.user.first_name)}"%>">
+                                                    <input type="hidden" name="last_name" class="form-control" value="<%= "#{(@conn.assigns.user.last_name)}"%>">
+                                                    <input type="hidden" name="phone" class="form-control" value="<%= "#{(@conn.assigns.user.phone)}"%>">
+                                                    <input type="hidden" name="driver_id" class="form-control" value="<%= "#{(@conn.assigns.user.id)}"%>">
+                                                    <input type="hidden" name="brand" class="form-control" value = "<%= (@vehicle_details == nil && 'User not assigned to vehicle') || @vehicle_details.brand %>">
+                                                    <input type="hidden" name="name" class="form-control" value = "<%= (@vehicle_details == nil && 'User not assigned to vehicle') || @vehicle_details.name %>">
+                                                    <input type="hidden" name="plate_no" class="form-control" value = "<%= (@vehicle_details == nil && 'User not assigned to vehicle') || @vehicle_details.plate_no %>">
+                                                    <input type="hidden" name="chassis_no" class="form-control" value = "<%= (@vehicle_details == nil && 'User not assigned to vehicle') || @vehicle_details.chassis_no %>">
+                                                    <input type="hidden" name="dt_issued">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Report Issue</button>
+                                    </div>        
+                                </form>
+                            </div>
+
+
+                            <div class="tab-pane fade" id="tab-vehicle-profile" role="tabpanel" aria-labelledby="tab-vehicle-profile">Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic. </div>
+                            <div class="tab-pane fade" id="tab-time" role="tabpanel" aria-labelledby="tab-time">Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%# -- Cards -- %>
+            <div class="container-fluid" style="margin-top: 2em;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <%= if @vehicle != nil do %>
+                            <a href="#" 
+                                data-id="<%= @vehicle.id%>" 
+                                data-first_name="<%= @user.first_name%>" 
+                                data-last_name="<%= @user.last_name%>" 
+                                data-phone="<%= @user.phone%>" 
+                                data-brand="<%= @vehicle.brand%>" 
+                                data-v_name="<%= @vehicle.v_name%>" 
+                                data-plate_no="<%= @vehicle.plate_no%>" 
+                                data-dismiss="modal" 
+                                data-toggle="modal" 
+                                data-target="#open-issue">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-danger-600">
+                                        Log Issues
+                                    </div>
+                                    <div class="card-body p-0 bg-danger-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    <div class="card-footer bg-danger-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a>
+                        <% else %>
+                            <div id="cp-2" class="card border">
+                                    <div class="card-header bg-danger-600">
+                                        Log Issues
+                                    </div>
+                                    <div class="card-body p-0 bg-danger-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">ISSUES</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-bus position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    <div class="card-footer bg-danger-800 py-2">
+                                        <br>
+                                    </div>
+                                </div>       
+                        <% end %>                                      
+                    </div>
+
+                    <div class="col-md-4">
+                        <a href="<%= Routes.driver_path(@conn, :logged_issues)%>">
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-info-600">
+                                    History of Logged Issues
+                                </div>
+                                <div class="card-body p-0 bg-info-300" style="height: 160px">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h1 class="opacity-15" id="driver-cards">HISTORY</h1>  
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <i class="fal fa-table position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                <div class="card-footer bg-info-800 py-2">
+                                    <br>
+                                </div>
+                            </div> 
+                        </a>                                     
+                    </div>
+
+                    <div class="col-md-4">
+                        <a href="#" data-id="<%= @user.id%>" data-first_name="<%= @user.first_name %>" data-last_name="<%= @user.last_name%>" data-email="<%= @user.email%>" data-user_role="<%= @user.user_role%>" data-sex="<%= @user.sex%>" data-nrc_no="<%= @user.nrc_no %>" data-phone="<%= @user.phone %>" data-toggle="modal" data-target="#profile-modal">
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-primary-600">
+                                    Personal Profile
+                                </div>
+                                <div class="card-body p-0 bg-primary-300" style="height: 160px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h1 class="opacity-15" id="driver-cards">PROFILE</h1>  
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <i class="fal fa-user position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem;"></i>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    <div class="card-footer bg-primary-800 py-2">
+                                    <br>
+                                </div>
+                            </div> 
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 5em;">
+                    <div class="col-md-4">
+                        <a href="<%= Routes.driver_path(@conn, :request_response)%>">
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-success-600">
+                                    Requests Sent
+                                </div>
+                                <div class="card-body p-0 bg-success-300" style="height: 160px">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h1 class="opacity-15" id="driver-cards">INBOX</h1>  
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <i class="fal fa-envelope position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:11rem;"></i>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                <div class="card-footer bg-success-800 py-2">
+                                    <br>
+                                </div>
+                            </div> 
+                        </a>                                     
+                    </div>
+
+                    
+                    <div class="col-md-4">
+                        <%= if @vehicle !=nil do %>
+                            <a href="#" 
+                                data-id="<%= @vehicle.id%>" 
+                                data-brand="<%= @vehicle.brand%>" 
+                                data-v_name="<%= @vehicle.v_name%>" 
+                                data-ext_color="<%= @vehicle.ext_color%>" 
+                                data-plate_no="<%= @vehicle.plate_no%>" 
+                                data-assignment_status="<%= @vehicle.assignment_status %>" 
+                                data-mileage="<%= @vehicle.mileage %>" 
+                                data-rd_tax_exp_dt="<%= @vehicle.rd_tax_exp_dt %>" 
+                                data-fitness_exp_dt="<%= @vehicle.fitness_exp_dt %>" 
+                                data-insrnc_exp_dt="<%= @vehicle.insrnc_exp_dt %>" 
+                                data-toggle="modal" 
+                                data-target="#vehicle-modal">
+                                <div id="cp-2" class="card border">
+                                    <div class="card-header bg-warning-600">
+                                        Vehicle Details
+                                    </div>
+                                    <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="card-footer bg-warning-800 py-2">
+                                        <br>
+                                    </div>
+                                </div> 
+                            </a> 
+                            <% else %> 
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-warning-600">
+                                    Vehicle Details
+                                </div>
+                                <div class="card-body p-0 bg-warning-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">VEHICLE</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-truck position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:9rem"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="card-footer bg-warning-800 py-2">
+                                    <br>
+                                </div>
+                            </div>    
+                        <%end%>                                         
+                    </div>
+                    
+
+                    <div class="col-md-4">
+                        <a href="#" data-toggle="modal" data-target=".js-modal-settings">
+                            <div id="cp-2" class="card border">
+                                <div class="card-header bg-fusion-600">
+                                    App Settings
+                                </div>
+                                <div class="card-body p-0 bg-fusion-300" style="height: 160px">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h1 class="opacity-15" id="driver-cards">SETTINGS</h1>  
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <i class="fal fa-cog position-absolute pos-middle pos-middle opacity-15 mb-n1 mr-n1" style="font-size:12rem"></i>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="card-footer bg-fusion-800 py-2">
+                                    <br>
+                                </div>
+                            </div> 
+                        </a>                                         
+                    </div> 
+                </div>
+            </div>
+            <%# ---------- %>
+        </div>
+
+        <div class="col-md-1"></div>
+    </div>
+</main>
+
+<script src="<%= Routes.static_path(@conn, "/js/jquery-1.11.2.min.js") %>"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script>
+  // -------------------------- Funtion to pick system dateTime
+  var putDate = function(form) {
+    form.dt_issued.value = new Date().toString();
+  };
+</script>

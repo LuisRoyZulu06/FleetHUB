@@ -26,6 +26,10 @@ defmodule FleetWeb.Router do
     plug(:put_layout, {FleetWeb.LayoutView, :app})
   end
 
+  pipeline :driver do
+    plug(:put_layout, {FleetWeb.LayoutView, :driver})
+  end
+
   pipeline :no_layout do
     plug :put_layout, false
   end
@@ -61,27 +65,10 @@ defmodule FleetWeb.Router do
     get "/Password/Change", UserController, :user_pwd_change
     post "/User/Self/Password/Change", UserController, :pwd_self_change
 
-    # --------------------- On Leave --------------------------------
-    # get "/Users/On/Leave", UserController, :users_on_leave
-    # post "/Activate/Leave/Account", UserController, :activate_user_on_leave
-
-    # ---------------------- Suspension ---------------------------
-    # get "/Suspended/Users", UserController, :suspended_users
-
-
 
     # ---------------------- Deactivated ---------------------------
     post "/Deactivate/Account", UserController, :deactivate_account
     post "/Activate/Suspended/Account", UserController, :activate_user_account
-
-    # -----------------------Dismissed---------------------------------
-    # get "/Dismissed/User/Accounts", UserController, :dismissed_users
-    # post "/Activate/dismissed/Account", UserController, :activate_dismissed_user
-
-
-    # ------------------------Retired -------------------------------
-    # get "/Retired/User/Accounts", UserController, :retired_users
-    # post "/Activate/retired/Account", UserController, :activate_retired_user
 
     # --------- Driver Controller
     get "/View/Driver", DriverController, :view_driver
@@ -90,7 +77,7 @@ defmodule FleetWeb.Router do
     post "/Update/Driver/Details", DriverController, :update_driver
     get "/Assign/Vehicle", DriverController, :assign_vehicle
     get "/List/of/Logged/Issues", DriverController, :logged_issues
-    post "/Report/Problem/With/Vehicle", DriverController, :create_issue
+    post "/Report/Problem/With/Vehicle", DriverController, :report_issue
     post "/File/Report", DriverController, :file_issue_report
     get "/Request/Response", DriverController, :request_response
     get "/Rejected/Request", DriverController, :rejected_request
@@ -99,7 +86,7 @@ defmodule FleetWeb.Router do
     post "/Deactivate/Driver/Account", DriverController, :deactivate_driver_account
 
     # //////////////////////////////////////////////////////////////////////// Vehicle CONTROLLER
-    get "/List/FleetHub/Vehicles", VehicleController, :list_vehicles
+    get "/Vehicle/management", VehicleController, :vehicle_mgt
     post "/Add/New/Vehicle/To/System", VehicleController, :create_vehicle
     get "/Vehicles/Under/Maintenance", VehicleController, :maintain_vehicle
     post "/Update/Vehicle/Details", VehicleController, :update_vehicle
@@ -130,6 +117,11 @@ defmodule FleetWeb.Router do
 
     # --------- Notifications Controller
     get "/email/logs", NotificationsController, :email_logs
+  end
+
+  scope "/", FleetWeb do
+    pipe_through([:browser, :driver])
+    get "/Home", DriverController, :index
   end
 
   # Other scopes may use custom stacks.
